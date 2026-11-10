@@ -5,6 +5,7 @@ import { ToastContainer, AppHeader, BottomNav } from './components/Shared';
 // Pages
 import Home from './pages/Home';
 import Role from './pages/Role';
+import CustomerReg from './pages/CustomerReg';
 import Onboard from './pages/Onboard';
 import Discover from './pages/Discover';
 import Results from './pages/Results';
@@ -18,7 +19,7 @@ import WorkerDash from './pages/WorkerDash';
 import WorkerJobs from './pages/WorkerJobs';
 import Modal from './pages/Modal';
 
-const BARE_VIEWS = ['home', 'role', 'onboard'];
+const BARE_VIEWS = ['home', 'role', 'customerReg', 'onboard'];
 const WORKER_V = ['wdash', 'wjob', 'wprofile'];
 
 function AppInner() {
@@ -26,8 +27,10 @@ function AppInner() {
   const { role, ob } = useApp();
 
   const navigate = (v) => {
-    if (v === 'wdash' && !ob.done) {
+    // Worker going to dashboard without completing onboarding → send to onboard
+    if (v === 'wdash' && role === 'worker' && !ob.done) {
       setView('onboard');
+      window.scrollTo(0, 0);
       return;
     }
     setView(v);
@@ -40,6 +43,7 @@ function AppInner() {
     switch (view) {
       case 'home':       return <Home onNavigate={navigate} />;
       case 'role':       return <Role onNavigate={navigate} />;
+      case 'customerReg': return <CustomerReg onNavigate={navigate} />;
       case 'onboard':    return <Onboard onNavigate={navigate} />;
       case 'discover':   return <Discover onNavigate={navigate} />;
       case 'results':    return <Results onNavigate={navigate} />;

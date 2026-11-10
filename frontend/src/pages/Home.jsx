@@ -67,11 +67,11 @@ export default function Home({ onNavigate }) {
               )}
             </p>
             <div className="ctas">
-              <button className="btn btn-primary btn-lg" onClick={() => onNavigate('discover')}>
+              <button className="btn btn-primary btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="search" />
                 {t('Find a Worker', 'کاریگر ڈھونڈیں')}
               </button>
-              <button className="btn btn-outline btn-lg" onClick={() => onNavigate('onboard')}>
+              <button className="btn btn-outline btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="briefcase" />
                 {t('Join as a Worker', 'کاریگر کے طور پر شامل ہوں')}
               </button>
@@ -176,7 +176,7 @@ export default function Home({ onNavigate }) {
             {CATS.map((c) => {
               const n = workers.filter((w) => w.cat === c.id && w.status === 'available').length;
               return (
-                <button key={c.id} className="svc" onClick={() => onNavigate('discover')}>
+              <button key={c.id} className="svc" onClick={() => onNavigate('role')}>
                   <span className="tile"><Icon name={c.icon} /></span>
                   <span>
                     <b>{c.en}</b>
@@ -297,10 +297,10 @@ export default function Home({ onNavigate }) {
               <span className="eyebrow">{t('Featured workers', 'نمایاں کاریگر')}</span>
               <h2 style={{ marginTop: 8 }}>{t('Near G-11, Islamabad', 'جی الیون، اسلام آباد کے قریب')}</h2>
             </div>
-            <button className="btn btn-outline" onClick={() => onNavigate('discover')}>
-              {t('See all nearby', 'سب دیکھیں')}
-              <Icon name="arrowR" className="flip" />
-            </button>
+              <button className="btn btn-outline" onClick={() => onNavigate('role')}>
+                {t('See all nearby', 'سب دیکھیں')}
+                <Icon name="arrowR" className="flip" />
+              </button>
           </div>
           <div className="results-grid" style={{ marginTop: 24 }}>
             {feat.map((w) => (
@@ -308,8 +308,8 @@ export default function Home({ onNavigate }) {
                 key={w.id}
                 w={w}
                 landing
-                onProfile={() => onNavigate('profile')}
-                onRequest={() => onNavigate('request')}
+                onProfile={() => onNavigate('role')}
+                onRequest={() => onNavigate('role')}
               />
             ))}
           </div>
@@ -360,7 +360,7 @@ export default function Home({ onNavigate }) {
               </p>
             </div>
             <div className="stack" style={{ gap: 12 }}>
-              <button className="btn btn-primary btn-lg btn-block" onClick={() => onNavigate('onboard')}>
+              <button className="btn btn-primary btn-lg btn-block" onClick={() => onNavigate('role')}>
                 <Icon name="mic" />
                 {t('Join as a Worker', 'کاریگر بنیں')}
               </button>
@@ -398,12 +398,12 @@ export default function Home({ onNavigate }) {
               <h4>{t('Customers', 'گاہک')}</h4>
               <a onClick={() => scrollTo('services')} style={{ cursor: 'pointer' }}>{t('Services', 'خدمات')}</a>
               <a onClick={() => scrollTo('how')} style={{ cursor: 'pointer' }}>{t('How it works', 'طریقہ کار')}</a>
-              <a onClick={() => onNavigate('discover')} style={{ cursor: 'pointer' }}>{t('Find a worker', 'کاریگر ڈھونڈیں')}</a>
+              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Find a worker', 'کاریگر ڈھونڈیں')}</a>
             </div>
             {/* Worker links */}
             <div>
               <h4>{t('Workers', 'کاریگر')}</h4>
-              <a onClick={() => onNavigate('onboard')} style={{ cursor: 'pointer' }}>{t('Join as a worker', 'شامل ہوں')}</a>
+              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Join as a worker', 'شامل ہوں')}</a>
               <a onClick={() => onNavigate('wdash')} style={{ cursor: 'pointer' }}>{t('Worker dashboard', 'ڈیش بورڈ')}</a>
             </div>
             {/* Contact */}
