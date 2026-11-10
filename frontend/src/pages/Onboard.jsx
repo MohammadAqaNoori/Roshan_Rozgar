@@ -62,68 +62,64 @@ export default function Onboard({ onNavigate }) {
           </>
         );
 
-      // Step 1: Name
+      // Step 1: Name — text input
       case 1: {
-        let inner;
-        if (ob.nameState === 'idle') {
-          inner = (
-            <div className="mic-zone">
-              <button className="mic" onClick={obNameListen} aria-label="Tap and speak your name"><Icon name="mic" /></button>
-              <b style={{ fontSize: 18 }}>{t('Tap and say your name', 'دبائیں اور اپنا نام بولیں')}</b>
-              <span className="muted small ur" style={{ fontSize: 16 }}>مثال: "میرا نام محمد عمران ہے"</span>
+        const isConfirmed = ob.nameState === 'confirmed';
+        return (
+          <Question sub={t('Type your name below.', 'نیچے اپنا نام لکھیں۔')}>
+            <div style={{ marginTop: 20 }}>
+              <label className="lbl" htmlFor="obname">
+                {t('Your full name', 'آپ کا پورا نام')}
+              </label>
+              <input
+                id="obname"
+                className="bigfield"
+                value={typedName || ob.name}
+                onChange={(e) => {
+                  setTypedName(e.target.value);
+                  // Reset confirmed state if user edits
+                  if (isConfirmed) obNameRedo();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (typedName || ob.name).trim().length > 1) {
+                    obTyped((typedName || ob.name).trim());
+                  }
+                }}
+                placeholder={t('e.g. Muhammad Imran', 'مثلاً: محمد عمران')}
+                autoComplete="name"
+                autoFocus
+              />
+
+              {/* Confirmation tick once name is set */}
+              {isConfirmed && (
+                <div className="heard" style={{ marginTop: 14, background: 'var(--success-50)' }}>
+                  <div className="row" style={{ gap: 10, color: '#17714A' }}>
+                    <Icon name="checkCircle" />
+                    <b>{t('Name saved', 'نام محفوظ')}: {ob.name}</b>
+                  </div>
+                </div>
+              )}
+
+              {/* Confirm button — shown when something is typed but not yet confirmed */}
+              {!isConfirmed && (typedName || ob.name).trim().length > 1 && (
+                <button
+                  className="btn btn-primary btn-block"
+                  style={{ marginTop: 12 }}
+                  onClick={() => obTyped((typedName || ob.name).trim())}
+                >
+                  <Icon name="check" />
+                  {t('Use this name', 'یہ نام رکھیں')}
+                  <span className="ur" style={{ fontSize: 15, opacity: 0.85 }}>ٹھیک ہے</span>
+                </button>
+              )}
+
+              <p className="small muted" style={{ marginTop: 10 }}>
+                <Icon name="users" />
+                {' '}{t('Only your first name is shown to customers.', 'گاہک کو صرف پہلا نام دکھایا جاتا ہے۔')}
+              </p>
             </div>
-          );
-        } else if (ob.nameState === 'listening') {
-          inner = (
-            <div className="mic-zone">
-              <button className="mic listening" aria-label="Listening"><Icon name="mic" /></button>
-              <div className="wave live" style={{ height: 36 }}>
-                {Array.from({ length: 18 }, (_, i) => <i key={i} style={{ height: `${10 + ((i * 7) % 22)}px`, animationDelay: `${i * 0.06}s`, background: 'var(--error)' }} />)}
-              </div>
-              <b>{t('Listening…', 'سن رہے ہیں…')}</b>
-            </div>
-          );
-        } else if (ob.nameState === 'heard') {
-          inner = (
-            <div className="heard" style={{ marginTop: 20 }}>
-              <div className="row" style={{ gap: 8 }}>
-                <span className="pill pill-ai"><Icon name="sparkles" />{t('Heard (speech-to-text)', 'سنا گیا')}</span>
-                <span className="pill pill-sample">{t('Simulated in prototype', 'نقلی')}</span>
-              </div>
-              <div className="val">{ob.name}<span className="ur">{ob.name === 'Muhammad Imran' ? 'محمد عمران' : ''}</span></div>
-              <b className="ur" style={{ fontSize: 20, color: 'var(--forest)' }}>کیا یہ آپ کا نام ہے؟ <span style={{ fontFamily: 'var(--f-en)', fontSize: 16, fontWeight: 600 }}>Is this your name?</span></b>
-              <div className="row" style={{ gap: 10 }}>
-                <button className="btn btn-primary" onClick={obNameYes}><Icon name="check" />{t('Yes', 'ہاں')}<small className="ur" style={{ fontSize: 14 }}>ہاں، صحیح ہے</small></button>
-                <button className="btn btn-outline" onClick={obNameNo}><Icon name="x" />{t('No', 'نہیں')}<small className="ur" style={{ fontSize: 14 }}>نہیں، دوبارہ</small></button>
-              </div>
-            </div>
-          );
-        } else if (ob.nameState === 'failed') {
-          inner = (
-            <div className="fallback" style={{ marginTop: 20 }}>
-              <div className="row" style={{ gap: 10, color: '#B23434' }}>
-                <span style={{ width: 40, height: 40, borderRadius: '99px', background: '#fff', display: 'grid', placeItems: 'center' }}><Icon name="alert" /></span>
-                <div><b>{t('We didn\u2019t catch that', 'ہم سمجھ نہیں سکے')}</b><div className="small ur">کوئی بات نہیں، دوسرا طریقہ آزمائیں</div></div>
-              </div>
-              <div className="stack" style={{ gap: 10, marginTop: 14 }}>
-                <button className="btn btn-primary btn-block" onClick={obNameListen}><Icon name="mic" />{t('Speak again, a little slower', 'دوبارہ آہستہ بولیں')}</button>
-                <label className="lbl" htmlFor="obname" style={{ margin: '6px 0 0' }}><Icon name="keyboard" /> {t('Or type it (Urdu or English)', 'یا لکھ دیں')}</label>
-                <input id="obname" className="bigfield" value={typedName} onChange={(e) => setTypedName(e.target.value)} placeholder={t('Your name', 'آپ کا نام')} autoComplete="name" />
-                <button className="btn btn-outline btn-block" onClick={() => obTyped(typedName)}><Icon name="check" />{t('Use this name', 'یہ نام رکھیں')}</button>
-                <p className="small muted"><Icon name="users" /> {t('A family member or the shop owner can also type it for you.', 'گھر کا کوئی فرد بھی لکھ سکتا ہے۔')}</p>
-              </div>
-            </div>
-          );
-        } else if (ob.nameState === 'confirmed') {
-          inner = (
-            <div className="heard" style={{ marginTop: 20, background: 'var(--success-50)' }}>
-              <div className="row" style={{ gap: 10, color: '#17714A' }}><Icon name="checkCircle" /><b>{t('Name saved', 'نام محفوظ')}</b></div>
-              <div className="val">{ob.name}</div>
-              <button className="btn btn-ghost btn-sm" style={{ alignSelf: 'flex-start' }} onClick={obNameRedo}><Icon name="refresh" />{t('Say it again', 'دوبارہ بولیں')}</button>
-            </div>
-          );
-        }
-        return <Question sub="Tap the green button and speak.">{inner}{ob.nameState === 'idle' && <p style={{ textAlign: 'center', marginTop: 10 }}><button className="btn btn-ghost btn-sm" onClick={obNameNo}><Icon name="keyboard" />{t('I\u2019d rather type', 'میں لکھنا چاہتا ہوں')}</button></p>}</Question>;
+          </Question>
+        );
       }
 
       // Step 2: Trade

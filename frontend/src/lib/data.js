@@ -84,7 +84,7 @@ export const CUSTOMER = {
 
 export const OB_STEPS = [
   { icon: 'globe', en: 'Choose your language', ur: 'اپنی زبان چنیں' },
-  { icon: 'mic', en: 'Say your name', ur: 'اپنا نام بولیں' },
+  { icon: 'keyboard', en: 'What is your name?', ur: 'آپ کا نام کیا ہے؟' },
   { icon: 'briefcase', en: 'What is your work?', ur: 'آپ کا کام کیا ہے؟' },
   { icon: 'wrench', en: 'What can you do?', ur: 'آپ کیا کیا کر سکتے ہیں؟' },
   { icon: 'pin', en: 'Where do you work?', ur: 'آپ کہاں کام کرتے ہیں؟' },
