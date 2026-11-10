@@ -1,13 +1,12 @@
-"""Pydantic schemas for job-related requests and responses."""
+"""Pydantic schemas for job requests and responses."""
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
 
 class JobCreate(BaseModel):
-    """Customer creates a job request."""
     title: Optional[str] = None
     description: Optional[str] = None
     trade_required: Optional[str] = None
@@ -15,10 +14,10 @@ class JobCreate(BaseModel):
     lat: Optional[float] = None
     lng: Optional[float] = None
     scheduled_time: Optional[datetime] = None
+    worker_id: Optional[int] = None   # optionally request a specific worker
 
 
 class JobUpdate(BaseModel):
-    """Negotiation / status changes."""
     worker_id: Optional[int] = None
     agreed_price: Optional[float] = None
     status: Optional[str] = None

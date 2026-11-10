@@ -1,4 +1,4 @@
-"""Review model — post-job feedback for trust building."""
+"""Review model — post-job trust signal."""
 
 from datetime import datetime
 
@@ -16,11 +16,16 @@ class Review(Base):
     customer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     worker_id = Column(Integer, ForeignKey("workers.id"), nullable=False)
 
-    # Review content
-    rating = Column(Integer, nullable=False)       # 1 to 5 stars
-    text_review = Column(Text, nullable=True)      # optional typed review
-    voice_url = Column(String(500), nullable=True) # optional voice review
-    voice_transcript = Column(Text, nullable=True) # AI-transcribed voice review
+    rating = Column(Integer, nullable=False)
+    text_review = Column(Text, nullable=True)
+    voice_url = Column(String(500), nullable=True)
+    voice_transcript = Column(Text, nullable=True)
+
+    # Sub-ratings (for detailed trust signal)
+    quality_rating = Column(Integer, nullable=True)
+    professionalism_rating = Column(Integer, nullable=True)
+    timeliness_rating = Column(Integer, nullable=True)
+    tags = Column(String(500), nullable=True)   # comma-separated tags
 
     created_at = Column(DateTime, default=datetime.utcnow)
 

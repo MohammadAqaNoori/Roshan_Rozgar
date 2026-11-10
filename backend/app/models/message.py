@@ -1,9 +1,9 @@
-"""Message model — communication between customer and worker on a job."""
+"""Message model — chat between customer and worker on a job."""
 
 import enum
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Text
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Text, Float
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -11,8 +11,9 @@ from app.core.database import Base
 
 class MessageType(str, enum.Enum):
     text = "text"
-    voice = "voice"        # audio file
-    transcript = "transcript"  # AI-transcribed voice message
+    voice = "voice"
+    offer = "offer"      # price offer card
+    system = "system"    # system notification
 
 
 class Message(Base):
@@ -23,8 +24,12 @@ class Message(Base):
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     type = Column(Enum(MessageType), default=MessageType.text)
-    content = Column(Text, nullable=True)       # text content or transcript
-    audio_url = Column(String(500), nullable=True)  # for voice messages
+    content = Column(Text, nullable=True)        # text content
+    audio_url = Column(String(500), nullable=True)
+    transcript = Column(Text, nullable=True)     # AI-transcribed voice
+    offer_amount = Column(Float, nullable=True)  # for type=offer
+    offer_note = Column(Text, nullable=True)     # for type=offer
+    offer_state = Column(String(20), nullable=True)  # open|accepted|superseded
 
     created_at = Column(DateTime, default=datetime.utcnow)
 

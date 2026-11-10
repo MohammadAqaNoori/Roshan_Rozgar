@@ -1,12 +1,9 @@
-"""Worker model — extends User with trade-specific profile info."""
+"""Worker model — trade profile linked to a User."""
 
 import enum
 from datetime import datetime
 
-from sqlalchemy import (
-    Column, Integer, String, Float, Boolean, DateTime,
-    ForeignKey, Enum, Text,
-)
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Enum, Text
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -21,13 +18,15 @@ class Trade(str, enum.Enum):
     painter = "painter"
     mason = "mason"
     welder = "welder"
+    appliance = "appliance"
+    general = "general"
     other = "other"
 
 
 class WorkerStatus(str, enum.Enum):
-    available = "available"      # free for new jobs
-    busy = "busy"                  # currently on a job
-    offline = "offline"            # not taking requests
+    available = "available"
+    busy = "busy"
+    offline = "offline"
 
 
 class Worker(Base):
@@ -36,15 +35,18 @@ class Worker(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
 
-    # Profile (may be populated via voice/AI)
+    # Profile (populated via voice/AI during onboarding)
     trade = Column(Enum(Trade), nullable=True)
     experience_years = Column(Integer, nullable=True)
-    bio = Column(Text, nullable=True)  # AI-extracted from voice
+    bio = Column(Text, nullable=True)
+    skills = Column(Text, nullable=True)        # comma-separated e.g. "Leak repair,Geyser fitting"
+    days = Column(String(100), nullable=True)   # comma-separated e.g. "Mon,Tue,Wed"
+    hours = Column(String(50), nullable=True)   # e.g. "9 AM – 7 PM"
 
     # Location
     lat = Column(Float, nullable=True)
     lng = Column(Float, nullable=True)
-    area_name = Column(String(255), nullable=True)  # e.g. "G-9", "F-7"
+    area_name = Column(String(255), nullable=True)
 
     # Availability
     status = Column(Enum(WorkerStatus), default=WorkerStatus.offline)

@@ -4,17 +4,17 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.security import create_access_token, hash_password, verify_password
+from app.core.security import create_access_token
+from app.core.deps import get_current_user
 from app.models.user import User, UserRole
-from app.schemas.user import UserCreate, UserOut, Token
-
+from app.schemas.user import UserCreate, UserLogin, UserOut, Token
 
 router = APIRouter()
 
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(payload: UserCreate, db: Session = Depends(get_db)):
-    """Register with phone number only. Name and profile filled later (voice)."""
+    """Register with phone + name + role. OTP verification is simulated."""
     existing = db.query(User).filter(User.phone == payload.phone).first()
     if existing:
         raise HTTPException(
@@ -24,6 +24,7 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 
     user = User(
         phone=payload.phone,
+        name=payload.name,
         role=UserRole(payload.role),
     )
     db.add(user)
@@ -31,53 +32,36 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
 
     token = create_access_token(subject=str(user.id))
-    return Token(access_token=token, user=UserOut.model_validate(user))
+    return Token(access_token=token, token_type="bearer", user=UserOut.model_validate(user))
 
 
 @router.post("/login", response_model=Token)
-def login(phone: str, db: Session = Depends(get_db)):
-    """Login with phone number. No password for now (can add OTP later)."""
-    user = db.query(User).filter(User.phone == phone).first()
+def login(payload: UserLogin, db: Session = Depends(get_db)):
+    """Login with phone number (OTP simulated — any phone that exists works)."""
+    user = db.query(User).filter(User.phone == payload.phone).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Account deactivated",
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account deactivated")
 
     token = create_access_token(subject=str(user.id))
-    return Token(access_token=token, user=UserOut.model_validate(user))
+    return Token(access_token=token, token_type="bearer", user=UserOut.model_validate(user))
 
 
 @router.get("/me", response_model=UserOut)
-def get_me(user_id: int = Depends(_get_current_user), db: Session = Depends(get_db)):
-    """Get current user profile."""
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
+def get_me(current_user: User = Depends(get_current_user)):
+    """Get current authenticated user's profile."""
+    return current_user
 
 
-# --- Temporary auth dependency (replace with proper OAuth2) ---
-from app.core.security import decode_access_token
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
-security = HTTPBearer()
-
-
-def _get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+@router.patch("/me/name", response_model=UserOut)
+def update_name(
+    name: str,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> int:
-    token = credentials.credentials
-    user_id = decode_access_token(token)
-    if user_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-        )
-    return int(user_id)
+):
+    """Update the current user's display name."""
+    current_user.name = name
+    db.commit()
+    db.refresh(current_user)
+    return current_user
