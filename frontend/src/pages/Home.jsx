@@ -40,7 +40,7 @@ export default function Home({ onNavigate }) {
                 {ur() ? 'English' : 'اردو'}
               </span>
             </button>
-            <button className="btn btn-outline btn-sm" onClick={() => onNavigate('role')}>
+            <button className="btn btn-outline btn-sm" onClick={() => onNavigate('login')}>
               {t('Log in', 'لاگ ان')}
             </button>
             <button className="btn btn-primary btn-sm" onClick={() => onNavigate('role')}>

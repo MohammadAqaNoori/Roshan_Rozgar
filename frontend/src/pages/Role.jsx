@@ -16,19 +16,6 @@ export default function Role({ onNavigate }) {
     onNavigate('onboard');
   };
 
-  // "Already have account" buttons — set role first, navigate uses a callback
-  // so the guard in App.jsx can read the NEW role synchronously via a flag
-  const loginCustomer = () => {
-    setRole('customer');
-    onNavigate('discover');
-  };
-
-  const loginWorker = () => {
-    setRole('worker');
-    // We pass 'wdash' but flag that ob is already done for returning workers
-    onNavigate('wdash-returning');
-  };
-
   return (
     <>
       <header className="lnav">
@@ -45,10 +32,10 @@ export default function Role({ onNavigate }) {
           <div className="row between wrapit" style={{ gap: 16 }}>
             <div>
               <h1 style={{ fontSize: 'clamp(28px,4vw,40px)' }}>
-                {t('Welcome! Who are you?', 'خوش آمدید! آپ کون ہیں؟')}
+                {t('Create your account', 'اکاؤنٹ بنائیں')}
               </h1>
               <p className="muted">
-                {t('Choose one. You can switch later.', 'ایک چنیں۔ بعد میں بدل سکتے ہیں۔')}
+                {t('Choose how you want to use Roshan Rozgar.', 'بتائیں آپ روشن روزگار کیسے استعمال کرنا چاہتے ہیں۔')}
               </p>
             </div>
           </div>
@@ -125,27 +112,14 @@ export default function Role({ onNavigate }) {
             </button>
           </div>
 
-          {/* Already registered links */}
-          <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          {/* Already have an account — link to login */}
+          <div style={{ marginTop: 24, textAlign: 'center' }}>
             <p className="muted small">
-              {t('Already have an account?', 'پہلے سے رجسٹرڈ ہیں؟')}
+              {t('Already have an account?', 'پہلے سے رجسٹرڈ ہیں؟')}{' '}
+              <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('login')}>
+                {t('Log in', 'لاگ ان')}
+              </button>
             </p>
-            <div className="row wrapit" style={{ gap: 10, justifyContent: 'center' }}>
-              <button
-                className="btn btn-outline btn-sm"
-                onClick={loginCustomer}
-              >
-                <Icon name="home" />
-                {t('Customer login', 'گاہک لاگ ان')}
-              </button>
-              <button
-                className="btn btn-outline btn-sm"
-                onClick={loginWorker}
-              >
-                <Icon name="briefcase" />
-                {t('Worker login', 'کاریگر لاگ ان')}
-              </button>
-            </div>
           </div>
         </div>
       </main>

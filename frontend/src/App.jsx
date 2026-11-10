@@ -5,6 +5,7 @@ import { ToastContainer, AppHeader, BottomNav } from './components/Shared';
 // Pages
 import Home from './pages/Home';
 import Role from './pages/Role';
+import Login from './pages/Login';
 import CustomerReg from './pages/CustomerReg';
 import Onboard from './pages/Onboard';
 import Discover from './pages/Discover';
@@ -19,7 +20,7 @@ import WorkerDash from './pages/WorkerDash';
 import WorkerJobs from './pages/WorkerJobs';
 import Modal from './pages/Modal';
 
-const BARE_VIEWS = ['home', 'role', 'customerReg', 'onboard'];
+const BARE_VIEWS = ['home', 'role', 'login', 'customerReg', 'onboard'];
 const WORKER_V = ['wdash', 'wjob', 'wprofile'];
 
 function AppInner() {
@@ -49,6 +50,7 @@ function AppInner() {
     switch (view) {
       case 'home':       return <Home onNavigate={navigate} />;
       case 'role':       return <Role onNavigate={navigate} />;
+      case 'login':      return <Login onNavigate={navigate} />;
       case 'customerReg': return <CustomerReg onNavigate={navigate} />;
       case 'onboard':    return <Onboard onNavigate={navigate} />;
       case 'discover':   return <Discover onNavigate={navigate} />;
