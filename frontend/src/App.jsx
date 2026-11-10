@@ -1,37 +1,77 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from 'react';
+import { AppProvider, useApp } from './context/AppContext';
+import { ToastContainer, AppHeader, BottomNav } from './components/Shared';
 
 // Pages
-import LandingPage from "./pages/LandingPage";
-import WorkerOnboarding from "./pages/WorkerOnboarding";
-import WorkerDashboard from "./pages/WorkerDashboard";
-import CustomerHome from "./pages/CustomerHome";
-import WorkerDiscovery from "./pages/WorkerDiscovery";
-import JobChat from "./pages/JobChat";
-import JobTracking from "./pages/JobTracking";
-import ReviewPage from "./pages/ReviewPage";
+import Home from './pages/Home';
+import Role from './pages/Role';
+import Onboard from './pages/Onboard';
+import Discover from './pages/Discover';
+import Results from './pages/Results';
+import Profile from './pages/Profile';
+import Request from './pages/Request';
+import Chat from './pages/Chat';
+import Confirm from './pages/Confirm';
+import Track from './pages/Track';
+import Review from './pages/Review';
+import WorkerDash from './pages/WorkerDash';
+import WorkerJobs from './pages/WorkerJobs';
+import Modal from './pages/Modal';
 
-// Components
-import Layout from "./components/Layout";
+const BARE_VIEWS = ['home', 'role', 'onboard'];
+const WORKER_V = ['wdash', 'wjob', 'wprofile'];
+
+function AppInner() {
+  const [view, setView] = useState('home');
+  const { role, ob } = useApp();
+
+  const navigate = (v) => {
+    if (v === 'wdash' && !ob.done) {
+      setView('onboard');
+      return;
+    }
+    setView(v);
+    window.scrollTo(0, 0);
+  };
+
+  const isBare = BARE_VIEWS.includes(view);
+
+  const renderPage = () => {
+    switch (view) {
+      case 'home':       return <Home onNavigate={navigate} />;
+      case 'role':       return <Role onNavigate={navigate} />;
+      case 'onboard':    return <Onboard onNavigate={navigate} />;
+      case 'discover':   return <Discover onNavigate={navigate} />;
+      case 'results':    return <Results onNavigate={navigate} />;
+      case 'profile':    return <Profile own={false} onNavigate={navigate} />;
+      case 'wprofile':   return <Profile own={true} onNavigate={navigate} />;
+      case 'request':    return <Request onNavigate={navigate} />;
+      case 'chat':       return <Chat onNavigate={navigate} />;
+      case 'confirm':
+      case 'booked':     return <Confirm onNavigate={navigate} />;
+      case 'track':      return <Track onNavigate={navigate} />;
+      case 'review':     return <Review onNavigate={navigate} />;
+      case 'wdash':      return <WorkerDash onNavigate={navigate} />;
+      case 'wjob':       return <WorkerJobs onNavigate={navigate} />;
+      default:           return <Home onNavigate={navigate} />;
+    }
+  };
+
+  return (
+    <div>
+      {!isBare && <AppHeader activeView={view} onNavigate={navigate} />}
+      {renderPage()}
+      {!isBare && <BottomNav activeView={view} onNavigate={navigate} />}
+      <Modal onNavigate={navigate} />
+      <ToastContainer />
+    </div>
+  );
+}
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-
-        <Route element={<Layout />}>
-          {/* Worker flows */}
-          <Route path="/worker/onboarding" element={<WorkerOnboarding />} />
-          <Route path="/worker/dashboard" element={<WorkerDashboard />} />
-
-          {/* Customer flows */}
-          <Route path="/customer/home" element={<CustomerHome />} />
-          <Route path="/customer/find" element={<WorkerDiscovery />} />
-          <Route path="/job/:jobId/chat" element={<JobChat />} />
-          <Route path="/job/:jobId/track" element={<JobTracking />} />
-          <Route path="/job/:jobId/review" element={<ReviewPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AppProvider>
+      <AppInner />
+    </AppProvider>
   );
 }

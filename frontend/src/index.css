@@ -1,22 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap");
+@import "./styles/roshan.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  html,
-  body {
-    @apply h-full;
-  }
-  body {
-    @apply bg-gray-50 text-gray-900 antialiased;
-  }
-}
-
-/* Urdu text helper */
-.urdu {
-  font-family: "'Noto Nastaliq Urdu', sans-serif";
-  direction: rtl;
-  line-height: 2;
-}
