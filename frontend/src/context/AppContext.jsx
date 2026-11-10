@@ -225,15 +225,33 @@ export function AppProvider({ children }) {
       update((s) => ({
         ...s,
         _modal: null,
-        msgs: [...s.msgs, { id: 'm' + Date.now(), from: s.role, type: 'offer', amount, note, state: 'open', time: nowTime() }],
+        msgs: [...s.msgs, {
+          id: 'm' + Date.now(),
+          from: s.role,
+          type: 'offer',
+          amount,
+          note: note || '',
+          state: 'open',
+          time: nowTime(),
+        }],
       }));
     },
     acceptOffer: (msgId) => {
-      update((s) => ({
-        ...s,
-        msgs: s.msgs.map((m) => m.id === msgId ? { ...m, state: 'accepted' } : m.state === 'open' ? { ...m, state: 'superseded' } : m),
-        job: s.job ? { ...s.job, status: 'agreed', price: s.msgs.find((m) => m.id === msgId)?.amount } : null,
-      }));
+      update((s) => {
+        const offerMsg = s.msgs.find((m) => m.id === msgId);
+        const price = offerMsg?.amount ?? s.job?.price;
+        return {
+          ...s,
+          msgs: s.msgs.map((m) =>
+            m.id === msgId
+              ? { ...m, state: 'accepted' }
+              : m.type === 'offer' && m.state === 'open'
+              ? { ...m, state: 'superseded' }
+              : m
+          ),
+          job: s.job ? { ...s.job, status: 'agreed', price } : null,
+        };
+      });
     },
     quickReply: (text) => {
       actions.sendMsg(text);

@@ -155,7 +155,7 @@ export function ToastContainer() {
 
 // App shell header
 export function AppHeader({ activeView, onNavigate }) {
-  const { t, role, notifs } = useApp();
+  const { t, role } = useApp();
   const navItems = role === 'worker'
     ? [['wdash', 'home', t('Home', 'ہوم')], ['wjob', 'briefcase', t('Jobs', 'کام')], ['chat', 'msg', t('Chat', 'چیٹ')], ['wprofile', 'user', t('Profile', 'پروفائل')]]
     : [['discover', 'search', t('Find', 'تلاش')], ['track', 'calendar', t('Bookings', 'بکنگ')], ['chat', 'msg', t('Chat', 'چیٹ')], ['profile', 'user', t('Profile', 'پروفائل')]];

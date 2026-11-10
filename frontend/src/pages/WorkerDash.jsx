@@ -5,7 +5,7 @@ import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { CUSTOMER, catBy, stIdx } from '../lib/data';
 
 export default function WorkerDash({ onNavigate }) {
-  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, openModal, speak } = useApp();
+  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak } = useApp();
 
   const me = W('imran');
   const active = job && stIdx(job.status) >= stIdx('confirmed') && stIdx(job.status) < stIdx('closed');

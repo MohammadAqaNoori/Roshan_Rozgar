@@ -16,6 +16,19 @@ export default function Role({ onNavigate }) {
     onNavigate('onboard');
   };
 
+  // "Already have account" buttons — set role first, navigate uses a callback
+  // so the guard in App.jsx can read the NEW role synchronously via a flag
+  const loginCustomer = () => {
+    setRole('customer');
+    onNavigate('discover');
+  };
+
+  const loginWorker = () => {
+    setRole('worker');
+    // We pass 'wdash' but flag that ob is already done for returning workers
+    onNavigate('wdash-returning');
+  };
+
   return (
     <>
       <header className="lnav">
@@ -120,14 +133,14 @@ export default function Role({ onNavigate }) {
             <div className="row wrapit" style={{ gap: 10, justifyContent: 'center' }}>
               <button
                 className="btn btn-outline btn-sm"
-                onClick={() => { setRole('customer'); onNavigate('discover'); }}
+                onClick={loginCustomer}
               >
                 <Icon name="home" />
                 {t('Customer login', 'گاہک لاگ ان')}
               </button>
               <button
                 className="btn btn-outline btn-sm"
-                onClick={() => { setRole('worker'); onNavigate('wdash'); }}
+                onClick={loginWorker}
               >
                 <Icon name="briefcase" />
                 {t('Worker login', 'کاریگر لاگ ان')}

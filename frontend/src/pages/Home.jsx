@@ -5,7 +5,7 @@ import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, rs } from '../context/AppContext';
 import { Brand, Stars, StatusPill, WorkerCard, SpeakBtn, Disclaimer } from '../components/Shared';
-import { CATS, seedWorkers, CUSTOMER } from '../lib/data';
+import { CATS, seedWorkers } from '../lib/data';
 
 export default function Home({ onNavigate }) {
   const { t, ur, setLang } = useApp();
@@ -404,7 +404,7 @@ export default function Home({ onNavigate }) {
             <div>
               <h4>{t('Workers', 'کاریگر')}</h4>
               <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Join as a worker', 'شامل ہوں')}</a>
-              <a onClick={() => onNavigate('wdash')} style={{ cursor: 'pointer' }}>{t('Worker dashboard', 'ڈیش بورڈ')}</a>
+              <a onClick={() => onNavigate('wdash-returning')} style={{ cursor: 'pointer' }}>{t('Worker dashboard', 'ڈیش بورڈ')}</a>
             </div>
             {/* Contact */}
             <div>

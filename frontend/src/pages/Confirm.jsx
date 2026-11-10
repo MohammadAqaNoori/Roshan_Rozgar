@@ -5,7 +5,7 @@ import { Avatar } from '../lib/avatar';
 import { catBy, stIdx } from '../lib/data';
 
 export default function Confirm({ onNavigate }) {
-  const { t, job, W, wname, catName, confirmBooking, simCustomerConfirm, _confirming, setAvail } = useApp();
+  const { t, job, W, wname, catName, confirmBooking, _confirming } = useApp();
 
   if (!job || stIdx(job.status) < stIdx('agreed')) {
     return (
