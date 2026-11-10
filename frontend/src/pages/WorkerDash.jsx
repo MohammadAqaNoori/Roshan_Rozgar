@@ -7,11 +7,17 @@ import { CUSTOMER, catBy, stIdx } from '../lib/data';
 export default function WorkerDash({ onNavigate }) {
   const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak } = useApp();
 
-  const me = W('imran');
+  const me = W('imran');  // seeded worker — used only for stats/reviews demo data
   const active = job && stIdx(job.status) >= stIdx('confirmed') && stIdx(job.status) < stIdx('closed');
   const incoming = job && ['requested', 'negotiating'].includes(job.status);
   const waitConfirm = job && job.status === 'agreed';
   const on = me.status === 'available';
+
+  // Actual logged-in worker's name and trade from onboarding state
+  const displayName = ob.name && ob.name.trim() ? ob.name.trim() : me.name;
+  const displayTrade = ob.profession ? ob.profession : me.cat;
+  const displayArea = ob.area ? ob.area : me.area;
+  const tradeObj = catBy(displayTrade);
 
   // Availability card
   const availCard = (
@@ -158,10 +164,13 @@ export default function WorkerDash({ onNavigate }) {
             )}
             <div>
               <p className="muted">{t('Assalam-o-Alaikum', 'السلام علیکم')}</p>
-              <h1 style={{ fontSize: 'clamp(24px,3vw,32px)' }}>{wname(me)}</h1>
+              <h1 style={{ fontSize: 'clamp(24px,3vw,32px)' }}>{displayName}</h1>
             </div>
           </div>
-          <span className="pill pill-info"><Icon name={catBy(me.cat).icon} />{catName(me.cat)} · {me.area}</span>
+          <span className="pill pill-info">
+            <Icon name={tradeObj.icon} />
+            {t(tradeObj.en, tradeObj.ur)}{displayArea ? ` · ${displayArea}` : ''}
+          </span>
         </div>
 
         <div className="wd-grid">
