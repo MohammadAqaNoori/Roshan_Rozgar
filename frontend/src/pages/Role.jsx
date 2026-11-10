@@ -4,16 +4,16 @@ import { useApp } from '../context/AppContext';
 import { Brand, LangToggle } from '../components/Shared';
 
 export default function Role({ onNavigate }) {
-  const { t, ur, setRole } = useApp();
+  const { t, ur, setRole, startCustomerSignup, startWorkerSignup } = useApp();
 
   const goCustomer = () => {
-    setRole('customer');
+    startCustomerSignup();
     onNavigate('customerReg');
   };
 
   const goWorker = () => {
-    setRole('worker');
-    onNavigate('onboard');
+    startWorkerSignup();
+    onNavigate('onboard', { fresh: true });
   };
 
   return (

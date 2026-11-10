@@ -27,15 +27,16 @@ function AppInner() {
   const [view, setView] = useState('home');
   const { role, ob } = useApp();
 
-  const navigate = (v) => {
-    // 'wdash-returning' means a worker who already has a profile — skip onboarding
+  const navigate = (v, opts = {}) => {
+    // 'wdash-returning' means a worker who already finished onboarding — skip it
     if (v === 'wdash-returning') {
       setView('wdash');
       window.scrollTo(0, 0);
       return;
     }
     // Worker going to dashboard without completing onboarding → send to onboard
-    if (v === 'wdash' && role === 'worker' && !ob.done) {
+    // opts.fresh=true bypasses this guard (used after startWorkerSignup resets ob)
+    if (v === 'wdash' && role === 'worker' && !ob.done && !opts.fresh) {
       setView('onboard');
       window.scrollTo(0, 0);
       return;

@@ -124,6 +124,21 @@ export function AppProvider({ children }) {
     setLang: (lang) => update({ lang }),
     setRole: (role) => update({ role }),
 
+    // Start a fresh customer signup — clears any previous session data
+    startCustomerSignup: () => update((s) => ({
+      ...freshState(),
+      lang: s.lang,
+      role: 'customer',
+    })),
+
+    // Start a fresh worker signup — clears previous onboarding state
+    startWorkerSignup: () => update((s) => ({
+      ...freshState(),
+      lang: s.lang,
+      role: 'worker',
+      ob: { ...freshState().ob, step: 0, done: false },
+    })),
+
     // Onboarding
     obNext: () => update((s) => ({ ...s, ob: { ...s.ob, step: Math.min(s.ob.step + 1, 9) } })),
     obBack: () => update((s) => ({ ...s, ob: { ...s.ob, step: Math.max(s.ob.step - 1, 0) } })),
