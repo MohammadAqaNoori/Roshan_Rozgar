@@ -43,9 +43,6 @@ export default function Home({ onNavigate }) {
             <button className="btn btn-outline btn-sm" onClick={() => onNavigate('login')}>
               {t('Log in', 'لاگ ان')}
             </button>
-            <button className="btn btn-primary btn-sm" onClick={() => onNavigate('role')}>
-              {t('Sign up', 'رجسٹر کریں')}
-            </button>
           </div>
         </div>
       </header>
