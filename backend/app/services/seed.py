@@ -1,5 +1,6 @@
 """
 Database seeding — creates demo workers, jobs, and reviews.
+v2.0 — Localized for Afghanistan (Karigar)
 All seeded data is clearly disclosed in README as required by competition rules.
 """
 
@@ -15,28 +16,27 @@ from app.models.message import Message, MessageType
 
 
 WORKERS = [
-    {"name": "Muhammad Imran",   "nameUr": "محمد عمران",   "phone": "+923001111001", "trade": Trade.plumber,       "exp": 12, "area": "G-11, Islamabad", "lat": 33.6844, "lng": 73.0479, "status": WorkerStatus.available, "rating": 4.8, "jobs": 142, "reviews": 126, "skills": "Leak repair,Geyser fitting,Bathroom fittings,Pipe replacement", "days": "Mon,Tue,Wed,Thu,Fri,Sat", "hours": "9 AM – 7 PM",  "bio": "12 سال کا تجربہ۔ گھریلو اور تجارتی پانی کا کام۔"},
-    {"name": "Abdul Rehman",     "nameUr": "عبدالرحمٰن",   "phone": "+923001111002", "trade": Trade.electrician,   "exp": 15, "area": "G-10, Islamabad", "lat": 33.6750, "lng": 73.0350, "status": WorkerStatus.available, "rating": 4.9, "jobs": 236, "reviews": 210, "skills": "House wiring,UPS & inverter,Fault finding,Switchboard", "days": "Mon,Tue,Wed,Thu,Fri,Sat,Sun", "hours": "8 AM – 9 PM",  "bio": "15 سال کا تجربہ۔ گھریلو وائرنگ اور یو پی ایس کا ماہر۔"},
-    {"name": "Shahid Mehmood",   "nameUr": "شاہد محمود",   "phone": "+923001111003", "trade": Trade.ac_technician, "exp": 8,  "area": "F-11, Islamabad", "lat": 33.6900, "lng": 73.0250, "status": WorkerStatus.busy,      "rating": 4.6, "jobs": 97,  "reviews": 88,  "skills": "AC service,Gas refill,Installation,PCB repair", "days": "Mon,Tue,Wed,Thu,Fri,Sat", "hours": "10 AM – 8 PM", "bio": "8 سال کا تجربہ۔ ہر برانڈ کے اے سی کی سروس اور گیس بھرنا۔"},
-    {"name": "Bilal Ahmed",      "nameUr": "بلال احمد",    "phone": "+923001111004", "trade": Trade.plumber,       "exp": 5,  "area": "G-9, Islamabad",  "lat": 33.6700, "lng": 73.0600, "status": WorkerStatus.available, "rating": 4.4, "jobs": 35,  "reviews": 31,  "skills": "Tap & mixer,Water tank & pump,Leak repair", "days": "Mon,Tue,Wed,Thu,Fri", "hours": "9 AM – 6 PM",  "bio": "5 سال کا تجربہ۔ نلکے، ٹینکی اور موٹر کا کام۔"},
-    {"name": "Naveed Akhtar",    "nameUr": "نوید اختر",    "phone": "+923001111005", "trade": Trade.carpenter,     "exp": 20, "area": "I-8, Islamabad",  "lat": 33.6557, "lng": 73.0256, "status": WorkerStatus.available, "rating": 4.7, "jobs": 70,  "reviews": 64,  "skills": "Door repair,Cupboards,Locks & hinges,Furniture polish", "days": "Mon,Tue,Wed,Thu,Fri,Sat", "hours": "9 AM – 6 PM",  "bio": "20 سال کا تجربہ۔ دروازے، الماری اور فرنیچر کا کام۔"},
-    {"name": "Tariq Mehmood",    "nameUr": "طارق محمود",   "phone": "+923001111006", "trade": Trade.appliance,     "exp": 11, "area": "Satellite Town",  "lat": 33.5973, "lng": 73.0479, "status": WorkerStatus.available, "rating": 4.5, "jobs": 58,  "reviews": 52,  "skills": "Fridge,Washing machine,Microwave,Water dispenser", "days": "Mon,Tue,Wed,Thu,Fri,Sat", "hours": "10 AM – 7 PM", "bio": "11 سال کا تجربہ۔ فریج اور واشنگ مشین کی مرمت۔"},
-    {"name": "Zahid Hussain",    "nameUr": "زاہد حسین",    "phone": "+923001111007", "trade": Trade.painter,       "exp": 10, "area": "Saddar, RWP",    "lat": 33.5900, "lng": 73.0450, "status": WorkerStatus.offline,   "rating": 4.5, "jobs": 44,  "reviews": 40,  "skills": "Room paint,Seepage fix,Exterior,Polish & enamel", "days": "Mon,Tue,Wed,Thu,Fri", "hours": "8 AM – 5 PM",  "bio": "10 سال کا تجربہ۔ کمرے کا رنگ اور سیلن کا علاج۔"},
-    {"name": "Asif Ali",         "nameUr": "آصف علی",      "phone": "+923001111008", "trade": Trade.mechanic,      "exp": 9,  "area": "G-13, Islamabad", "lat": 33.6500, "lng": 73.0200, "status": WorkerStatus.available, "rating": 4.3, "jobs": 30,  "reviews": 27,  "skills": "Car service,Battery,Bike repair,Denting", "days": "Mon,Tue,Wed,Thu,Fri,Sat", "hours": "9 AM – 8 PM",  "bio": "9 سال کا تجربہ۔ گاڑی اور بائیک کی مرمت۔"},
+    {"name": "Ahmad Shah",       "nameUr": "احمد شاه",      "phone": "+93700111001", "trade": Trade.plumber,       "exp": 11, "area": "Shahr-e-Naw, Kabul",      "lat": 34.5260, "lng": 69.1781, "status": WorkerStatus.available, "rating": 4.8, "jobs": 128, "reviews": 112, "skills": "Leak repair,Geyser fitting,Bathroom fittings,Pipe replacement", "days": "Sat,Sun,Mon,Tue,Wed,Thu", "hours": "8 AM – 7 PM",  "bio": "۱۱ سال تجربه۔ کار لوله کشی خانگی و تجاری."},
+    {"name": "Abdul Karim",       "nameUr": "عبدالکریم",     "phone": "+93700111002", "trade": Trade.electrician,   "exp": 14, "area": "Wazir Akbar Khan, Kabul", "lat": 34.5280, "lng": 69.1950, "status": WorkerStatus.available, "rating": 4.9, "jobs": 221, "reviews": 198, "skills": "House wiring,UPS & inverter,Fault finding,Solar panel", "days": "Sat,Sun,Mon,Tue,Wed,Thu,Fri", "hours": "7 AM – 9 PM",  "bio": "۱۴ سال تجربه. متخصص سیم کشی و پانل خورشیدی."},
+    {"name": "Nasir Ahmad",       "nameUr": "نصیر احمد",     "phone": "+93700111003", "trade": Trade.ac_technician, "exp": 7,  "area": "Macroyan, Kabul",         "lat": 34.5200, "lng": 69.2050, "status": WorkerStatus.busy,      "rating": 4.6, "jobs": 84,  "reviews": 76,  "skills": "AC service,Gas refill,Installation,PCB repair", "days": "Sat,Sun,Mon,Tue,Wed", "hours": "9 AM – 7 PM",  "bio": "۷ سال تجربه. سرویس کولر و شارژ گاز."},
+    {"name": "Habibullah",        "nameUr": "حبیب‌الله",     "phone": "+93700111004", "trade": Trade.carpenter,     "exp": 18, "area": "Khair Khana, Kabul",      "lat": 34.5450, "lng": 69.1650, "status": WorkerStatus.available, "rating": 4.7, "jobs": 65,  "reviews": 59,  "skills": "Door repair,Cupboards,Furniture polish,Locks & hinges", "days": "Sat,Sun,Mon,Tue,Wed,Thu", "hours": "8 AM – 6 PM",  "bio": "۱۸ سال تجربه. کار نجاری و مبلمان."},
+    {"name": "Wahidullah",        "nameUr": "واحدالله",     "phone": "+93700111005", "trade": Trade.mason,         "exp": 15, "area": "Herat City, Herat",      "lat": 34.3482, "lng": 62.2041, "status": WorkerStatus.available, "rating": 4.8, "jobs": 95,  "reviews": 87,  "skills": "Brickwork,Plastering,Tiling,Concrete", "days": "Sat,Sun,Mon,Tue,Wed,Thu", "hours": "7 AM – 6 PM",  "bio": "۱۵ سال تجربه. کار معماری و بتون."},
+    {"name": "Zarif Khan",        "nameUr": "ظریف خان",      "phone": "+93700111006", "trade": Trade.painter,       "exp": 9,  "area": "Mazar City, Mazar-i-Sharif", "lat": 36.7069, "lng": 67.1100, "status": WorkerStatus.offline,   "rating": 4.5, "jobs": 49,  "reviews": 44,  "skills": "Room paint,Seepage fix,Exterior,Polish & enamel", "days": "Sat,Sun,Mon,Tue,Wed", "hours": "8 AM – 5 PM",  "bio": "۹ سال تجربه. رنگ‌کاری و رطوبت."},
+    {"name": "Omar Farooq",       "nameUr": "عمر فاروق",     "phone": "+93700111007", "trade": Trade.mechanic,      "exp": 10, "area": "Kandahar City, Kandahar", "lat": 31.6289, "lng": 65.7372, "status": WorkerStatus.available, "rating": 4.3, "jobs": 35,  "reviews": 31,  "skills": "Car service,Battery,Bike repair,Denting & painting", "days": "Sat,Sun,Mon,Tue,Wed,Thu", "hours": "9 AM – 8 PM",  "bio": "۱۰ سال تجربه. سرویس موتر و موترسایکل."},
+    {"name": "Yusuf Rahimi",      "nameUr": "یوسف رحیمی",    "phone": "+93700111008", "trade": Trade.appliance,     "exp": 12, "area": "Karte Seh, Kabul",       "lat": 34.5100, "lng": 69.1700, "status": WorkerStatus.available, "rating": 4.6, "jobs": 60,  "reviews": 53,  "skills": "Fridge,Washing machine,Microwave,Water dispenser", "days": "Sat,Sun,Mon,Tue,Wed,Thu", "hours": "9 AM – 7 PM",  "bio": "۱۲ سال تجربه. تعمیر وسایل برقی."},
 ]
 
 CUSTOMER = {
-    "name": "Ayesha Khan",
-    "phone": "+923335550000",
+    "name": "Mariam Noori",
+    "phone": "+93700100100",
 }
 
 SAMPLE_REVIEWS = [
-    {"worker_idx": 0, "stars": 5, "text": "Fixed the geyser pipe in one visit. Cleaned up after himself.", "tags": "Fixed first time,Clean work"},
-    {"worker_idx": 0, "stars": 5, "text": "Bathroom mixer replaced. Price was exactly as agreed in chat.", "tags": "Fair price"},
-    {"worker_idx": 0, "stars": 4, "text": "Good work, came 40 minutes late but called ahead.", "tags": "Polite"},
-    {"worker_idx": 1, "stars": 5, "text": "Found the short circuit in 10 minutes. Very calm and careful.", "tags": "Fixed first time"},
-    {"worker_idx": 2, "stars": 5, "text": "AC cooling restored. Showed me the gas pressure reading.", "tags": "On time"},
-    {"worker_idx": 4, "stars": 5, "text": "Kitchen cupboard hinges replaced. Doors close properly now.", "tags": "Clean work"},
+    {"worker_idx": 0, "stars": 5, "text": "Repaired the leaking pipe quickly and cleaned up after. Very professional.", "tags": "Fixed first time,Clean work"},
+    {"worker_idx": 0, "stars": 5, "text": "Replaced bathroom mixer as agreed. No surprises on price.", "tags": "Fair price"},
+    {"worker_idx": 1, "stars": 5, "text": "Found the short circuit in minutes. Calm and careful work.", "tags": "Fixed first time"},
+    {"worker_idx": 2, "stars": 5, "text": "AC cooling restored. He showed the gas pressure reading before and after.", "tags": "On time"},
+    {"worker_idx": 3, "stars": 5, "text": "Fixed the broken door hinges perfectly. Very skilled ustad.", "tags": "Clean work"},
 ]
 
 
@@ -83,7 +83,7 @@ def seed_database():
             db.flush()
             worker_objs.append(worker)
 
-        # Completed job + reviews for top 3 workers
+        # Completed job + reviews for top workers
         for rev in SAMPLE_REVIEWS:
             worker = worker_objs[rev["worker_idx"]]
             created_at = datetime.utcnow() - timedelta(days=10)
@@ -98,7 +98,7 @@ def seed_database():
                 area_name=worker.area_name,
                 lat=worker.lat,
                 lng=worker.lng,
-                agreed_price=1200.0,
+                agreed_price=300.0,
                 status=JobStatus.completed,
                 created_at=created_at,
                 completed_at=completed_at,
@@ -108,9 +108,9 @@ def seed_database():
 
             # Chat messages
             db.add(Message(job_id=job.id, sender_id=cust_user.id, type=MessageType.text,
-                           content="Kya aap aa saktay hain?"))
+                           content="می‌توانید بیایید؟"))
             db.add(Message(job_id=job.id, sender_id=worker.user_id, type=MessageType.text,
-                           content="Haan, main aa sakta hoon."))
+                           content="بله، می‌توانم بیایم."))
 
             review = Review(
                 job_id=job.id,
@@ -127,10 +127,10 @@ def seed_database():
 
         print("\n✅ Seed complete!")
         print(f"   Workers : {len(WORKERS)}")
-        print(f"   Customer: 1 (Ayesha Khan)")
+        print(f"   Customer: 1 (Mariam Noori)")
         print(f"   Reviews : {len(SAMPLE_REVIEWS)}")
         print(f"\n   Customer phone: {CUSTOMER['phone']}")
-        print(f"   Worker phone  : {WORKERS[0]['phone']} (Muhammad Imran)")
+        print(f"   Worker phone  : {WORKERS[0]['phone']} (Ahmad Shah)")
 
     except Exception as e:
         db.rollback()

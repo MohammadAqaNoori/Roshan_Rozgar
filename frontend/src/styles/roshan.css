@@ -1,8 +1,9 @@
-/* Roshan Rozgar — full CSS extracted from the design prototype */
+/* Karigar — full CSS for the Afghanistan marketplace platform */
 
 :root{
-  --emerald:#087F5B; --emerald-600:#066B4D; --forest:#07513D; --forest-900:#043427;
+  --emerald:#006400; --emerald-600:#1A7A1A; --forest:#004300; --forest-900:#003300;
   --amber:#F4B942; --amber-200:#FCEBC4; --amber-50:#FEF7E6; --amber-ink:#7A5200;
+  --accent:#C8102E; --accent-50:#FDECEA;
   --bg:#FAFAF7; --surface:#FFFFFF; --soft:#F0F2F1; --line:#E1E6E3; --line-2:#CED6D2;
   --ink:#202B29; --muted:#5E6A66; --muted-2:#77827E;
   --success:#269B69; --success-50:#E6F5EE; --error:#D94848; --error-50:#FCEDED;
@@ -21,12 +22,12 @@
 *{box-sizing:border-box}
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-en);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;margin:0;min-height:100%}
-html[lang="ur"] body{font-family:var(--f-ur);line-height:2}
+html[lang="fa"] body,html[lang="ur"] body{font-family:var(--f-ur);line-height:2}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--emerald)}
 h1,h2,h3,h4{margin:0;color:var(--forest);text-wrap:balance;letter-spacing:-.02em;line-height:1.15}
-html[lang="ur"] h1,html[lang="ur"] h2,html[lang="ur"] h3,html[lang="ur"] h4{letter-spacing:0;line-height:1.9}
+html[lang="fa"] h1,html[lang="fa"] h2,html[lang="fa"] h3,html[lang="fa"] h4,html[lang="ur"] h1,html[lang="ur"] h2,html[lang="ur"] h3,html[lang="ur"] h4{letter-spacing:0;line-height:1.9}
 p{margin:0}
 .ur{font-family:var(--f-ur);line-height:2;letter-spacing:0}
 .num{font-variant-numeric:tabular-nums}
@@ -47,7 +48,7 @@ p{margin:0}
 .small{font-size:14px}
 .xs{font-size:12.5px}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--emerald)}
-html[lang="ur"] .eyebrow{letter-spacing:0;font-size:14px}
+html[lang="fa"] .eyebrow,html[lang="ur"] .eyebrow{letter-spacing:0;font-size:14px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* buttons */
@@ -66,7 +67,7 @@ html[lang="ur"] .eyebrow{letter-spacing:0;font-size:14px}
 .btn-lg{min-height:60px;font-size:18px;border-radius:16px;padding-inline:26px}
 .btn-sm{min-height:40px;padding:6px 14px;font-size:14px;border-radius:12px}
 .btn[disabled],.btn.is-disabled{background:var(--soft);color:var(--muted-2);border-color:var(--line);box-shadow:none;cursor:not-allowed}
-html[lang="ur"] .btn{font-weight:600;padding-block:4px}
+html[lang="fa"] .btn,html[lang="ur"] .btn{font-weight:600;padding-block:4px}
 .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:inline-grid;place-items:center;color:var(--forest)}
 .icon-btn:hover{border-color:var(--emerald);color:var(--emerald)}
 .speak{width:44px;height:44px;border-radius:99px;border:0;background:var(--amber-50);color:var(--amber-ink);display:inline-grid;place-items:center;flex:none}
@@ -78,7 +79,7 @@ html[lang="ur"] .btn{font-weight:600;padding-block:4px}
 .chip:hover{border-color:var(--emerald)}
 .chip[aria-pressed="true"],.chip.pressed{background:var(--forest);border-color:var(--forest);color:#fff}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 10px;font-size:12.5px;font-weight:700;white-space:nowrap}
-html[lang="ur"] .pill{font-weight:600;padding-block:0}
+html[lang="fa"] .pill,html[lang="ur"] .pill{font-weight:600;padding-block:0}
 .pill-av{background:var(--success-50);color:#17714A}
 .pill-busy{background:var(--amber-50);color:var(--amber-ink)}
 .pill-off{background:var(--soft);color:var(--muted)}
@@ -135,7 +136,7 @@ html[lang="ur"] .pill{font-weight:600;padding-block:0}
 .hero-grid{display:grid;gap:40px;align-items:center}
 @media (min-width:1000px){.hero-grid{grid-template-columns:1.05fr 1fr;gap:56px}.hero{padding-block:72px 88px}}
 .hero h1{font-size:clamp(36px,6.4vw,64px);font-weight:800;line-height:1.02;letter-spacing:-.035em;color:var(--forest)}
-html[lang="ur"] .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.8;font-weight:700}
+html[lang="fa"] .hero h1,html[lang="ur"] .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.8;font-weight:700}
 .hero h1 em{font-style:normal;color:var(--emerald);position:relative;white-space:nowrap}
 .hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.18em;background:var(--amber);border-radius:4px;z-index:-1;opacity:.85}
 .hero .lede{font-size:18px;color:var(--muted);max-width:34em;margin-top:18px}
@@ -160,7 +161,7 @@ html[lang="ur"] .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.8;font-wei
 @keyframes wv{50%{transform:scaleY(.35)}}
 .lsec{padding-block:56px}
 .lsec h2{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.03em}
-html[lang="ur"] .lsec h2{font-weight:700}
+html[lang="fa"] .lsec h2,html[lang="ur"] .lsec h2{font-weight:700}
 .lsec .sub{color:var(--muted);font-size:17px;max-width:40em;margin-top:10px}
 .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px}
 @media (min-width:700px){.svc-grid{grid-template-columns:repeat(4,1fr);gap:16px}}

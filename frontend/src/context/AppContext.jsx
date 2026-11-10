@@ -1,10 +1,11 @@
 /**
- * Global app state — mirrors the prototype's `S` object with React Context.
+ * Global app state — Karigar v2.0 (Afghanistan)
+ * Language: English (en) + Dari (fa)
  */
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { seedWorkers, CUSTOMER, DEFAULT_JOB, classify, catBy, stIdx } from '../lib/data';
 
-const KEY = 'rr-proto-v1';
+const KEY = 'karigar-v1';
 
 const freshState = () => ({
   lang: 'en',
@@ -12,7 +13,7 @@ const freshState = () => ({
   workers: seedWorkers(),
   ob: {
     step: 0,
-    lang: 'ur',
+    lang: 'fa',
     name: '',
     nameState: 'idle',
     profession: '',
@@ -20,12 +21,12 @@ const freshState = () => ({
     area: '',
     exp: '',
     photo: '',
-    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    hours: '9 AM – 7 PM',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '8 AM – 7 PM',
     done: false,
   },
   f: { q: '', cat: 'plumber', dist: 5, availOnly: false, minRating: 0, view: 'list' },
-  sel: 'imran',
+  sel: 'ahmad',
   req: {
     voiceState: 'idle',
     transcript: '',
@@ -35,7 +36,7 @@ const freshState = () => ({
     answers: {},
     photo: '',
     imgState: 'idle',
-    time: 'Today, 5–7 PM',
+    time: 'Today, 4–6 PM',
     address: CUSTOMER.address,
   },
   job: null,
@@ -80,7 +81,8 @@ export function AppProvider({ children }) {
   // Sync lang/dir to <html>
   useEffect(() => {
     document.documentElement.lang = state.lang;
-    document.documentElement.dir = state.lang === 'ur' ? 'rtl' : 'ltr';
+    // Dari (fa) is RTL; English (en) is LTR
+    document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
   }, [state.lang]);
 
   // Helper to update state
@@ -88,14 +90,15 @@ export function AppProvider({ children }) {
     setState((prev) => (typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }));
   }, []);
 
-  // Language helpers
-  const ur = useCallback(() => state.lang === 'ur', [state.lang]);
-  const t = useCallback((en, u) => (ur() && u ? u : en), [ur]);
+  // Language helpers — 'fa' = Dari
+  const fa = useCallback(() => state.lang === 'fa', [state.lang]);
+  // t(english, dari) — returns the right string for current lang
+  const t = useCallback((en, d) => (fa() && d ? d : en), [fa]);
 
   // Worker helpers
   const W = useCallback((id) => state.workers.find((w) => w.id === id), [state.workers]);
-  const wname = useCallback((w) => (ur() ? w.nameUr : w.name), [ur]);
-  const catName = useCallback((id) => { const c = catBy(id); return ur() ? c.ur : c.en; }, [ur]);
+  const wname = useCallback((w) => (fa() ? w.nameFa : w.name), [fa]);
+  const catName = useCallback((id) => { const c = catBy(id); return fa() ? c.fa : c.en; }, [fa]);
 
   // Toast
   const showToast = useCallback((msg, ok = false) => {
@@ -103,35 +106,36 @@ export function AppProvider({ children }) {
     setTimeout(() => setToastMsg(null), 2800);
   }, []);
 
-  // Speech synthesis
-  const speak = useCallback((en, u) => {
+  // Speech synthesis — supports Dari (fa-AF / fa)
+  const speak = useCallback((en, d) => {
     try {
       if (window.speechSynthesis) {
         speechSynthesis.cancel();
         const voices = speechSynthesis.getVoices() || [];
-        const urV = voices.find((v) => /^ur|hi/i.test(v.lang));
-        const useUr = ur() && urV;
-        const ut = new SpeechSynthesisUtterance(useUr ? u : en);
-        if (useUr) { ut.voice = urV; ut.lang = urV.lang; } else ut.lang = 'en-US';
+        // Prefer fa-AF, fa-IR, then any Persian/Dari voice
+        const faV = voices.find((v) => /^fa/i.test(v.lang));
+        const useFa = fa() && faV;
+        const ut = new SpeechSynthesisUtterance(useFa ? d : en);
+        if (useFa) { ut.voice = faV; ut.lang = faV.lang; } else ut.lang = 'en-US';
         ut.rate = 0.95;
         speechSynthesis.speak(ut);
       }
     } catch (e) {}
-  }, [ur]);
+  }, [fa]);
 
   // Actions
   const actions = {
     setLang: (lang) => update({ lang }),
     setRole: (role) => update({ role }),
 
-    // Start a fresh customer signup — clears any previous session data
+    // Start a fresh customer signup
     startCustomerSignup: () => update((s) => ({
       ...freshState(),
       lang: s.lang,
       role: 'customer',
     })),
 
-    // Start a fresh worker signup — clears previous onboarding state
+    // Start a fresh worker signup
     startWorkerSignup: () => update((s) => ({
       ...freshState(),
       lang: s.lang,
@@ -148,7 +152,7 @@ export function AppProvider({ children }) {
     obNameListen: () => {
       update((s) => ({ ...s, ob: { ...s.ob, nameState: 'listening' } }));
       setTimeout(() => {
-        update((s) => ({ ...s, ob: { ...s.ob, nameState: 'heard', name: 'Muhammad Imran' } }));
+        update((s) => ({ ...s, ob: { ...s.ob, nameState: 'heard', name: 'Ahmad Shah' } }));
       }, 1800);
     },
     obNameYes: () => update((s) => ({ ...s, ob: { ...s.ob, nameState: 'confirmed' } })),
@@ -181,14 +185,15 @@ export function AppProvider({ children }) {
     reqListen: () => {
       update((s) => ({ ...s, req: { ...s.req, voiceState: 'listening' } }));
       setTimeout(() => {
+        const transcript = 'لوله زیر آشپزخانه نشت می‌کند، آب می‌چکد. لطفاً امروز بیایید.';
         update((s) => ({
           ...s,
           req: {
             ...s.req,
             voiceState: 'idle',
-            transcript: 'Kitchen ke sink ke neeche se paani tapak raha hai, pipe purana lagta hai.',
-            aiCat: classify('Kitchen ke sink ke neeche se paani tapak raha hai, pipe purana lagta hai.'),
-            cat: classify('Kitchen ke sink ke neeche se paani tapak raha hai, pipe purana lagta hai.'),
+            transcript,
+            aiCat: classify(transcript),
+            cat: classify(transcript),
           },
         }));
       }, 2000);
@@ -237,7 +242,7 @@ export function AppProvider({ children }) {
           update((s) => ({
             ...s,
             _typing: false,
-            msgs: [...s.msgs, { id: 'm' + Date.now(), from: s.role === 'customer' ? 'worker' : 'customer', type: 'text', text: 'Theek hai, main 5 baje aa sakta hoon.', time: nowTime() }],
+            msgs: [...s.msgs, { id: 'm' + Date.now(), from: s.role === 'customer' ? 'worker' : 'customer', type: 'text', text: 'بسیار خوب، می‌توانم ساعت ۴ بیایم.', time: nowTime() }],
           }));
         }, 1200);
       }, 800);
@@ -283,6 +288,8 @@ export function AppProvider({ children }) {
     quickReply: (text) => {
       actions.sendMsg(text);
     },
+
+    clearChat: () => update((s) => ({ ...s, msgs: [], job: null })),
 
     // Booking
     confirmBooking: () => {
@@ -354,12 +361,11 @@ export function AppProvider({ children }) {
       showToast('Review added to profile', true);
     },
 
-    // Worker availability — uses the first worker matching ob.name or falls back to 'imran'
+    // Worker availability
     setAvail: (status) => update((s) => {
-      // Find the worker whose user matches the logged-in worker by ob.name or use imran as demo fallback
       const targetId = s.ob?.name
-        ? s.workers.find((w) => w.name === s.ob.name || w.nameUr === s.ob.name)?.id ?? 'imran'
-        : 'imran';
+        ? s.workers.find((w) => w.name === s.ob.name || w.nameFa === s.ob.name)?.id ?? 'ahmad'
+        : 'ahmad';
       const workers = s.workers.map((w) => w.id === targetId ? { ...w, status, is_available: status === 'available' } : w);
       return { ...s, workers };
     }),
@@ -381,7 +387,7 @@ export function AppProvider({ children }) {
 
   const value = {
     ...state,
-    ur,
+    fa,
     t,
     W,
     wname,
@@ -411,4 +417,6 @@ function nowTime() {
   return `${h}:${m} ${ap}`;
 }
 
-export const rs = (n) => 'Rs ' + Number(n).toLocaleString('en-PK');
+// Afghan Afghani currency formatter
+// e.g. afn(300) → "؋ 300"
+export const afn = (n) => '؋ ' + Number(n).toLocaleString('fa-AF');

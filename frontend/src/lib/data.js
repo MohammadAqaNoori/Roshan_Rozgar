@@ -1,113 +1,199 @@
 /**
  * Static data — categories, skills, areas, avatar looks, seed workers, customer.
+ * v2.0 — Localized for Afghanistan (Dari + English)
  */
 
+// ── Trade categories ──────────────────────────────────────────────────────────
 export const CATS = [
-  { id: 'plumber', en: 'Plumber', ur: 'پلمبر', icon: 'droplet', hint: 'Leaks, taps, geysers' },
-  { id: 'electrician', en: 'Electrician', ur: 'الیکٹریشن', icon: 'zap', hint: 'Wiring, fans, UPS' },
-  { id: 'ac', en: 'AC Technician', ur: 'اے سی مکینک', icon: 'snow', hint: 'Service, gas, install' },
-  { id: 'carpenter', en: 'Carpenter', ur: 'بڑھئی', icon: 'hammer', hint: 'Doors, cupboards' },
-  { id: 'painter', en: 'Painter', ur: 'پینٹر', icon: 'brush', hint: 'Rooms, seepage' },
-  { id: 'mechanic', en: 'Mechanic', ur: 'مکینک', icon: 'car', hint: 'Car & bike' },
-  { id: 'appliance', en: 'Appliance Repair', ur: 'مشین مرمت', icon: 'washer', hint: 'Fridge, washing machine' },
-  { id: 'general', en: 'General Repair', ur: 'عام مرمت', icon: 'wrench', hint: 'Odd jobs at home' },
+  { id: 'plumber',     en: 'Plumber',         fa: 'نل‌بند',         icon: 'droplet', hint: 'Leaks, taps, pipes' },
+  { id: 'electrician', en: 'Electrician',      fa: 'برق‌کار',        icon: 'zap',     hint: 'Wiring, fans, UPS' },
+  { id: 'ac',          en: 'AC Technician',    fa: 'مکانیک تکلیف',   icon: 'snow',    hint: 'Service, gas, install' },
+  { id: 'carpenter',   en: 'Carpenter',        fa: 'نجار',           icon: 'hammer',  hint: 'Doors, cupboards, furniture' },
+  { id: 'painter',     en: 'Painter',          fa: 'رنگمال',         icon: 'brush',   hint: 'Rooms, exterior, seepage' },
+  { id: 'mechanic',    en: 'Mechanic',         fa: 'مکانیک',         icon: 'car',     hint: 'Car & bike repair' },
+  { id: 'mason',       en: 'Mason / Builder',  fa: 'معمار',          icon: 'home',    hint: 'Bricks, concrete, tiling' },
+  { id: 'tailor',      en: 'Tailor',           fa: 'خیاط',           icon: 'scissors',hint: 'Clothes, alterations' },
+  { id: 'appliance',   en: 'Appliance Repair', fa: 'مرمت وسایل برقی', icon: 'washer',  hint: 'Fridge, washing machine' },
+  { id: 'general',     en: 'General Repair',   fa: 'مرمت عمومی',     icon: 'wrench',  hint: 'Odd jobs at home' },
 ];
 
 export const catBy = (id) => CATS.find((c) => c.id === id) || CATS[0];
 
+// ── Skills per category ───────────────────────────────────────────────────────
 export const SKILLS = {
-  plumber: [['Leak repair', 'لیکیج ٹھیک کرنا', 'droplet'], ['Tap & mixer', 'نلکا اور مکسر', 'wrench'], ['Geyser fitting', 'گیزر فٹنگ', 'sun'], ['Pipe replacement', 'پائپ بدلنا', 'route'], ['Bathroom fittings', 'باتھ روم فٹنگ', 'home'], ['Water tank & pump', 'ٹینکی اور موٹر', 'droplet']],
-  electrician: [['House wiring', 'گھر کی وائرنگ', 'zap'], ['Fan & light', 'پنکھا اور لائٹ', 'sun'], ['UPS & inverter', 'یو پی ایس', 'zap'], ['Switchboard', 'سوئچ بورڈ', 'layout'], ['Fault finding', 'خرابی ڈھونڈنا', 'search'], ['Meter & DB', 'میٹر اور ڈی بی', 'briefcase']],
-  ac: [['AC service', 'اے سی سروس', 'snow'], ['Gas refill', 'گیس بھرنا', 'snow'], ['Installation', 'فٹنگ', 'wrench'], ['PCB repair', 'کارڈ مرمت', 'zap']],
-  carpenter: [['Door repair', 'دروازہ مرمت', 'home'], ['Cupboards', 'الماری', 'layout'], ['Furniture polish', 'پالش', 'brush'], ['Locks & hinges', 'تالے اور قبضے', 'lock']],
-  painter: [['Room paint', 'کمرے کا رنگ', 'brush'], ['Seepage fix', 'سیلن کا علاج', 'droplet'], ['Exterior', 'باہر کی دیوار', 'home'], ['Polish & enamel', 'پالش', 'brush']],
-  mechanic: [['Car service', 'گاڑی سروس', 'car'], ['Bike repair', 'بائیک مرمت', 'car'], ['Battery', 'بیٹری', 'zap'], ['Denting', 'ڈینٹنگ', 'hammer']],
-  appliance: [['Fridge', 'فریج', 'washer'], ['Washing machine', 'واشنگ مشین', 'washer'], ['Microwave', 'مائیکروویو', 'zap'], ['Water dispenser', 'ڈسپنسر', 'droplet']],
-  general: [['Drilling & fixing', 'ڈرل اور فٹنگ', 'wrench'], ['Curtain rods', 'پردے کی راڈ', 'home'], ['Furniture assembly', 'فرنیچر جوڑنا', 'hammer'], ['Small repairs', 'چھوٹی مرمت', 'wrench']],
+  plumber:     [['Leak repair', 'رفع نشتی', 'droplet'], ['Tap & mixer', 'شیر و میکسر', 'wrench'], ['Geyser fitting', 'نصب گیزر', 'sun'], ['Pipe replacement', 'تعویض لوله', 'route'], ['Bathroom fittings', 'تجهیزات حمام', 'home'], ['Water tank & pump', 'تانک و پمپ آب', 'droplet']],
+  electrician: [['House wiring', 'سیم‌کشی خانه', 'zap'], ['Fan & light', 'پنکه و چراغ', 'sun'], ['UPS & inverter', 'یو‌پی‌اس', 'zap'], ['Switchboard', 'تابلو برق', 'layout'], ['Fault finding', 'یافتن خرابی', 'search'], ['Solar panel', 'پانل خورشیدی', 'sun']],
+  ac:          [['AC service', 'سرویس کولر', 'snow'], ['Gas refill', 'شارژ گاز', 'snow'], ['Installation', 'نصب', 'wrench'], ['PCB repair', 'تعمیر کارت', 'zap']],
+  carpenter:   [['Door repair', 'تعمیر دروازه', 'home'], ['Cupboards', 'کمد و قفسه', 'layout'], ['Furniture polish', 'پالیش مبل', 'brush'], ['Locks & hinges', 'قفل و لولا', 'lock']],
+  painter:     [['Room paint', 'رنگ‌کاری اتاق', 'brush'], ['Seepage fix', 'رفع رطوبت', 'droplet'], ['Exterior', 'نمای بیرونی', 'home'], ['Polish & enamel', 'پالیش', 'brush']],
+  mechanic:    [['Car service', 'سرویس موتر', 'car'], ['Bike repair', 'تعمیر موترسایکل', 'car'], ['Battery', 'باتری', 'zap'], ['Denting & painting', 'پنچرگیری و رنگ', 'hammer']],
+  mason:       [['Brickwork', 'آجرچینی', 'home'], ['Plastering', 'اندود کاری', 'wrench'], ['Tiling', 'کاشی‌کاری', 'layout'], ['Concrete', 'بتون‌ریزی', 'hammer']],
+  tailor:      [['Men\'s wear', 'لباس مردانه', 'scissors'], ['Women\'s wear', 'لباس زنانه', 'scissors'], ['Alterations', 'تعدیل لباس', 'wrench'], ['Traditional dress', 'لباس ملی', 'star']],
+  appliance:   [['Fridge', 'یخچال', 'washer'], ['Washing machine', 'ماشین لباسشویی', 'washer'], ['Microwave', 'مایکروویو', 'zap'], ['Water dispenser', 'دیسپنسر آب', 'droplet']],
+  general:     [['Drilling & fixing', 'حفاری و نصب', 'wrench'], ['Curtain rods', 'میله پرده', 'home'], ['Furniture assembly', 'مونتاژ مبلمان', 'hammer'], ['Small repairs', 'تعمیرات کوچک', 'wrench']],
 };
 
+// ── Afghan cities and districts ───────────────────────────────────────────────
 export const AREAS = [
-  { id: 'G-11', city: 'Islamabad', x: 250, y: 250 },
-  { id: 'G-10', city: 'Islamabad', x: 330, y: 250 },
-  { id: 'G-9', city: 'Islamabad', x: 410, y: 250 },
-  { id: 'F-11', city: 'Islamabad', x: 250, y: 170 },
-  { id: 'F-10', city: 'Islamabad', x: 330, y: 170 },
-  { id: 'I-8', city: 'Islamabad', x: 470, y: 330 },
-  { id: 'G-13', city: 'Islamabad', x: 110, y: 250 },
-  { id: 'Saddar', city: 'Rawalpindi', x: 560, y: 420 },
-  { id: 'Satellite Town', city: 'Rawalpindi', x: 600, y: 360 },
+  { id: 'Shahr-e-Naw',    city: 'Kabul',           x: 250, y: 250 },
+  { id: 'Karte Seh',      city: 'Kabul',           x: 310, y: 230 },
+  { id: 'Macroyan',       city: 'Kabul',           x: 370, y: 250 },
+  { id: 'Wazir Akbar Khan', city: 'Kabul',         x: 290, y: 190 },
+  { id: 'Khair Khana',    city: 'Kabul',           x: 230, y: 170 },
+  { id: 'Pul-e-Charkhi',  city: 'Kabul',           x: 450, y: 280 },
+  { id: 'Herat City',     city: 'Herat',           x: 110, y: 350 },
+  { id: 'Injil',          city: 'Herat',           x: 90,  y: 380 },
+  { id: 'Mazar City',     city: 'Mazar-i-Sharif',  x: 580, y: 160 },
+  { id: 'Balkh',          city: 'Mazar-i-Sharif',  x: 540, y: 140 },
+  { id: 'Kandahar City',  city: 'Kandahar',        x: 300, y: 480 },
+  { id: 'Dand',           city: 'Kandahar',        x: 330, y: 500 },
 ];
 
+// ── Avatar visual looks ───────────────────────────────────────────────────────
 export const LOOKS = {
-  imran: { skin: '#B97A56', shirt: '#087F5B', hair: 'short', beard: true, bg: '#E3F2EC', hc: '#2A1D16' },
-  rehman: { skin: '#A86B48', shirt: '#F4B942', hair: 'cap', beard: true, bg: '#FEF7E6', hc: '#3A2A20', cap: '#07513D' },
-  shahid: { skin: '#C68A63', shirt: '#3E6FB0', hair: 'short', beard: false, bg: '#E8EEF8', hc: '#1E1612' },
-  naveed: { skin: '#9C6444', shirt: '#8A5A3B', hair: 'topi', beard: true, bg: '#F4ECE4', hc: '#BFB7B0' },
-  zahid: { skin: '#B5764F', shirt: '#D94848', hair: 'short', beard: false, bg: '#FCEDED', hc: '#241914' },
-  bilal: { skin: '#C9906A', shirt: '#07513D', hair: 'short', beard: true, bg: '#E3F2EC', hc: '#2B1E17' },
-  tariq: { skin: '#A96F4C', shirt: '#5E6A66', hair: 'cap', beard: false, bg: '#F0F2F1', hc: '#2A1D16', cap: '#D94848' },
-  asif: { skin: '#B47450', shirt: '#202B29', hair: 'short', beard: true, bg: '#ECEFEE', hc: '#1D1510' },
-  ayesha: { skin: '#C98F6C', shirt: '#F4B942', hair: 'dupatta', beard: false, bg: '#FEF7E6', hc: '#24170F', dup: '#087F5B' },
-  hamza: { skin: '#BF8360', shirt: '#3E6FB0', hair: 'short', beard: false, bg: '#E8EEF8', hc: '#1E1612' },
+  ahmad:   { skin: '#B97A56', shirt: '#006400', hair: 'short',  beard: true,  bg: '#E3F2EC', hc: '#2A1D16' },
+  karim:   { skin: '#A86B48', shirt: '#C8102E', hair: 'pakol',  beard: true,  bg: '#FDECEA', hc: '#3A2A20' },
+  nasir:   { skin: '#C68A63', shirt: '#3E6FB0', hair: 'short',  beard: false, bg: '#E8EEF8', hc: '#1E1612' },
+  habib:   { skin: '#9C6444', shirt: '#8A5A3B', hair: 'topi',   beard: true,  bg: '#F4ECE4', hc: '#BFB7B0' },
+  zarif:   { skin: '#B5764F', shirt: '#C8102E', hair: 'short',  beard: false, bg: '#FCEDED', hc: '#241914' },
+  wahid:   { skin: '#C9906A', shirt: '#006400', hair: 'short',  beard: true,  bg: '#E3F2EC', hc: '#2B1E17' },
+  omar:    { skin: '#A96F4C', shirt: '#5E6A66', hair: 'pakol',  beard: false, bg: '#F0F2F1', hc: '#2A1D16' },
+  yusuf:   { skin: '#B47450', shirt: '#202B29', hair: 'short',  beard: true,  bg: '#ECEFEE', hc: '#1D1510' },
+  mariam:  { skin: '#C98F6C', shirt: '#F4B942', hair: 'hijab',  beard: false, bg: '#FEF7E6', hc: '#24170F', dup: '#006400' },
+  farida:  { skin: '#BF8360', shirt: '#3E6FB0', hair: 'hijab',  beard: false, bg: '#E8EEF8', hc: '#1E1612', dup: '#C8102E' },
 };
 
+// ── Seed workers (Afghan, Dari names) ─────────────────────────────────────────
 export const seedWorkers = () => [
-  { id: 'imran', name: 'Muhammad Imran', nameUr: 'محمد عمران', cat: 'plumber', exp: 12, area: 'G-11', city: 'Islamabad', km: 1.2, rating: 4.8, count: 126, jobs: 142, price: 800, status: 'available', freeAt: '', skills: ['Leak repair', 'Geyser fitting', 'Bathroom fittings', 'Pipe replacement'], langs: 'Urdu, Punjabi', phone: '0300-5551234', since: '2024', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], hours: '9 AM – 7 PM', lat: 33.6844, lng: 73.0479, reviews: [
-    { by: 'Sana R.', area: 'G-11/3', stars: 5, q: 5, p: 5, t: 4, text: 'Fixed the geyser pipe in one visit and explained what had worn out. Cleaned up after.', date: '2 weeks ago', tags: ['Fixed first time', 'Clean work'] },
-    { by: 'Faisal M.', area: 'G-10/2', stars: 5, q: 5, p: 5, t: 5, text: 'Bathroom mixer replaced. Price was as agreed in chat, no surprises.', date: '1 month ago', tags: ['Fair price'] },
-    { by: 'Rabia A.', area: 'F-11/1', stars: 4, q: 4, p: 5, t: 3, text: 'Good work, came about 40 minutes later than said but called ahead.', date: '1 month ago', tags: ['Polite'] },
-  ] },
-  { id: 'rehman', name: 'Abdul Rehman', nameUr: 'عبدالرحمٰن', cat: 'electrician', exp: 15, area: 'G-10', city: 'Islamabad', km: 2.1, rating: 4.9, count: 210, jobs: 236, price: 700, status: 'available', freeAt: '', skills: ['House wiring', 'UPS & inverter', 'Fault finding'], langs: 'Urdu, Pashto', phone: '0301-5552345', since: '2024', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], hours: '8 AM – 9 PM', lat: 33.6750, lng: 73.0350, reviews: [
-    { by: 'Usman K.', area: 'G-10/4', stars: 5, q: 5, p: 5, t: 5, text: 'Found the short circuit quickly. Very calm and careful.', date: '5 days ago', tags: ['Fixed first time'] },
-  ] },
-  { id: 'shahid', name: 'Shahid Mehmood', nameUr: 'شاہد محمود', cat: 'ac', exp: 8, area: 'F-11', city: 'Islamabad', km: 3.4, rating: 4.6, count: 88, jobs: 97, price: 1500, status: 'busy', freeAt: '6:00 PM', skills: ['AC service', 'Gas refill', 'Installation'], langs: 'Urdu', phone: '0302-5553456', since: '2025', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], hours: '10 AM – 8 PM', lat: 33.6900, lng: 73.0250, reviews: [
-    { by: 'Hina S.', area: 'F-11/2', stars: 5, q: 5, p: 4, t: 5, text: 'AC cooling is back. Showed the gas pressure reading before and after.', date: '3 weeks ago', tags: ['On time'] },
-  ] },
-  { id: 'bilal', name: 'Bilal Ahmed', nameUr: 'بلال احمد', cat: 'plumber', exp: 5, area: 'G-9', city: 'Islamabad', km: 2.8, rating: 4.4, count: 31, jobs: 35, price: 600, status: 'available', freeAt: '', skills: ['Tap & mixer', 'Water tank & pump', 'Leak repair'], langs: 'Urdu, Punjabi', phone: '0303-5554567', since: '2025', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], hours: '9 AM – 6 PM', lat: 33.6700, lng: 73.0600, reviews: [
-    { by: 'Kamran T.', area: 'G-9/1', stars: 4, q: 4, p: 4, t: 5, text: 'Pump wiring sorted. Good for small jobs.', date: '2 months ago', tags: ['On time'] },
-  ] },
-  { id: 'naveed', name: 'Naveed Akhtar', nameUr: 'نوید اختر', cat: 'carpenter', exp: 20, area: 'I-8', city: 'Islamabad', km: 4.0, rating: 4.7, count: 64, jobs: 70, price: 1000, status: 'available', freeAt: '', skills: ['Door repair', 'Cupboards', 'Locks & hinges'], langs: 'Urdu, Punjabi', phone: '0304-5555678', since: '2024', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], hours: '9 AM – 6 PM', lat: 33.6557, lng: 73.0256, reviews: [
-    { by: 'Maryam N.', area: 'I-8/3', stars: 5, q: 5, p: 5, t: 4, text: 'Kitchen cupboard hinges replaced, doors close properly now.', date: '1 week ago', tags: ['Clean work'] },
-  ] },
-  { id: 'tariq', name: 'Tariq Mehmood', nameUr: 'طارق محمود', cat: 'appliance', exp: 11, area: 'Satellite Town', city: 'Rawalpindi', km: 8.6, rating: 4.5, count: 52, jobs: 58, price: 900, status: 'available', freeAt: '', skills: ['Fridge', 'Washing machine', 'Microwave'], langs: 'Urdu, Punjabi', phone: '0305-5556789', since: '2024', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], hours: '10 AM – 7 PM', lat: 33.5973, lng: 73.0479, reviews: [] },
-  { id: 'zahid', name: 'Zahid Hussain', nameUr: 'زاہد حسین', cat: 'painter', exp: 10, area: 'Saddar', city: 'Rawalpindi', km: 9.2, rating: 4.5, count: 40, jobs: 44, price: 2500, status: 'off', freeAt: 'Tomorrow', skills: ['Room paint', 'Seepage fix', 'Exterior'], langs: 'Urdu', phone: '0306-5557890', since: '2025', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], hours: '8 AM – 5 PM', lat: 33.5973, lng: 73.0479, reviews: [] },
-  { id: 'asif', name: 'Asif Ali', nameUr: 'آصف علی', cat: 'mechanic', exp: 9, area: 'G-13', city: 'Islamabad', km: 5.1, rating: 4.3, count: 27, jobs: 30, price: 1200, status: 'available', freeAt: '', skills: ['Car service', 'Battery', 'Bike repair'], langs: 'Urdu, Saraiki', phone: '0307-5558901', since: '2025', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], hours: '9 AM – 8 PM', lat: 33.6500, lng: 73.0200, reviews: [] },
+  {
+    id: 'ahmad', name: 'Ahmad Shah', nameFa: 'احمد شاه', cat: 'plumber',
+    exp: 11, area: 'Shahr-e-Naw', city: 'Kabul', km: 1.4,
+    rating: 4.8, count: 112, jobs: 128, price: 300, status: 'available', freeAt: '',
+    skills: ['Leak repair', 'Geyser fitting', 'Bathroom fittings', 'Pipe replacement'],
+    langs: 'Dari, Pashto', phone: '0700-111001', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '8 AM – 7 PM', lat: 34.5260, lng: 69.1781,
+    reviews: [
+      { by: 'Mariam N.', area: 'Shahr-e-Naw', stars: 5, q: 5, p: 5, t: 4, text: 'Repaired the leaking pipe quickly and cleaned up after. Very professional.', date: '1 week ago', tags: ['Fixed first time', 'Clean work'] },
+      { by: 'Khalid F.', area: 'Karte Seh',   stars: 5, q: 5, p: 5, t: 5, text: 'Replaced bathroom mixer as agreed. No surprises on price.', date: '3 weeks ago', tags: ['Fair price'] },
+    ],
+  },
+  {
+    id: 'karim', name: 'Abdul Karim', nameFa: 'عبدالکریم', cat: 'electrician',
+    exp: 14, area: 'Wazir Akbar Khan', city: 'Kabul', km: 2.3,
+    rating: 4.9, count: 198, jobs: 221, price: 250, status: 'available', freeAt: '',
+    skills: ['House wiring', 'UPS & inverter', 'Fault finding', 'Solar panel'],
+    langs: 'Dari', phone: '0700-222002', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    hours: '7 AM – 9 PM', lat: 34.5280, lng: 69.1950,
+    reviews: [
+      { by: 'Omar Z.', area: 'Macroyan', stars: 5, q: 5, p: 5, t: 5, text: 'Found the short circuit in minutes. Calm and careful work.', date: '4 days ago', tags: ['Fixed first time'] },
+    ],
+  },
+  {
+    id: 'nasir', name: 'Nasir Ahmad', nameFa: 'نصیر احمد', cat: 'ac',
+    exp: 7, area: 'Macroyan', city: 'Kabul', km: 3.1,
+    rating: 4.6, count: 76, jobs: 84, price: 500, status: 'busy', freeAt: '5:00 PM',
+    skills: ['AC service', 'Gas refill', 'Installation'],
+    langs: 'Dari, Pashto', phone: '0700-333003', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed'],
+    hours: '9 AM – 7 PM', lat: 34.5200, lng: 69.2050,
+    reviews: [
+      { by: 'Fatima R.', area: 'Karte Seh', stars: 5, q: 5, p: 4, t: 5, text: 'AC cooling restored. He showed the gas pressure reading before and after.', date: '2 weeks ago', tags: ['On time'] },
+    ],
+  },
+  {
+    id: 'habib', name: 'Habibullah', nameFa: 'حبیب‌الله', cat: 'carpenter',
+    exp: 18, area: 'Khair Khana', city: 'Kabul', km: 4.2,
+    rating: 4.7, count: 59, jobs: 65, price: 400, status: 'available', freeAt: '',
+    skills: ['Door repair', 'Cupboards', 'Furniture polish', 'Locks & hinges'],
+    langs: 'Dari', phone: '0700-444004', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '8 AM – 6 PM', lat: 34.5450, lng: 69.1650,
+    reviews: [
+      { by: 'Zarifa H.', area: 'Khair Khana', stars: 5, q: 5, p: 5, t: 4, text: 'Fixed the broken door hinges perfectly. Very skilled ustad.', date: '5 days ago', tags: ['Clean work'] },
+    ],
+  },
+  {
+    id: 'wahid', name: 'Wahidullah', nameFa: 'واحدالله', cat: 'mason',
+    exp: 15, area: 'Herat City', city: 'Herat', km: 2.0,
+    rating: 4.8, count: 87, jobs: 95, price: 350, status: 'available', freeAt: '',
+    skills: ['Brickwork', 'Plastering', 'Tiling', 'Concrete'],
+    langs: 'Dari, Pashto', phone: '0700-555005', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '7 AM – 6 PM', lat: 34.3482, lng: 62.2041,
+    reviews: [],
+  },
+  {
+    id: 'zarif', name: 'Zarif Khan', nameFa: 'ظریف خان', cat: 'painter',
+    exp: 9, area: 'Mazar City', city: 'Mazar-i-Sharif', km: 3.8,
+    rating: 4.5, count: 44, jobs: 49, price: 800, status: 'off', freeAt: 'Tomorrow',
+    skills: ['Room paint', 'Seepage fix', 'Exterior', 'Polish & enamel'],
+    langs: 'Dari, Uzbeki', phone: '0700-666006', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed'],
+    hours: '8 AM – 5 PM', lat: 36.7069, lng: 67.1100,
+    reviews: [],
+  },
+  {
+    id: 'omar', name: 'Omar Farooq', nameFa: 'عمر فاروق', cat: 'mechanic',
+    exp: 10, area: 'Kandahar City', city: 'Kandahar', km: 5.5,
+    rating: 4.3, count: 31, jobs: 35, price: 450, status: 'available', freeAt: '',
+    skills: ['Car service', 'Bike repair', 'Battery', 'Denting & painting'],
+    langs: 'Pashto, Dari', phone: '0700-777007', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '9 AM – 8 PM', lat: 31.6289, lng: 65.7372,
+    reviews: [],
+  },
+  {
+    id: 'yusuf', name: 'Yusuf Rahimi', nameFa: 'یوسف رحیمی', cat: 'tailor',
+    exp: 12, area: 'Karte Seh', city: 'Kabul', km: 1.8,
+    rating: 4.6, count: 53, jobs: 60, price: 200, status: 'available', freeAt: '',
+    skills: ["Men's wear", "Women's wear", 'Alterations', 'Traditional dress'],
+    langs: 'Dari', phone: '0700-888008', since: '2025',
+    days: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+    hours: '9 AM – 7 PM', lat: 34.5100, lng: 69.1700,
+    reviews: [],
+  },
 ];
 
+// ── Seed customer ─────────────────────────────────────────────────────────────
 export const CUSTOMER = {
-  name: 'Ayesha Khan',
-  nameUr: 'عائشہ خان',
-  address: 'House 24, Street 7, G-11/2, Islamabad',
-  area: 'G-11/2',
-  phone: '0333-5550000',
+  name: 'Mariam Noori',
+  nameFa: 'مریم نوری',
+  address: 'House 12, Street 3, Shahr-e-Naw, Kabul',
+  area: 'Shahr-e-Naw',
+  phone: '0700-100100',
 };
 
+// ── Onboarding steps ──────────────────────────────────────────────────────────
 export const OB_STEPS = [
-  { icon: 'globe', en: 'Choose your language', ur: 'اپنی زبان چنیں' },
-  { icon: 'keyboard', en: 'What is your name?', ur: 'آپ کا نام کیا ہے؟' },
-  { icon: 'briefcase', en: 'What is your work?', ur: 'آپ کا کام کیا ہے؟' },
-  { icon: 'wrench', en: 'What can you do?', ur: 'آپ کیا کیا کر سکتے ہیں؟' },
-  { icon: 'pin', en: 'Where do you work?', ur: 'آپ کہاں کام کرتے ہیں؟' },
-  { icon: 'star', en: 'How many years of experience?', ur: 'کتنے سال کا تجربہ ہے؟' },
-  { icon: 'camera', en: 'Add your photo', ur: 'اپنی تصویر لگائیں' },
-  { icon: 'calendar', en: 'When can you work?', ur: 'آپ کب کام کر سکتے ہیں؟' },
-  { icon: 'eye', en: 'Check your profile', ur: 'اپنی پروفائل دیکھیں' },
-  { icon: 'checkCircle', en: 'Profile ready', ur: 'پروفائل تیار' },
+  { icon: 'globe',       en: 'Choose your language',         fa: 'زبان خود را انتخاب کنید' },
+  { icon: 'keyboard',    en: 'What is your name?',           fa: 'نام شما چیست؟' },
+  { icon: 'briefcase',   en: 'What is your work?',           fa: 'کار شما چیست؟' },
+  { icon: 'wrench',      en: 'What can you do?',             fa: 'چه کارهایی می‌توانید انجام دهید؟' },
+  { icon: 'pin',         en: 'Where do you work?',           fa: 'کجا کار می‌کنید؟' },
+  { icon: 'star',        en: 'How many years of experience?', fa: 'چند سال تجربه دارید؟' },
+  { icon: 'camera',      en: 'Add your photo',               fa: 'عکس خود را اضافه کنید' },
+  { icon: 'calendar',    en: 'When can you work?',           fa: 'چه زمانی می‌توانید کار کنید؟' },
+  { icon: 'eye',         en: 'Check your profile',           fa: 'پروفایل خود را بررسی کنید' },
+  { icon: 'checkCircle', en: 'Profile ready',                fa: 'پروفایل آماده است' },
 ];
 
+// ── Job status state machine ──────────────────────────────────────────────────
 export const STATUS_ORDER = ['requested', 'negotiating', 'agreed', 'confirmed', 'onway', 'working', 'done', 'closed', 'reviewed'];
 export const stIdx = (s) => STATUS_ORDER.indexOf(s);
 
+// ── Default demo job ──────────────────────────────────────────────────────────
 export const DEFAULT_JOB = () => ({
-  id: 'RR-2611-0427',
-  workerId: 'imran',
+  id: 'KR-2611-0001',
+  workerId: 'ahmad',
   cat: 'plumber',
-  title: 'Leak under kitchen sink',
-  voice: 'Kitchen ke sink ke neeche se paani tapak raha hai, pipe purana lagta hai. Aaj shaam tak koi aa jaye to behtar hai.',
+  title: 'Leaking pipe under kitchen sink',
+  voice: 'لوله زیر آشپزخانه نشت می‌کند، آب می‌چکد. لطفاً امروز بیایید.',
   text: '',
   details: ['Leaking constantly, even with tap closed', 'Shut-off valve under the sink: Yes'],
   photo: 'sample',
-  time: 'Today, 5–7 PM',
+  time: 'Today, 4–6 PM',
   address: CUSTOMER.address,
   price: null,
   offers: [],
@@ -116,15 +202,17 @@ export const DEFAULT_JOB = () => ({
   log: [],
 });
 
-/** Simple on-device keyword classifier (prototype stand-in for LLM) */
+// ── Keyword classifier (Dari + English) ──────────────────────────────────────
 const KW = {
-  plumber: ['paani', 'pani', 'pipe', 'nalka', 'nal', 'leak', 'tapak', 'sink', 'geyser', 'gizer', 'tank', 'tanki', 'flush', 'commode', 'drain', 'gutter', 'motor', 'پانی', 'نلکا', 'پائپ', 'لیک', 'گیزر', 'ٹینکی', 'tap', 'water', 'bathroom', 'washroom'],
-  electrician: ['bijli', 'light', 'wiring', 'switch', 'pankha', 'fan', 'ups', 'inverter', 'current', 'short', 'socket', 'board', 'breaker', 'meter', 'بجلی', 'پنکھا', 'سوئچ', 'وائرنگ', 'لائٹ'],
-  ac: [' ac ', 'a.c', 'a/c', 'cooling', 'thanda', 'gas', 'split', 'inverter ac', 'compressor', 'اے سی', 'کولنگ'],
-  carpenter: ['darwaza', 'door', 'lakri', 'almari', 'cupboard', 'drawer', 'furniture', 'kabza', 'hinge', 'lock', 'tala', 'دروازہ', 'الماری', 'لکڑی', 'تالا'],
-  painter: ['rang', 'paint', 'seelan', 'seepage', 'deewar', 'wall', 'polish', 'رنگ', 'سیلن', 'دیوار'],
-  mechanic: ['gari', 'gaari', 'car', 'bike', 'engine', 'battery', 'tyre', 'puncture', 'گاڑی', 'بائیک', 'انجن'],
-  appliance: ['fridge', 'freezer', 'washing', 'machine', 'microwave', 'oven', 'dispenser', 'فریج', 'مشین'],
+  plumber:     ['paani', 'pani', 'pipe', 'nal', 'nalk', 'leak', 'tapak', 'sink', 'geyser', 'tank', 'flush', 'drain', 'motor', 'آب', 'لوله', 'نشتی', 'نل', 'تانک', 'گیزر', 'tap', 'water', 'bathroom'],
+  electrician: ['bijli', 'barq', 'برق', 'light', 'wiring', 'switch', 'fan', 'ups', 'inverter', 'current', 'short', 'socket', 'breaker', 'solar', 'سیم', 'برق‌کار', 'چراغ', 'پنکه'],
+  ac:          [' ac ', 'a.c', 'cooling', 'thanda', 'gas', 'compressor', 'کولر', 'سرما', 'تکلیف'],
+  carpenter:   ['door', 'darwaza', 'wood', 'cupboard', 'furniture', 'hinge', 'lock', 'دروازه', 'نجار', 'کمد', 'مبل', 'قفل'],
+  painter:     ['rang', 'paint', 'seepage', 'wall', 'رنگ', 'رنگمال', 'دیوار', 'رطوبت'],
+  mechanic:    ['car', 'motar', 'موتر', 'bike', 'engine', 'battery', 'tyre', 'مکانیک', 'موترسایکل'],
+  mason:       ['brick', 'concrete', 'tile', 'plaster', 'آجر', 'معمار', 'بتون', 'کاشی'],
+  tailor:      ['cloth', 'dress', 'stitch', 'alter', 'لباس', 'خیاط', 'دوختن', 'تعدیل'],
+  appliance:   ['fridge', 'freezer', 'washing', 'machine', 'microwave', 'dispenser', 'یخچال', 'ماشین'],
 };
 
 export function classify(text) {

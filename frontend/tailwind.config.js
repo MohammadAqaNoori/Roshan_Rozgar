@@ -7,20 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Pakistan-inspired palette
+        // Afghan national palette — black, red, green
         brand: {
-          DEFAULT: "#01411C",   // Pakistan flag green
-          light: "#0B6B3A",
-          dark: "#003314",
+          DEFAULT: "#006400",   // Afghan green
+          light: "#1A7A1A",
+          dark: "#004300",
         },
         accent: {
-          DEFAULT: "#FFB300",   // warm gold for trust/CTAs
-          light: "#FFC93C",
-          dark: "#E89F00",
+          DEFAULT: "#C8102E",   // Afghan red — trust/CTAs
+          light: "#E63050",
+          dark: "#A00020",
+        },
+        amber: {
+          DEFAULT: "#F4B942",   // warm gold for highlights
         },
       },
       fontFamily: {
-        urdu: ["'Noto Nastaliq Urdu'", "sans-serif"],
+        dari: ["'Noto Nastaliq Urdu'", "'Noto Nastaliq'", "serif"],
+        sans: ["'Plus Jakarta Sans'", "sans-serif"],
       },
     },
   },

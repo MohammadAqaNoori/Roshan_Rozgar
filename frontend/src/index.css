@@ -1,5 +1,15 @@
+/* Fonts loaded in index.html for performance; this import is kept as fallback */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap");
 @import "./styles/roshan.css";
+
+/* Dari / Persian script — same Nastaliq rendering as Urdu */
+.fa,
+[lang="fa"],
+.dari {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Nastaliq', serif;
+  line-height: 1.9;
+  direction: rtl;
+}
 
 @tailwind base;
 @tailwind components;

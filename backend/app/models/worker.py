@@ -18,6 +18,7 @@ class Trade(str, enum.Enum):
     painter = "painter"
     mason = "mason"
     welder = "welder"
+    tailor = "tailor"
     appliance = "appliance"
     general = "general"
     other = "other"

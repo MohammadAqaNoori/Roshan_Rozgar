@@ -66,7 +66,7 @@ export default function Results({ onNavigate }) {
                       aria-pressed={f.cat === c.id}
                       onClick={() => setFilter({ cat: f.cat === c.id ? '' : c.id })}
                     >
-                      <Icon name={c.icon} />{t(c.en, c.ur)}
+                      <Icon name={c.icon} />{t(c.en, c.fa)}
                     </button>
                   ))}
                 </div>

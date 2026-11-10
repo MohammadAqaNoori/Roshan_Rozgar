@@ -1,9 +1,9 @@
 """
-Gemini AI service — the core AI integration for Roshan Rozgar.
+Gemini AI service — the core AI integration for Karigar.
 
 Every function here removes a genuine barrier for the user:
   - Literacy barrier: workers speak instead of filling forms
-  - Language barrier: Urdu/Roman Urdu supported throughout
+  - Language barrier: Dari/Roman Dari supported throughout
   - Typing barrier: customers describe problems by voice
   - Trust barrier: voice reviews transcribed for future customers
 
@@ -37,14 +37,14 @@ def _get_model() -> genai.GenerativeModel:
 
 # ── 1. ONBOARDING: Extract worker profile from voice ─────────────────────────
 
-PROFILE_PROMPT = """You are helping a skilled trade worker in Pakistan create their work profile.
-They have spoken in Urdu or Roman Urdu. Listen carefully and extract:
+PROFILE_PROMPT = """You are helping a skilled trade worker in Afghanistan create their work profile.
+They have spoken in Dari or Roman Dari. Listen carefully and extract:
 
-- name: their full name (e.g. "Muhammad Imran")
-- trade: ONE of exactly: electrician, plumber, ac_technician, carpenter, mechanic, painter, mason, welder, appliance, general
+- name: their full name (e.g. "Ahmad Shah")
+- trade: ONE of exactly: electrician, plumber, ac_technician, carpenter, mechanic, painter, mason, welder, tailor, appliance, general
 - experience_years: integer number of years (e.g. 12)
-- area_name: their neighbourhood/sector (e.g. "G-9, Islamabad" or "Saddar, Rawalpindi")
-- bio: 1-2 sentence summary of their skills IN URDU (e.g. "12 سال کا تجربہ۔ گھریلو اور تجارتی بجلی کا کام۔")
+- area_name: their neighbourhood/district (e.g. "Shahr-e-Naw, Kabul" or "Herat City")
+- bio: 1-2 sentence summary of their skills IN DARI (e.g. "۱۲ سال تجربه۔ کار برق خانگی و تجاری.")
 
 Return ONLY a valid JSON object, no extra text, no markdown:
 {"name": "", "trade": "", "experience_years": 0, "area_name": "", "bio": ""}
@@ -53,7 +53,7 @@ Return ONLY a valid JSON object, no extra text, no markdown:
 
 async def extract_profile_from_audio(audio_data: bytes, mime_type: str = "audio/webm") -> dict:
     """
-    Worker speaks in Urdu/Roman Urdu → Gemini fills their profile form.
+    Worker speaks in Dari/Roman Dari → Gemini fills their profile form.
     This is the primary literacy barrier removal for worker onboarding.
     """
     try:
@@ -68,13 +68,13 @@ async def extract_profile_from_audio(audio_data: bytes, mime_type: str = "audio/
 
 # ── 2. JOB REQUEST: Extract job details from customer voice ──────────────────
 
-JOB_PROMPT = """A customer in Pakistan is describing a home repair job they need done.
-They may speak in Urdu, Roman Urdu, or English.
+JOB_PROMPT = """A customer in Afghanistan is describing a home repair job they need done.
+They may speak in Dari, Roman Dari, or English.
 
 Extract:
 - title: short job title (e.g. "AC repair", "Leaking pipe under sink")
 - description: what the customer said, in their own words
-- trade_required: ONE of: electrician, plumber, ac_technician, carpenter, mechanic, painter, mason, welder, appliance, general
+- trade_required: ONE of: electrician, plumber, ac_technician, carpenter, mechanic, painter, mason, welder, tailor, appliance, general
 
 Return ONLY valid JSON:
 {"title": "", "description": "", "trade_required": ""}
@@ -99,7 +99,7 @@ async def extract_job_from_audio(audio_data: bytes, mime_type: str = "audio/webm
 # ── 3. CHAT: Transcribe voice messages ───────────────────────────────────────
 
 TRANSCRIBE_PROMPT = """Transcribe this voice message exactly as spoken.
-The speaker may use Urdu, Roman Urdu, or English.
+The speaker may use Dari, Roman Dari, or English.
 Return ONLY the transcribed text — no labels, no explanation."""
 
 
@@ -121,8 +121,8 @@ async def transcribe_voice_message(audio_data: bytes, mime_type: str = "audio/we
 
 # ── 4. REVIEW: Transcribe voice review ───────────────────────────────────────
 
-REVIEW_PROMPT = """A customer in Pakistan is leaving a voice review for a trade worker.
-They may speak in Urdu, Roman Urdu, or English.
+REVIEW_PROMPT = """A customer in Afghanistan is leaving a voice review for a trade worker.
+They may speak in Dari, Roman Dari, or English.
 Transcribe exactly what they said.
 Return ONLY the transcribed text."""
 

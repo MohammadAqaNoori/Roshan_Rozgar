@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { Icon } from '../lib/icons';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { CUSTOMER } from '../lib/data';
 
 export default function Modal({ onNavigate }) {
@@ -40,7 +40,7 @@ export default function Modal({ onNavigate }) {
             >
               <Icon name="minus" />
             </button>
-            <span className="amt num">{rs(counter)}</span>
+            <span className="amt num">{afn(counter)}</span>
             <button
               className="icon-btn"
               style={{ width: 56, height: 56 }}
@@ -55,7 +55,7 @@ export default function Modal({ onNavigate }) {
           <div className="row wrapit" style={{ justifyContent: 'center', marginTop: 12, gap: 6 }}>
             {[800, 1000, 1200, 1500, 1800, 2500].map((a) => (
               <button key={a} className={`chip${counter === a ? ' pressed' : ''}`} onClick={() => setCounter(a)}>
-                {rs(a)}
+                {afn(a)}
               </button>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function Modal({ onNavigate }) {
   // ── Call ──────────────────────────────────────────────────────────────────
   if (_modal === 'call') {
     const phone = isCustomer ? w?.phone : CUSTOMER.phone;
-    const name  = isCustomer ? (w ? wname(w) : '—') : t(CUSTOMER.name, CUSTOMER.nameUr);
+    const name  = isCustomer ? (w ? wname(w) : '—') : t(CUSTOMER.name, CUSTOMER.nameFa);
     return (
       <div className="scrim" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
         <div className="modal" role="dialog" aria-modal="true">

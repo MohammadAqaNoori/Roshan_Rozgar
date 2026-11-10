@@ -1,17 +1,17 @@
 /**
- * Landing page for "Roshan Rozgar" — hyper-local marketplace for skilled trade workers.
+ * Landing page for "Karigar" — hyper-local marketplace for skilled trade workers.
  */
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { Brand, Stars, StatusPill, WorkerCard, SpeakBtn, Disclaimer } from '../components/Shared';
 import { CATS, seedWorkers } from '../lib/data';
 
 export default function Home({ onNavigate }) {
-  const { t, ur, setLang } = useApp();
+  const { t, fa, setLang } = useApp();
   const workers = seedWorkers();
-  const feat = ['imran', 'rehman', 'naveed'].map((id) => workers.find((w) => w.id === id));
-  const rehman = workers.find((w) => w.id === 'rehman');
+  const feat = ['ahmad', 'karim', 'habib'].map((id) => workers.find((w) => w.id === id));
+  const karim = workers.find((w) => w.id === 'karim');
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -29,19 +29,19 @@ export default function Home({ onNavigate }) {
           <Brand onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
           <nav className="links" aria-label="Site">
             <a onClick={() => scrollTo('services')} style={{ cursor: 'pointer' }}>{t('Services', 'خدمات')}</a>
-            <a onClick={() => scrollTo('how')} style={{ cursor: 'pointer' }}>{t('How it works', 'طریقہ کار')}</a>
-            <a onClick={() => scrollTo('join')} style={{ cursor: 'pointer' }}>{t('Become a worker', 'کاریگر بنیں')}</a>
-            <a onClick={() => scrollTo('about')} style={{ cursor: 'pointer' }}>{t('About', 'ہمارے بارے میں')}</a>
+            <a onClick={() => scrollTo('how')} style={{ cursor: 'pointer' }}>{t('How it works', 'روش کار')}</a>
+            <a onClick={() => scrollTo('join')} style={{ cursor: 'pointer' }}>{t('Become a worker', 'کاریگر شوید')}</a>
+            <a onClick={() => scrollTo('about')} style={{ cursor: 'pointer' }}>{t('About', 'درباره')}</a>
           </nav>
           <div className="row" style={{ gap: 8, marginInlineStart: 'auto' }}>
-            <button className="btn btn-ghost btn-sm" onClick={() => setLang(ur() ? 'en' : 'ur')}>
+            <button className="btn btn-ghost btn-sm" onClick={() => setLang(fa() ? 'en' : 'fa')}>
               <Icon name="globe" />
-              <span className={ur() ? '' : 'ur'} style={{ lineHeight: 1.2 }}>
-                {ur() ? 'English' : 'اردو'}
+              <span className={fa() ? '' : 'ur'} style={{ lineHeight: 1.2 }}>
+                {fa() ? 'English' : 'دری'}
               </span>
             </button>
             <button className="btn btn-outline btn-sm" onClick={() => onNavigate('login')}>
-              {t('Log in', 'لاگ ان')}
+              {t('Log in', 'ورود')}
             </button>
           </div>
         </div>
@@ -52,34 +52,34 @@ export default function Home({ onNavigate }) {
         <div className="wrap hero-grid">
           {/* Left column */}
           <div>
-            <span className="eyebrow">{t('Islamabad · Rawalpindi', 'اسلام آباد · راولپنڈی')}</span>
+            <span className="eyebrow">{t('Kabul · Herat', 'کابل · هرات')}</span>
             <h1 style={{ marginTop: 14 }}>
-              {ur() ? (
-                <>ہر کام کا <em>ہنرمند</em>، اب آپ کے قریب۔</>
+              {fa() ? (
+                <>هر کار، یک <em>کاریگر ماهر</em>، نزدیک شما.</>
               ) : (
-                <>Har Kaam Ka <em>Hunarmand</em>, Ab Aapke Qareeb.</>
+                <>Every job, a skilled <em>Karigar</em>, near you.</>
               )}
             </h1>
             <p className="lede">
               {t(
                 'Find a nearby electrician, plumber or AC technician who is free right now. See reviews from real bookings, agree the price by chat or voice note, then book.',
-                'قریب ترین الیکٹریشن، پلمبر یا اے سی مکینک ڈھونڈیں جو ابھی فارغ ہو۔ اصل بکنگ کے ریویو دیکھیں، قیمت پہلے طے کریں، پھر بک کریں۔'
+                'یک برق‌کار، لوله‌کش یا تکنسین کولر نزدیک خود پیدا کنید که اکنون آزاد است. نظرات واقعی رزرو را ببینید، قیمت را با چت یا پیام صوتی توافق کنید، سپس رزرو کنید.'
               )}
             </p>
             <div className="ctas">
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="search" />
-                {t('Find a Worker', 'کاریگر ڈھونڈیں')}
+                {t('Find a Worker', 'کاریگر پیدا کنید')}
               </button>
               <button className="btn btn-outline btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="briefcase" />
-                {t('Join as a Worker', 'کاریگر کے طور پر شامل ہوں')}
+                {t('Join as a Worker', 'کاریگر شوید')}
               </button>
             </div>
             <div className="trustline">
-              <span><Icon name="checkCircle" />{t('Reviews only from completed bookings', 'ریویو صرف مکمل بکنگ سے')}</span>
-              <span><Icon name="tag" />{t('Price agreed before work starts', 'کام سے پہلے قیمت طے')}</span>
-              <span><Icon name="mic" />{t('Works in Urdu & by voice', 'اردو اور آواز میں')}</span>
+              <span><Icon name="checkCircle" />{t('Reviews only from completed bookings', 'نظرات فقط از رزروهای تکمیل شده')}</span>
+              <span><Icon name="tag" />{t('Price agreed before work starts', 'قیمت قبل از شروع کار توافق می‌شود')}</span>
+              <span><Icon name="mic" />{t('Works in Dari & by voice', 'به دری و با صدا کار می‌کند')}</span>
             </div>
           </div>
 
@@ -98,12 +98,12 @@ export default function Home({ onNavigate }) {
                 </div>
               </div>
               <p style={{ marginTop: 8, color: 'var(--ink)' }}>
-                “Kitchen ka nalka tapak raha hai, aaj shaam tak koi aa jaye”
+                "آب آشپزخانه چکه می‌کند، امروز تا غروب کسی بیاید"
               </p>
               <div className="row" style={{ gap: 6, marginTop: 8 }}>
                 <span className="pill pill-ai">
                   <Icon name="sparkles" />
-                  {t('Suggested: Plumber', 'تجویز: پلمبر')}
+                  {t('Suggested: Plumber', 'پیشنهاد: لوله‌کش')}
                 </span>
               </div>
             </div>
@@ -111,36 +111,36 @@ export default function Home({ onNavigate }) {
             {/* Worker card preview */}
             <div className="hero-card">
               <div className="row" style={{ gap: 12, alignItems: 'flex-start' }}>
-                <Avatar id="rehman" size={64} />
+                <Avatar id="karim" size={64} />
                 <div className="grow">
                   <b style={{ fontSize: 17, color: 'var(--ink)' }}>
-                    {ur() ? rehman.nameUr : rehman.name}
+                    {fa() ? karim.nameFa : karim.name}
                   </b>
                   <div className="muted small">
-                    {t('Electrician', 'الیکٹریشن')} · {rehman.exp} {t('yrs', 'سال')}
+                    {t('Electrician', 'برق‌کار')} · {karim.exp} {t('yrs', 'سال')}
                   </div>
                   <div className="row" style={{ gap: 8, marginTop: 4 }}>
-                    <Stars n={rehman.rating} count={rehman.count} />
+                    <Stars n={karim.rating} count={karim.count} />
                     <span className="muted small">
-                      <Icon name="pin" /> <span className="num">{rehman.km}</span> km
+                      <Icon name="pin" /> <span className="num">{karim.km}</span> km
                     </span>
                   </div>
                 </div>
               </div>
               <div className="row between" style={{ marginTop: 14 }}>
-                <StatusPill w={rehman} />
+                <StatusPill w={karim} />
                 <span className="price">
-                  <small>{t('Visit from', 'وزٹ')}</small>
-                  <b className="num">{rs(rehman.price)}</b>
+                  <small>{t('Visit from', 'ویزیت از')}</small>
+                  <b className="num">{afn(karim.price)}</b>
                 </span>
               </div>
               <div className="skills" style={{ marginTop: 12 }}>
-                {rehman.skills.map((s) => (
+                {karim.skills.map((s) => (
                   <span key={s} className="skill">{s}</span>
                 ))}
               </div>
               <div className="row" style={{ gap: 8, marginTop: 14 }}>
-                <span className="btn btn-outline btn-sm grow">{t('Profile', 'پروفائل')}</span>
+                <span className="btn btn-outline btn-sm grow">{t('Profile', 'پروفایل')}</span>
                 <span className="btn btn-primary btn-sm grow">{t('Request', 'درخواست')}</span>
               </div>
             </div>
@@ -156,10 +156,10 @@ export default function Home({ onNavigate }) {
               </span>
               <div>
                 <b style={{ display: 'block', color: 'var(--ink)' }}>
-                  {t('Booking confirmed', 'بکنگ کنفرم')}
+                  {t('Booking confirmed', 'رزرو تأیید شد')}
                 </b>
                 <span className="muted xs num">
-                  Rs 1,300 · {t('Today 5–7 PM', 'آج شام 5 تا 7')}
+                  ؋ 1,300 · {t('Today 5–7 PM', 'امروز ۵ تا ۷ عصر')}
                 </span>
               </div>
             </div>
@@ -170,8 +170,8 @@ export default function Home({ onNavigate }) {
       {/* ─────────────── 3. SERVICES ─────────────── */}
       <section className="lsec" id="services" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="wrap">
-          <span className="eyebrow">{t('Popular services', 'مقبول خدمات')}</span>
-          <h2 style={{ marginTop: 8 }}>{t('What do you need fixed today?', 'آج کیا ٹھیک کروانا ہے؟')}</h2>
+          <span className="eyebrow">{t('Popular services', 'خدمات محبوب')}</span>
+          <h2 style={{ marginTop: 8 }}>{t('What do you need fixed today?', 'امروز چه چیزی را تعمیر می‌خواهید؟')}</h2>
           <div className="svc-grid">
             {CATS.map((c) => {
               const n = workers.filter((w) => w.cat === c.id && w.status === 'available').length;
@@ -180,10 +180,10 @@ export default function Home({ onNavigate }) {
                   <span className="tile"><Icon name={c.icon} /></span>
                   <span>
                     <b>{c.en}</b>
-                    <span className="ur" style={{ display: 'block' }}>{c.ur}</span>
+                    <span className="ur" style={{ display: 'block' }}>{c.fa}</span>
                   </span>
                   <small>
-                    {n ? `${n} ${t('available nearby', 'قریب دستیاب')}` : t('See workers', 'کاریگر دیکھیں')}
+                    {n ? `${n} ${t('available nearby', 'نزدیک موجود')}` : t('See workers', 'کاریگران را ببینید')}
                   </small>
                 </button>
               );
@@ -195,59 +195,59 @@ export default function Home({ onNavigate }) {
       {/* ─────────────── 4. HOW IT WORKS ─────────────── */}
       <section className="lsec" id="how">
         <div className="wrap">
-          <span className="eyebrow">{t('How Roshan Rozgar works', 'روشن روزگار کیسے کام کرتا ہے')}</span>
-          <h2 style={{ marginTop: 8 }}>{t('Two sides, one booking', 'دو فریق، ایک بکنگ')}</h2>
+          <span className="eyebrow">{t('How Karigar works', 'کاریگر چگونه کار می‌کند')}</span>
+          <h2 style={{ marginTop: 8 }}>{t('Two sides, one booking', 'دو طرف، یک رزرو')}</h2>
           <div className="how">
             {/* For households */}
             <div className="how-col c">
-              <h3><Icon name="home" />{t('For households', 'گھر والوں کے لیے')}</h3>
+              <h3><Icon name="home" />{t('For households', 'برای خانواده‌ها')}</h3>
               <ol className="steps">
                 <li>
                   <div>
-                    <b>{t('Say or type the problem', 'مسئلہ بولیں یا لکھیں')}</b>
-                    <span>{t('In Urdu, Roman Urdu or English. Add a photo if it helps.', 'اردو، رومن اردو یا انگریزی میں۔ چاہیں تو تصویر لگائیں۔')}</span>
+                    <b>{t('Say or type the problem', 'مشکل را بگویید یا بنویسید')}</b>
+                    <span>{t('In Dari, Roman Dari or English. Add a photo if it helps.', 'به دری، دری رومی یا انگلیسی. اگر کمک می‌کند عکس اضافه کنید.')}</span>
                   </div>
                 </li>
                 <li>
                   <div>
-                    <b>{t('Pick someone free and nearby', 'قریب اور فارغ کاریگر چنیں')}</b>
-                    <span>{t('Only workers who are available now are shown first, with distance and past reviews.', 'پہلے وہ کاریگر دکھائے جاتے ہیں جو ابھی فارغ ہیں۔')}</span>
+                    <b>{t('Pick someone free and nearby', 'کاریگر آزاد و نزدیک انتخاب کنید')}</b>
+                    <span>{t('Only workers who are available now are shown first, with distance and past reviews.', 'ابتدا کاریگرانی که اکنون آزاد هستند نمایش داده می‌شوند، با فاصله و نظرات گذشته.')}</span>
                   </div>
                 </li>
                 <li>
                   <div>
-                    <b>{t('Agree the price in chat', 'بات چیت میں قیمت طے کریں')}</b>
-                    <span>{t('Voice notes and quick replies. The agreed amount is saved on the booking.', 'وائس نوٹ اور فوری جواب۔ طے شدہ رقم بکنگ میں محفوظ۔')}</span>
+                    <b>{t('Agree the price in chat', 'قیمت را در چت توافق کنید')}</b>
+                    <span>{t('Voice notes and quick replies. The agreed amount is saved on the booking.', 'پیام‌های صوتی و پاسخ‌های سریع. مبلغ توافق شده در رزرو ذخیره می‌شود.')}</span>
                   </div>
                 </li>
                 <li>
                   <div>
-                    <b>{t('Confirm, then rate the job', 'کنفرم کریں، پھر ریٹنگ دیں')}</b>
-                    <span>{t('Your review helps the next family decide.', 'آپ کا ریویو اگلے گھرانے کی مدد کرتا ہے۔')}</span>
+                    <b>{t('Confirm, then rate the job', 'تایید کنید، سپس امتیاز دهید')}</b>
+                    <span>{t('Your review helps the next family decide.', 'نظر شما به خانواده بعدی کمک می‌کند تصمیم بگیرد.')}</span>
                   </div>
                 </li>
               </ol>
             </div>
             {/* For workers */}
             <div className="how-col w">
-              <h3><Icon name="briefcase" />{t('For skilled workers', 'ہنرمندوں کے لیے')}</h3>
+              <h3><Icon name="briefcase" />{t('For skilled workers', 'برای کارگران ماهر')}</h3>
               <ol className="steps">
                 <li>
                   <div>
-                    <b>{t('Make a profile by speaking', 'بول کر پروفائل بنائیں')}</b>
-                    <span>{t('No forms, no CV. Tap pictures and answer out loud.', 'نہ فارم، نہ سی وی۔ تصویریں دبائیں اور بول کر جواب دیں۔')}</span>
+                    <b>{t('Make a profile by speaking', 'با صحبت کردن پروفایل بسازید')}</b>
+                    <span>{t('No forms, no CV. Tap pictures and answer out loud.', 'بدون فرم، بدون رزومه. عکس بگیرید و با صدای بلند پاسخ دهید.')}</span>
                   </div>
                 </li>
                 <li>
                   <div>
-                    <b>{t('Switch to "Available"', '"دستیاب" کریں')}</b>
-                    <span>{t('Customers nearby see you right away.', 'قریبی گاہک آپ کو فوراً دیکھیں گے۔')}</span>
+                    <b>{t('Switch to "Available"', 'آماده را انتخاب کنید')}</b>
+                    <span>{t('Customers nearby see you right away.', 'مشتریان نزدیک بلافاصله شما را می‌بینند.')}</span>
                   </div>
                 </li>
                 <li>
                   <div>
-                    <b>{t('Finish the job, build your name', 'کام ختم کریں، نام بنائیں')}</b>
-                    <span>{t('Reviews from each job stay on your profile.', 'ہر کام کا ریویو آپ کی پروفائل پر رہتا ہے۔')}</span>
+                    <b>{t('Finish the job, build your name', 'کار را تمام کنید، نام خود را بسازید')}</b>
+                    <span>{t('Reviews from each job stay on your profile.', 'نظرات هر کار در پروفایل شما باقی می‌ماند.')}</span>
                   </div>
                 </li>
               </ol>
@@ -259,30 +259,30 @@ export default function Home({ onNavigate }) {
       {/* ─────────────── 5. WHY CHOOSE US ─────────────── */}
       <section className="lsec" style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <span className="eyebrow">{t('Why choose us', 'ہمیں کیوں چنیں')}</span>
-          <h2 style={{ marginTop: 8 }}>{t('Built around the questions people actually ask', 'وہ سوال جو لوگ واقعی پوچھتے ہیں')}</h2>
+          <span className="eyebrow">{t('Why choose us', 'چرا ما را انتخاب کنید')}</span>
+          <h2 style={{ marginTop: 8 }}>{t('Built around the questions people actually ask', 'بر اساس سوالاتی که مردم واقعا می‌پرسند')}</h2>
           <div className="why">
             <div className="card">
               <div className="tile"><Icon name="checkCircle" /></div>
-              <h3>{t('Reviews only from completed bookings', 'ریویو صرف مکمل بکنگ سے')}</h3>
-              <p>{t('Ratings come only from bookings completed on the platform, split into quality, professionalism and timeliness.', 'ریٹنگ صرف پلیٹ فارم پر مکمل ہونے والی بکنگ سے آتی ہے۔')}</p>
+              <h3>{t('Reviews only from completed bookings', 'نظرات فقط از رزروهای تکمیل شده')}</h3>
+              <p>{t('Ratings come only from bookings completed on the platform, split into quality, professionalism and timeliness.', 'امتیازها فقط از رزروهای تکمیل شده در پلتفرم می‌آیند، به کیفیت، حرفه‌ای بودن و به‌هنگامی تقسیم می‌شوند.')}</p>
             </div>
             <div className="card">
               <div className="tile"><Icon name="tag" /></div>
-              <h3>{t('Price agreed before work starts', 'کام سے پہلے قیمت طے')}</h3>
-              <p>{t('Workers show a starting visit charge. The final price is offered and accepted in chat before anyone sets out.', 'کاریگر ابتدائی وزٹ چارج دکھاتے ہیں۔ اصل قیمت نکلنے سے پہلے چیٹ میں طے ہوتی ہے۔')}</p>
+              <h3>{t('Price agreed before work starts', 'قیمت قبل از شروع کار توافق می‌شود')}</h3>
+              <p>{t('Workers show a starting visit charge. The final price is offered and accepted in chat before anyone sets out.', 'کاریگران هزینه ویزیت اولیه را نشان می‌دهند. قیمت نهایی قبل از حرکت در چت پیشنهاد و پذیرفته می‌شود.')}</p>
             </div>
             <div className="card">
               <div className="tile"><Icon name="mic" /></div>
-              <h3>{t('Works in Urdu & by voice', 'اردو اور آواز میں')}</h3>
-              <p>{t('Send a voice note in Urdu or Roman Urdu. Every step can be listened to, no reading required.', 'اردو یا رومن اردو میں وائس نوٹ بھیجیں۔ ہر قدم سنا جا سکتا ہے۔')}</p>
+              <h3>{t('Works in Dari & by voice', 'به دری و با صدا کار می‌کند')}</h3>
+              <p>{t('Send a voice note in Dari or Roman Dari. Every step can be listened to, no reading required.', 'پیام صوتی به دری یا دری رومی بفرستید. هر مرحله را می‌توان شنید، نیازی به خواندن نیست.')}</p>
             </div>
           </div>
           <div style={{ marginTop: 16 }}>
             <Disclaimer>
               {t(
-                'What we check: phone number by OTP and job history on the platform. What we don\u2019t: government ID (CNIC) or police records. Profiles say clearly which is which.',
-                'ہم فون نمبر (OTP) اور پلیٹ فارم پر کام کی تاریخ چیک کرتے ہیں۔ شناختی کارڈ یا پولیس ریکارڈ کی تصدیق نہیں کرتے۔'
+                'What we check: phone number by OTP and job history on the platform. What we don\u2019t: government ID (Tazkira) or police records. Profiles say clearly which is which.',
+                'آنچه بررسی می‌کنیم: شماره تلفن با OTP و سابقه کار در پلتفرم. آنچه بررسی نمی‌کنیم: کارت شناسایی (تذکره) یا سوابق پلیس. پروفایل‌ها واضح بیان می‌کنند کدام است.'
               )}
             </Disclaimer>
           </div>
@@ -294,11 +294,11 @@ export default function Home({ onNavigate }) {
         <div className="wrap">
           <div className="row between wrapit">
             <div>
-              <span className="eyebrow">{t('Featured workers', 'نمایاں کاریگر')}</span>
-              <h2 style={{ marginTop: 8 }}>{t('Near G-11, Islamabad', 'جی الیون، اسلام آباد کے قریب')}</h2>
+              <span className="eyebrow">{t('Featured workers', 'کاریگران ویژه')}</span>
+              <h2 style={{ marginTop: 8 }}>{t('Near Shahr-e-Naw, Kabul', 'نزدیک شهر نو، کابل')}</h2>
             </div>
               <button className="btn btn-outline" onClick={() => onNavigate('role')}>
-                {t('See all nearby', 'سب دیکھیں')}
+                {t('See all nearby', 'همه را ببینید')}
                 <Icon name="arrowR" className="flip" />
               </button>
           </div>
@@ -319,17 +319,17 @@ export default function Home({ onNavigate }) {
       {/* ─────────────── 7. TESTIMONIALS ─────────────── */}
       <section className="lsec">
         <div className="wrap">
-          <span className="eyebrow">{t('What customers say', 'گاہکوں کی رائے')}</span>
-          <h2 style={{ marginTop: 8 }}>{t('Small jobs, big relief', 'چھوٹے کام، بڑا سکون')}</h2>
+          <span className="eyebrow">{t('What customers say', 'نظر مشتریان')}</span>
+          <h2 style={{ marginTop: 8 }}>{t('Small jobs, big relief', 'کارهای کوچک، آرامش بزرگ')}</h2>
           <div className="testi">
             {[
-              ['ayesha', 'Ayesha K.', 'G-11/2, Islamabad', t('The plumber could see the photo of the leak before coming, so he brought the right connector. Done in 30 minutes.', 'پلمبر نے آنے سے پہلے لیک کی تصویر دیکھ لی، سہی کنیکٹر ساتھ لایا۔ 30 منٹ میں کام مکمل۔')],
-              ['hamza', 'Hamza S.', 'Satellite Town, Rawalpindi', t('I sent a voice note in Punjabi-Urdu at 9 PM and had an electrician confirmed for the morning.', 'رات 9 بجے پنجابی-اردو میں وائس نوٹ بھیجا اور صبح کو الیکٹریشن کنفرم ہو گیا۔')],
-              ['bilal', 'Naeem U.', 'G-9/4, Islamabad', t('Before this I only got work from the adda. Now customers call me from three sectors.', 'اس سے پہلے مجھے صرف اڈے سے کام ملتا تھا۔ اب گاہک تین سیکٹرز سے بلاتے ہیں۔')],
+              ['mariam', 'Mariam K.', 'Shahr-e-Naw, Kabul', t('The plumber could see the photo of the leak before coming, so he brought the right connector. Done in 30 minutes.', 'لوله‌کش قبل از آمدن عکس نشتی را دید و اتصال مناسب را آورد. در ۳۰ دقیقه انجام شد.')],
+              ['farida', 'Farida S.', 'Herat City, Herat', t('I sent a voice note in Dari at 9 PM and had an electrician confirmed for the morning.', 'ساعت ۹ شب پیام صوتی به دری فرستادم و صبح برق‌کار تأیید شد.')],
+              ['ahmad', 'Ahmad N.', 'Mazar-i-Sharif', t('Before this I only got work from the bazaar. Now customers call me from three districts.', 'قبل از این فقط از بازار کار می‌گرفتم. اکنون مشتریان از سه منطقه با من تماس می‌گیرند.')],
             ].map(([avatarId, name, place, quote]) => (
               <figure key={name} className="card" style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <span className="pill pill-sample" style={{ alignSelf: 'flex-start' }}>
-                  {t('Sample testimonial', 'نمونہ رائے')}
+                  {t('Sample testimonial', 'نمونه نظر')}
                 </span>
                 <blockquote className="quote" style={{ margin: 0 }}>“{quote}”</blockquote>
                 <figcaption className="row" style={{ marginTop: 'auto' }}>
@@ -351,22 +351,22 @@ export default function Home({ onNavigate }) {
           <div className="joinband">
             <div>
               <span className="eyebrow" style={{ color: 'var(--forest-900)' }}>
-                {t('For electricians, plumbers, mechanics & more', 'ہنرمندوں کے لیے')}
+                {t('For electricians, plumbers, mechanics & more', 'برای برق‌کاران، لوله‌کشان، مکانیک‌ها و بیشتر')}
               </span>
-              <h2 style={{ marginTop: 10 }}>{t('Your skill. Your name. More work.', 'آپ کا ہنر، آپ کا نام، زیادہ کام۔')}</h2>
-              <p className="ur" style={{ fontSize: 24, color: 'var(--forest-900)', marginTop: 6 }}>اپنے ہنر کو روزگار بنائیں</p>
+              <h2 style={{ marginTop: 10 }}>{t('Your skill. Your name. More work.', 'مهارت شما. نام شما. کار بیشتر.')}</h2>
+              <p className="ur" style={{ fontSize: 24, color: 'var(--forest-900)', marginTop: 6 }}>مهارت خود را به کار تبدیل کنید</p>
               <p style={{ marginTop: 8, color: 'var(--forest-900)', maxWidth: '36em' }}>
-                {t('Register by speaking in Urdu. Takes about 3 minutes. No form, no CV, no fee.', 'اردو میں بول کر رجسٹر کریں۔ تقریباً 3 منٹ۔ نہ فارم، نہ سی وی، نہ فیس۔')}
+                {t('Register by speaking in Dari. Takes about 3 minutes. No form, no CV, no fee.', 'با صحبت به دری ثبت‌نام کنید. حدود ۳ دقیقه. بدون فرم، بدون رزومه، بدون هزینه.')}
               </p>
             </div>
             <div className="stack" style={{ gap: 12 }}>
               <button className="btn btn-primary btn-lg btn-block" onClick={() => onNavigate('role')}>
                 <Icon name="mic" />
-                {t('Join as a Worker', 'کاریگر بنیں')}
+                {t('Join as a Worker', 'کاریگر شوید')}
               </button>
               <div className="row small" style={{ color: 'var(--forest-900)', justifyContent: 'center' }}>
                 <Icon name="speaker" />
-                {t('Every step can be listened to', 'ہر قدم سنا جا سکتا ہے')}
+                {t('Every step can be listened to', 'هر مرحله را می‌توان شنید')}
               </div>
             </div>
           </div>
@@ -382,36 +382,36 @@ export default function Home({ onNavigate }) {
               <Brand onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
               <p style={{ fontSize: 15 }}>
                 {t(
-                  'Hunar ko rozgar, rozgar ko roshan mustaqbil. Connecting skills to opportunities across Islamabad and Rawalpindi.',
-                  'ہنر کو روزگار، روزگار کو روشن مستقبل۔'
+                  'Connecting skills to opportunities across Kabul and Herat.',
+                  'مهارت‌ها را به فرصت‌ها در سراسر کابل و هرات وصل می‌کنیم.'
                 )}
               </p>
               <p className="xs" style={{ opacity: 0.75 }}>
                 {t(
                   'Built for the CUI Tech Fest AI Web Forge hackathon. All people, reviews and prices in this prototype are sample data.',
-                  'یہ پروٹوٹائپ ہے۔ تمام نام، ریویو اور قیمتیں نمونہ ہیں۔'
+                  'این یک نمونه اولیه است. تمام نام‌ها، نظرات و قیمت‌ها نمونه‌ای هستند.'
                 )}
               </p>
             </div>
             {/* Customer links */}
             <div>
-              <h4>{t('Customers', 'گاہک')}</h4>
+              <h4>{t('Customers', 'مشتریان')}</h4>
               <a onClick={() => scrollTo('services')} style={{ cursor: 'pointer' }}>{t('Services', 'خدمات')}</a>
-              <a onClick={() => scrollTo('how')} style={{ cursor: 'pointer' }}>{t('How it works', 'طریقہ کار')}</a>
-              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Find a worker', 'کاریگر ڈھونڈیں')}</a>
+              <a onClick={() => scrollTo('how')} style={{ cursor: 'pointer' }}>{t('How it works', 'روش کار')}</a>
+              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Find a worker', 'کاریگر پیدا کنید')}</a>
             </div>
             {/* Worker links */}
             <div>
-              <h4>{t('Workers', 'کاریگر')}</h4>
-              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Join as a worker', 'شامل ہوں')}</a>
-              <a onClick={() => onNavigate('wdash-returning')} style={{ cursor: 'pointer' }}>{t('Worker dashboard', 'ڈیش بورڈ')}</a>
+              <h4>{t('Workers', 'کاریگران')}</h4>
+              <a onClick={() => onNavigate('role')} style={{ cursor: 'pointer' }}>{t('Join as a worker', 'کاریگر شوید')}</a>
+              <a onClick={() => onNavigate('wdash-returning')} style={{ cursor: 'pointer' }}>{t('Worker dashboard', 'داشبورد کاریگر')}</a>
             </div>
             {/* Contact */}
             <div>
-              <h4>{t('Contact', 'رابطہ')}</h4>
-              <span style={{ display: 'block', paddingBlock: 4 }}>help@roshanrozgar.pk</span>
-              <span style={{ display: 'block', paddingBlock: 4 }} className="num">0800-76742 ({t('sample', 'نمونہ')})</span>
-              <span style={{ display: 'block', paddingBlock: 4 }}>{t('COMSATS, Park Road, Islamabad', 'کامسیٹس، پارک روڈ، اسلام آباد')}</span>
+              <h4>{t('Contact', 'تماس')}</h4>
+              <span style={{ display: 'block', paddingBlock: 4 }}>help@karigar.af</span>
+              <span style={{ display: 'block', paddingBlock: 4 }} className="num">+93 700 123 456 ({t('sample', 'نمونه')})</span>
+              <span style={{ display: 'block', paddingBlock: 4 }}>{t('Kabul, Afghanistan', 'کابل، افغانستان')}</span>
             </div>
           </div>
         </div>

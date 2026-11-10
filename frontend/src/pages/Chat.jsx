@@ -5,7 +5,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { StatusPill, Disclaimer } from '../components/Shared';
 import { catBy, CUSTOMER, stIdx } from '../lib/data';
 
@@ -53,7 +53,7 @@ export default function Chat({ onNavigate }) {
 
   const other = isCustomer
     ? { name: wname(w), sub: catName(job.cat), avatarId: job.workerId, pill: <StatusPill w={w} /> }
-    : { name: t(CUSTOMER.name, CUSTOMER.nameUr), sub: `${CUSTOMER.area} · ${w.km} km`, avatarId: 'ayesha', pill: null };
+    : { name: t(CUSTOMER.name, CUSTOMER.nameFa), sub: `${CUSTOMER.area} · ${w.km} km`, avatarId: 'mariam', pill: null };
 
   // ── Agreement banner ─────────────────────────────────────────────────────
   let agreeCls = 'none';
@@ -65,7 +65,7 @@ export default function Chat({ onNavigate }) {
     agreeContent = (
       <>
         <Icon name="hand" />
-        {t('Agreed:', 'طے:')} <b className="num">{rs(job.price)}</b> · {job.time}
+        {t('Agreed:', 'طے:')} <b className="num">{afn(job.price)}</b> · {job.time}
         {job.status === 'agreed' && (
           <span> · {isCustomer
             ? t('confirm the booking', 'بکنگ کنفرم کریں')
@@ -167,7 +167,7 @@ export default function Chat({ onNavigate }) {
               ? <span className="pill pill-off">{t('Replaced', 'بدل گئی')}</span>
               : <span className="pill pill-busy">{t('Waiting', 'انتظار')}</span>}
           </div>
-          <div className="amt num">{rs(m.amount)}</div>
+          <div className="amt num">{afn(m.amount)}</div>
           {m.note && <p className="small">{m.note}</p>}
           {canAct && (
             <div className="row" style={{ gap: 8, marginTop: 10 }}>
@@ -230,10 +230,10 @@ export default function Chat({ onNavigate }) {
           <dd>
             {stIdx(job.status) >= stIdx('confirmed') || isCustomer
               ? job.address
-              : <>G-11/2 · <span className="muted small">{t('full address after booking', 'پورا پتا بکنگ کے بعد')}</span></>}
+              : <>Shahr-e-Naw · <span className="muted small">{t('full address after booking', 'آدرس کامل پس از رزرو')}</span></>}
           </dd>
           <dt><Icon name="tag" />{t('Price', 'قیمت')}</dt>
-          <dd className="num">{job.price ? rs(job.price) : '—'}</dd>
+          <dd className="num">{job.price ? afn(job.price) : '—'}</dd>
         </dl>
 
         {/* Action buttons based on status */}

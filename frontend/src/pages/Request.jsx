@@ -132,14 +132,14 @@ export default function Request({ onNavigate }) {
               <div>
                 <label className="lbl" htmlFor="reqaddr">{t('Address', 'پتا')}</label>
                 <div className="row"><span style={{ color: 'var(--emerald)' }}><Icon name="pin" /></span><input id="reqaddr" className="inp" value={req.address} onChange={(e) => reqSet({ address: e.target.value })} /></div>
-                <p className="xs muted" style={{ marginTop: 6 }}><Icon name="lock" /> {t('Only your sector (G-11/2) is shown until you confirm a booking.', 'بکنگ کنفرم ہونے تک صرف سیکٹر دکھایا جائے گا۔')}</p>
+                <p className="xs muted" style={{ marginTop: 6 }}><Icon name="lock" /> {t('Only your area (Shahr-e-Naw) is shown until you confirm a booking.', 'تا زمانی که رزرو را تأیید نکنید، فقط منطقه شما (شهر نو) نشان داده می‌شود.')}</p>
               </div>
 
               {/* Time selection */}
               <div>
                 <span className="lbl">{t('When?', 'کب؟')}</span>
                 <div className="timegrid">
-                  {[['As soon as possible', 'جتنی جلدی ہو', 'zap'], ['Today, 5–7 PM', 'آج شام 5 تا 7', 'clock'], ['Tomorrow, 10 AM–1 PM', 'کل صبح', 'sun'], ['Pick a time', 'وقت چنیں', 'calendar']].map(([en, ur, i]) => (
+                  {[['As soon as possible', 'جتنی جلدی ہو', 'zap'], ['Today, 5–7 PM', 'آج شام 5 تا 7', 'clock'], ['Tomorrow, 10 AM–1 PM', 'کل صبح', 'sun'], ['Pick a time', 'وقت چنیں', 'calendar']].map(([en, fa, i]) => (
                     <button
                       key={en}
                       className="choice wide"

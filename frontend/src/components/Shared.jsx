@@ -1,19 +1,20 @@
 /**
- * Shared UI components used across all pages.
+ * Shared UI components — Karigar v2.0 (Afghanistan)
+ * Language: English + Dari (fa)
  */
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { catBy } from '../lib/data';
 
 // Status pill for worker availability
 export function StatusPill({ w }) {
   const { t } = useApp();
   if (w.status === 'available')
-    return <span className="pill pill-av"><span className="dot dot-av" />{t('Available now', 'ابھی دستیاب')}</span>;
+    return <span className="pill pill-av"><span className="dot dot-av" />{t('Available now', 'الان آماده')}</span>;
   if (w.status === 'busy')
-    return <span className="pill pill-busy"><Icon name="clock" />{t('On a job', 'کام پر')}{w.freeAt ? ` · ${t('free ~', 'فارغ ~')}${w.freeAt}` : ''}</span>;
-  return <span className="pill pill-off"><span className="dot dot-off" />{t('Not working today', 'آج چھٹی')}</span>;
+    return <span className="pill pill-busy"><Icon name="clock" />{t('On a job', 'مشغول کار')}{w.freeAt ? ` · ${t('free ~', 'آزاد ~')}${w.freeAt}` : ''}</span>;
+  return <span className="pill pill-off"><span className="dot dot-off" />{t('Not working today', 'امروز نیست')}</span>;
 }
 
 // Stars with rating
@@ -28,12 +29,12 @@ export function Stars({ n, count }) {
 }
 
 // Speaker button for text-to-speech
-export function SpeakBtn({ id, en, ur }) {
+export function SpeakBtn({ id, en, fa }) {
   const { speak } = useApp();
   return (
     <button
       className="speak"
-      onClick={() => speak(en, ur)}
+      onClick={() => speak(en, fa)}
       aria-label="Listen"
       data-speak-id={id}
     >
@@ -42,11 +43,12 @@ export function SpeakBtn({ id, en, ur }) {
   );
 }
 
-// Logo
+// Logo — Afghan-inspired green & red
 export function Logo({ size = 40 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-      <rect width="48" height="48" rx="14" fill="#087F5B" />
+      <rect width="48" height="48" rx="14" fill="#006400" />
+      {/* Hammer & wrench cross — karigar symbol */}
       <path d="M10 31a14 14 0 0 1 28 0z" fill="#F4B942" />
       <g stroke="#F4B942" strokeWidth="2.4" strokeLinecap="round">
         <path d="M24 9v4M12.5 13.5l2.8 2.8M35.5 13.5l-2.8 2.8M7 22.5h3.6M37.4 22.5H41" />
@@ -57,15 +59,18 @@ export function Logo({ size = 40 }) {
   );
 }
 
-// Brand
+// Brand — Karigar
 export function Brand({ onClick }) {
   const { t } = useApp();
   return (
     <button className="brand" onClick={onClick}>
       <Logo size={40} />
       <span>
-        <b>Roshan Rozgar</b>
-        <span className="ur">{t('روشن روزگار', 'روشن روزگار')}</span>
+        <b>Karigar</b>
+        {/* کاریگر in Dari — same Nastaliq script */}
+        <span className="fa" style={{ fontFamily: "'Noto Nastaliq Urdu', serif", direction: 'rtl' }}>
+          {t('کاریگر', 'کاریگر')}
+        </span>
       </span>
     </button>
   );
@@ -78,7 +83,7 @@ export function WorkerCard({ w, onProfile, onRequest, landing }) {
   const cls = w.status === 'busy' ? 'is-busy' : w.status === 'off' ? 'is-off' : '';
   const cta = w.status === 'available'
     ? <button className="btn btn-primary btn-sm" onClick={() => onRequest?.(w.id)}><Icon name="msg" />{t('Request', 'درخواست')}</button>
-    : <button className="btn btn-sm is-disabled" disabled>{w.status === 'busy' ? <><Icon name="clock" />{t('Busy', 'مصروف')}</> : t('Unavailable', 'دستیاب نہیں')}</button>;
+    : <button className="btn btn-sm is-disabled" disabled>{w.status === 'busy' ? <><Icon name="clock" />{t('Busy', 'مشغول')}</> : t('Unavailable', 'در دسترس نیست')}</button>;
 
   return (
     <article className={`wcard ${cls}`}>
@@ -86,7 +91,7 @@ export function WorkerCard({ w, onProfile, onRequest, landing }) {
         <Avatar id={w.id} size={64} />
         <div className="grow">
           <h3>{wname(w)}</h3>
-          <div className="meta"><span><Icon name={c.icon} />{catName(w.cat)}</span><span>{w.exp} {t('yrs exp.', 'سال تجربہ')}</span></div>
+          <div className="meta"><span><Icon name={c.icon} />{catName(w.cat)}</span><span>{w.exp} {t('yrs exp.', 'سال تجربه')}</span></div>
           <div className="meta" style={{ marginTop: 2 }}>
             <Stars n={w.rating} count={w.count} />
             <span><Icon name="pin" /><span className="num">{w.km} km</span> · {w.area}</span>
@@ -98,8 +103,8 @@ export function WorkerCard({ w, onProfile, onRequest, landing }) {
       </div>
       <div className="skills">{w.skills.slice(0, 3).map((s) => <span key={s} className="skill">{s}</span>)}</div>
       <div className="foot">
-        <span className="price grow"><small>{t('Visit from', 'وزٹ سے')}</small><b className="num">{rs(w.price)}</b></span>
-        <button className="btn btn-outline btn-sm" onClick={() => onProfile?.(w.id)}>{t('Profile', 'پروفائل')}</button>
+        <span className="price grow"><small>{t('Visit from', 'ویزیت از')}</small><b className="num">{afn(w.price)}</b></span>
+        <button className="btn btn-outline btn-sm" onClick={() => onProfile?.(w.id)}>{t('Profile', 'پروفایل')}</button>
         {cta}
       </div>
     </article>
@@ -117,22 +122,22 @@ export function BookingTicket({ j, w, statusLabel }) {
           <Icon name={c.icon} />
         </span>
         <div className="grow">
-          <span className="small" style={{ opacity: 0.8 }}>{t('Booking', 'بکنگ')} #{j.id}</span>
+          <span className="small" style={{ opacity: 0.8 }}>{t('Booking', 'رزرو')} #{j.id}</span>
           <h2>{j.title}</h2>
         </div>
         {statusLabel}
       </div>
       <div className="body">
         <div className="parties">
-          <div className="party"><Avatar id="ayesha" size={48} /><div className="grow"><span className="xs muted">{t('Customer', 'گاہک')}</span><b style={{ display: 'block' }}>Ayesha Khan</b><span className="small muted num">0333-5550000</span></div></div>
+          <div className="party"><Avatar id="mariam" size={48} /><div className="grow"><span className="xs muted">{t('Customer', 'مشتری')}</span><b style={{ display: 'block' }}>Mariam Noori</b><span className="small muted num">0700-100100</span></div></div>
           <div className="party"><Avatar id={w.id} size={48} /><div className="grow"><span className="xs muted">{t('Worker', 'کاریگر')}</span><b style={{ display: 'block' }}>{w.name}</b><span className="small muted">{catName(w.cat)} · <Stars n={w.rating} /></span></div></div>
         </div>
         <dl className="kv" style={{ margin: 0 }}>
-          <dt><Icon name="wrench" />{t('Job', 'کام')}</dt><dd>{j.details[0] || j.title}</dd>
-          <dt><Icon name="calendar" />{t('Date & time', 'تاریخ و وقت')}</dt><dd>{j.time} <span className="muted small">(Tue 10 Nov)</span></dd>
-          <dt><Icon name="pin" />{t('Location', 'جگہ')}</dt><dd>{j.address}</dd>
-          <dt><Icon name="tag" />{t('Agreed price', 'طے شدہ قیمت')}</dt>
-          <dd><b className="num" style={{ fontSize: 22, color: 'var(--forest)' }}>{j.price ? rs(j.price) : '—'}</b><span className="xs muted" style={{ display: 'block' }}>{t('Parts extra only if agreed in chat', 'پرزے صرف چیٹ میں طے ہونے پر')}</span></dd>
+          <dt><Icon name="wrench" />{t('Job', 'کار')}</dt><dd>{j.details[0] || j.title}</dd>
+          <dt><Icon name="calendar" />{t('Date & time', 'تاریخ و وقت')}</dt><dd>{j.time}</dd>
+          <dt><Icon name="pin" />{t('Location', 'آدرس')}</dt><dd>{j.address}</dd>
+          <dt><Icon name="tag" />{t('Agreed price', 'قیمت توافقی')}</dt>
+          <dd><b className="num" style={{ fontSize: 22, color: 'var(--forest)' }}>{j.price ? afn(j.price) : '—'}</b><span className="xs muted" style={{ display: 'block' }}>{t('Parts extra only if agreed in chat', 'قطعات فقط در صورت توافق در چت اضافه می‌شود')}</span></dd>
         </dl>
       </div>
     </div>
@@ -157,12 +162,12 @@ export function ToastContainer() {
 export function AppHeader({ activeView, onNavigate }) {
   const { t, role } = useApp();
   const navItems = role === 'worker'
-    ? [['wdash', 'home', t('Home', 'ہوم')], ['wjob', 'briefcase', t('Jobs', 'کام')], ['chat', 'msg', t('Chat', 'چیٹ')], ['wprofile', 'user', t('Profile', 'پروفائل')]]
-    : [['discover', 'search', t('Find', 'تلاش')], ['track', 'calendar', t('Bookings', 'بکنگ')], ['chat', 'msg', t('Chat', 'چیٹ')], ['profile', 'user', t('Profile', 'پروفائل')]];
+    ? [['wdash', 'home', t('Home', 'خانه')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['chat', 'msg', t('Chat', 'چت')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
+    : [['discover', 'search', t('Find', 'جستجو')], ['track', 'calendar', t('Bookings', 'رزروها')], ['chat', 'msg', t('Chat', 'چت')], ['profile', 'user', t('Profile', 'پروفایل')]];
 
   const topNav = role === 'worker'
-    ? [['wdash', 'home', t('Dashboard', 'ڈیش بورڈ')], ['wjob', 'briefcase', t('Jobs', 'کام')], ['wprofile', 'user', t('Profile', 'پروفائل')]]
-    : [['discover', 'search', t('Find a worker', 'کاریگر ڈھونڈیں')], ['track', 'calendar', t('My bookings', 'میری بکنگ')], ['profile', 'user', t('Profile', 'پروفائل')]];
+    ? [['wdash', 'home', t('Dashboard', 'داشبورد')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
+    : [['discover', 'search', t('Find a worker', 'پیدا کردن کاریگر')], ['track', 'calendar', t('My bookings', 'رزروهای من')], ['profile', 'user', t('Profile', 'پروفایل')]];
 
   const activeOf = (v) => {
     const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track' };
@@ -192,8 +197,8 @@ export function AppHeader({ activeView, onNavigate }) {
 export function BottomNav({ activeView, onNavigate }) {
   const { t, role, notifs } = useApp();
   const items = role === 'worker'
-    ? [['wdash', 'home', t('Home', 'ہوم')], ['wjob', 'briefcase', t('Jobs', 'کام')], ['chat', 'msg', t('Chat', 'چیٹ')], ['wprofile', 'user', t('Profile', 'پروفائل')]]
-    : [['discover', 'search', t('Find', 'تلاش')], ['track', 'calendar', t('Bookings', 'بکنگ')], ['chat', 'msg', t('Chat', 'چیٹ')], ['profile', 'user', t('Profile', 'پروفائل')]];
+    ? [['wdash', 'home', t('Home', 'خانه')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['chat', 'msg', t('Chat', 'چت')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
+    : [['discover', 'search', t('Find', 'جستجو')], ['track', 'calendar', t('Bookings', 'رزروها')], ['chat', 'msg', t('Chat', 'چت')], ['profile', 'user', t('Profile', 'پروفایل')]];
 
   const activeOf = (v) => {
     const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track' };
@@ -213,13 +218,19 @@ export function BottomNav({ activeView, onNavigate }) {
   );
 }
 
-// Language toggle
+// Language toggle — English / دری
 export function LangToggle() {
   const { lang, setLang } = useApp();
   return (
     <div className="seg" style={{ background: 'var(--soft)' }} role="group" aria-label="Language">
-      <button style={{ color: 'var(--ink)' }} aria-pressed={lang !== 'ur'} onClick={() => setLang('en')}>English</button>
-      <button style={{ color: 'var(--ink)', lineHeight: 1.3 }} className="ur" aria-pressed={lang === 'ur'} onClick={() => setLang('ur')}>اردو</button>
+      <button style={{ color: 'var(--ink)' }} aria-pressed={lang === 'en'} onClick={() => setLang('en')}>English</button>
+      <button
+        style={{ color: 'var(--ink)', fontFamily: "'Noto Nastaliq Urdu', serif", lineHeight: 1.5, direction: 'rtl' }}
+        aria-pressed={lang === 'fa'}
+        onClick={() => setLang('fa')}
+      >
+        دری
+      </button>
     </div>
   );
 }

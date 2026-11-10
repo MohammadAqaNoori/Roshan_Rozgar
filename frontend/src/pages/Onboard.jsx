@@ -6,26 +6,26 @@ import { Brand, SpeakBtn } from '../components/Shared';
 import { OB_STEPS, CATS, SKILLS, AREAS } from '../lib/data';
 
 export default function Onboard({ onNavigate }) {
-  const { t, ur, ob, obNext, obBack, obJump, obLang, obSet, obNameListen, obNameYes, obNameNo, obNameRedo, obTyped, obProf, obSkill, obArea, obExp, obDay, obHours, obFinish, speak } = useApp();
+  const { t, fa, ob, obNext, obBack, obJump, obLang, obSet, obNameListen, obNameYes, obNameNo, obNameRedo, obTyped, obProf, obSkill, obArea, obExp, obDay, obHours, obFinish, speak } = useApp();
   const [typedName, setTypedName] = useState('');
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState('');
 
   // Find nearest AREA to GPS coordinates using simple distance
   const findNearestArea = (lat, lng) => {
-    // Area approximate coordinates (Islamabad/Rawalpindi grid)
+    // Area approximate coordinates (Afghan cities)
     const AREA_COORDS = {
-      'G-11': { lat: 33.6844, lng: 73.0479 },
-      'G-10': { lat: 33.6750, lng: 73.0530 },
-      'G-9':  { lat: 33.6700, lng: 73.0600 },
-      'F-11': { lat: 33.6940, lng: 73.0380 },
-      'F-10': { lat: 33.6880, lng: 73.0450 },
-      'I-8':  { lat: 33.6557, lng: 73.0256 },
-      'G-13': { lat: 33.6500, lng: 73.0200 },
-      'Saddar':         { lat: 33.5900, lng: 73.0450 },
-      'Satellite Town': { lat: 33.5973, lng: 73.0479 },
+      'Shahr-e-Naw':      { lat: 34.5260, lng: 69.1781 },
+      'Karte Seh':        { lat: 34.5100, lng: 69.1700 },
+      'Macroyan':         { lat: 34.5200, lng: 69.2050 },
+      'Wazir Akbar Khan': { lat: 34.5280, lng: 69.1950 },
+      'Khair Khana':      { lat: 34.5450, lng: 69.1650 },
+      'Pul-e-Charkhi':    { lat: 34.5500, lng: 69.2300 },
+      'Herat City':       { lat: 34.3482, lng: 62.2041 },
+      'Mazar City':       { lat: 36.7069, lng: 67.1100 },
+      'Kandahar City':    { lat: 31.6289, lng: 65.7372 },
     };
-    let nearest = 'G-11';
+    let nearest = 'Shahr-e-Naw';
     let minDist = Infinity;
     for (const [id, coords] of Object.entries(AREA_COORDS)) {
       const d = Math.sqrt((lat - coords.lat) ** 2 + (lng - coords.lng) ** 2);
@@ -49,12 +49,12 @@ export default function Onboard({ onNavigate }) {
       },
       (err) => {
         setLocating(false);
-        // If permission denied or unavailable, fall back to G-11 for the demo
+        // If permission denied or unavailable, fall back to Shahr-e-Naw for the demo
         if (err.code === err.PERMISSION_DENIED) {
-          setLocError(t('Location permission denied. Please pick an area below.', 'جگہ کی اجازت نہیں ملی۔ نیچے سے علاقہ چنیں۔'));
+          setLocError(t('Location permission denied. Please pick an area below.', 'اجازه موقع‌یابی داده نشد. لطفاً منطقه را از زیر انتخاب کنید.'));
         } else {
-          // Fallback: simulate G-11 for demo
-          obArea('G-11');
+          // Fallback: simulate Shahr-e-Naw for demo
+          obArea('Shahr-e-Naw');
         }
       },
       { timeout: 8000, maximumAge: 60000 }
@@ -83,11 +83,11 @@ export default function Onboard({ onNavigate }) {
       <div className="ob-q">
         <span className="big-ico"><Icon name={st.icon} /></span>
         <div className="grow">
-          <p className="ur-line">{st.ur}</p>
+          <p className="ur-line">{st.fa}</p>
           <h2>{st.en}</h2>
           {sub && <p className="en-line" style={{ marginTop: 4 }}>{sub}</p>}
         </div>
-        <SpeakBtn id={`ob${ob.step}`} en={`${st.en}. ${sub || ''}`} ur={`${st.ur}. ${sub || ''}`} />
+        <SpeakBtn id={`ob${ob.step}`} en={`${st.en}. ${sub || ''}`} fa={`${st.fa}. ${sub || ''}`} />
       </div>
       {children}
     </>
@@ -101,19 +101,19 @@ export default function Onboard({ onNavigate }) {
           <>
             <Question sub="Tap one. You can change it any time.">
               <div className="choice-grid">
-                <button className="choice" aria-pressed={ob.lang === 'ur'} onClick={() => obLang('ur')}>
-                  <span className="tile" style={{ fontFamily: 'var(--f-ur)', fontSize: 22, lineHeight: 1 }}>اُ</span>
-                  <span className="u" style={{ fontSize: 22 }}>اردو</span>
-                  <b className="xs muted" style={{ fontWeight: 600 }}>Urdu</b>
+                <button className="choice" aria-pressed={ob.lang === 'fa'} onClick={() => obLang('fa')}>
+                  <span className="tile" style={{ fontFamily: 'var(--f-ur)', fontSize: 22, lineHeight: 1 }}>د</span>
+                  <span className="u" style={{ fontSize: 22 }}>دری</span>
+                  <b className="xs muted" style={{ fontWeight: 600 }}>Dari</b>
                 </button>
                 <button className="choice" aria-pressed={ob.lang === 'en'} onClick={() => obLang('en')}>
                   <span className="tile" style={{ fontWeight: 800, fontSize: 20 }}>Aa</span>
                   <b>English</b>
-                  <span className="u">انگریزی</span>
+                  <span className="u">انگلیسی</span>
                 </button>
               </div>
             </Question>
-            <div className="disclaimer" style={{ marginTop: 16 }}><Icon name="speaker" /><span>{t('Tap the yellow speaker on any step to hear it read aloud.', 'کسی بھی قدم پر پیلے اسپیکر کو دبائیں اور سنیں۔')}</span></div>
+            <div className="disclaimer" style={{ marginTop: 16 }}><Icon name="speaker" /><span>{t('Tap the yellow speaker on any step to hear it read aloud.', 'برای شنیدن هر مرحله، دکمه زرد بلندگو را بزنید.')}</span></div>
           </>
         );
 
@@ -140,7 +140,7 @@ export default function Onboard({ onNavigate }) {
                     obTyped((typedName || ob.name).trim());
                   }
                 }}
-                placeholder={t('e.g. Muhammad Imran', 'مثلاً: محمد عمران')}
+                placeholder={t('e.g. Ahmad Shah', 'مثلاً: احمد شاه')}
                 autoComplete="name"
                 autoFocus
               />
@@ -185,7 +185,7 @@ export default function Onboard({ onNavigate }) {
               {CATS.map((c) => (
                 <button key={c.id} className="choice" aria-pressed={ob.profession === c.id} onClick={() => obProf(c.id)}>
                   <span className="tile"><Icon name={c.icon} /></span>
-                  <span className="u">{c.ur}</span>
+                  <span className="u">{c.fa}</span>
                   <b className="small">{c.en}</b>
                 </button>
               ))}
@@ -296,7 +296,7 @@ export default function Onboard({ onNavigate }) {
         return (
           <Question sub="Tap the days you usually work.">
             <div className="daygrid">
-              {[['Mon', 'پیر'], ['Tue', 'منگل'], ['Wed', 'بدھ'], ['Thu', 'جمعرات'], ['Fri', 'جمعہ'], ['Sat', 'ہفتہ'], ['Sun', 'اتوار']].map(([d, u]) => (
+              {[['Sat', 'شنبه'], ['Sun', 'یکشنبه'], ['Mon', 'دوشنبه'], ['Tue', 'سه‌شنبه'], ['Wed', 'چهارشنبه'], ['Thu', 'پنجشنبه'], ['Fri', 'جمعه']].map(([d, u]) => (
                 <button key={d} className="day" aria-pressed={ob.days.includes(d)} onClick={() => obDay(d)}>{d}<span className="u">{u}</span></button>
               ))}
             </div>
@@ -319,10 +319,10 @@ export default function Onboard({ onNavigate }) {
           <Question sub="This is what customers will see. Tap a pencil to change something.">
             <div className="wcard" style={{ marginTop: 18, border: '2px solid var(--emerald)' }}>
               <div className="top">
-                {ob.photo ? <span className="ava" style={{ width: 72, height: 72 }}><img src={ob.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></span> : <Avatar id="imran" size={72} />}
+                {ob.photo ? <span className="ava" style={{ width: 72, height: 72 }}><img src={ob.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></span> : <Avatar id="ahmad" size={72} />}
                 <div className="grow">
                   <h3>{ob.name}</h3>
-                  <div className="meta"><span><Icon name={c.icon} />{c.en} · <span className="ur">{c.ur}</span></span></div>
+                  <div className="meta"><span><Icon name={c.icon} />{c.en} · <span className="ur">{c.fa}</span></span></div>
                   <div className="meta"><span><Icon name="star" />{ob.exp} {t('years', 'سال')}</span><span><Icon name="pin" />{ob.area}</span></div>
                 </div>
                 <span className="pill pill-av"><span className="dot dot-av" />{t('Available now', 'ابھی دستیاب')}</span>
@@ -347,12 +347,12 @@ export default function Onboard({ onNavigate }) {
         return (
           <div className="success-burst">
             <div className="burst"><Icon name="check" /></div>
-            <p className="ur" style={{ fontSize: 26, color: 'var(--forest)' }}>مبارک ہو! آپ کی پروفائل تیار ہے</p>
-            <h2 style={{ fontSize: 28 }}>{t('Your profile is live', 'آپ کی پروفائل لائیو ہے')}</h2>
-            <p className="muted" style={{ maxWidth: '30em' }}>{t(`Customers near ${ob.area || 'G-11'} can now find you. Keep your status on "Available" to get job requests.`, `قریبی گاہک اب آپ کو ڈھونڈ سکتے ہیں۔`)}</p>
-            <SpeakBtn id="obdone" en="Congratulations, your profile is ready." ur="مبارک ہو! آپ کی پروفائل تیار ہے۔" />
+            <p className="ur" style={{ fontSize: 26, color: 'var(--forest)' }}>تبریک! پروفایل شما آماده است</p>
+            <h2 style={{ fontSize: 28 }}>{t('Your profile is live', 'پروفایل شما فعال است')}</h2>
+            <p className="muted" style={{ maxWidth: '30em' }}>{t(`Customers near ${ob.area || 'Shahr-e-Naw'} can now find you. Keep your status on "Available" to get job requests.`, `مشتریان نزدیک اکنون می‌توانند شما را پیدا کنند. وضعیت خود را روی "آماده" نگه دارید.`)}</p>
+            <SpeakBtn id="obdone" en="Congratulations, your profile is ready." fa="تبریک! پروفایل شما آماده است." />
             <div className="stack" style={{ width: '100%', maxWidth: 380, marginTop: 8 }}>
-              <button className="btn btn-primary btn-lg btn-block" onClick={() => { obFinish(); onNavigate('wdash'); }}><Icon name="home" />{t('Go to my home screen', 'میری ہوم اسکرین')}</button>
+              <button className="btn btn-primary btn-lg btn-block" onClick={() => { obFinish(); onNavigate('wdash'); }}><Icon name="home" />{t('Go to my home screen', 'صفحه اصلی من')}</button>
             </div>
           </div>
         );
@@ -397,7 +397,7 @@ export default function Onboard({ onNavigate }) {
                 {ob.step === 6 && !ob.photo && <button className="btn btn-outline" onClick={obNext}>{t('Skip', 'چھوڑیں')}</button>}
                 <button className="btn btn-primary btn-lg" disabled={!isValid()} onClick={obNext}>
                   {ob.step === 8 ? t('Create my profile', 'پروفائل بنائیں') : t('Next', 'آگے')}
-                  {!ur() && ob.step !== 8 && <span className="ur" style={{ fontSize: 15, opacity: 0.85, lineHeight: 1.2 }}>آگے</span>}
+                  {!fa() && ob.step !== 8 && <span className="ur" style={{ fontSize: 15, opacity: 0.85, lineHeight: 1.2 }}>آگے</span>}
                   <Icon name="arrowR" className="flip" />
                 </button>
               </div>

@@ -1,10 +1,10 @@
 import { Icon } from '../lib/icons';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { stIdx } from '../lib/data';
 
 export default function WorkerJobs({ onNavigate }) {
   const { t, job, W } = useApp();
-  const me = W('imran');
+  const me = W('ahmad');
 
   const rows = [];
   if (job && job.status !== 'declined') {
@@ -31,7 +31,7 @@ export default function WorkerJobs({ onNavigate }) {
           {[['05', 'Nov', 'Tap & mixer', 'Faisal M.', 1200], ['01', 'Nov', 'Water tank float valve', 'Kamran T.', 900], ['29', 'Oct', 'Geyser pipe', 'Sana R.', 1800]].map(([d, m, title, n, p], i) => (
             <div key={i} className="listrow">
               <span className="datebox"><b className="num">{d}</b><span>{m}</span></span>
-              <div className="grow"><b>{title}</b><div className="small muted">{n} · <span className="num">{rs(p)}</span></div></div>
+              <div className="grow"><b>{title}</b><div className="small muted">{n} · <span className="num">{afn(p)}</span></div></div>
               <Icon name="checkCircle" style={{ color: 'var(--success)' }} />
             </div>
           ))}

@@ -1,6 +1,6 @@
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { BookingTicket } from '../components/Shared';
 import { catBy, stIdx } from '../lib/data';
 
@@ -79,7 +79,7 @@ export default function Track({ onNavigate }) {
         {[['28', 'Oct', 'Ceiling fan wiring', 'Abdul Rehman', 1200], ['02', 'Sep', 'AC service (1.5 ton)', 'Shahid Mehmood', 2500]].map(([d, m, ti, n, p], i) => (
           <div key={i} className="listrow">
             <span className="datebox"><b className="num">{d}</b><span>{m}</span></span>
-            <div className="grow"><b>{ti}</b><div className="small muted">{n} · <span className="num">{rs(p)}</span></div></div>
+            <div className="grow"><b>{ti}</b><div className="small muted">{n} · <span className="num">{afn(p)}</span></div></div>
             <span className="pill pill-off"><Icon name="check" />{t('Completed', 'مکمل')}</span>
           </div>
         ))}

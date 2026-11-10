@@ -1,5 +1,5 @@
 import { Icon } from '../lib/icons';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { BookingTicket, Disclaimer } from '../components/Shared';
 import { Avatar } from '../lib/avatar';
 import { catBy, stIdx } from '../lib/data';
@@ -33,7 +33,7 @@ export default function Confirm({ onNavigate }) {
           <div className="card success-burst" style={{ padding: 28 }}>
             <div className="burst"><Icon name="check" /></div>
             <h1 style={{ fontSize: 28 }}>{t('Booking confirmed', 'بکنگ کنفرم ہو گئی')}</h1>
-            <p className="muted">{wname(w)} {t('will come', 'آئیں گے')} {job.time.toLowerCase()} · <b className="num">{rs(job.price)}</b></p>
+            <p className="muted">{wname(w)} {t('will come', 'آئیں گے')} {job.time.toLowerCase()} · <b className="num">{afn(job.price)}</b></p>
           </div>
           <section className="card stack" style={{ gap: 12 }}>
             <b>{t('What just changed', 'ابھی کیا بدلا')}</b>

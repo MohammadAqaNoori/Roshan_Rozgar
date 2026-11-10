@@ -1,12 +1,12 @@
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { catBy } from '../lib/data';
 
 export default function Profile({ own, onNavigate }) {
-  const { t, ur, W, wname, catName, sel, selectWorker } = useApp();
-  const w = W(own ? 'imran' : sel) || W('imran');
+  const { t, fa, W, wname, catName, sel, selectWorker } = useApp();
+  const w = W(own ? 'ahmad' : sel) || W('ahmad');
   const c = catBy(w.cat);
 
   const avg = (k) => {
@@ -42,10 +42,10 @@ export default function Profile({ own, onNavigate }) {
               <h3>{t('What we know about', 'ہم کیا جانتے ہیں')} {wname(w).split(' ')[0]}</h3>
               <ul className="know" style={{ marginTop: 8 }}>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Phone number confirmed by OTP', 'فون نمبر OTP سے تصدیق شدہ')} <span className="pill pill-sample">{t('simulated', 'نقلی')}</span></span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Roshan Rozgar since', 'روشن روزگار پر فعال')} {w.since}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'روشن روزگار پر فعال')} {w.since}</span></li>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبانیں:')} {w.langs}</span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'وزٹ چارج سے')} <b className="num">{rs(w.price)}</b></span></li>
-                <li><span className="no"><Icon name="info" /></span><span>{t('Identity (CNIC) not verified — out of scope for this prototype.', 'شناخت کی تصدیق نہیں — اس پروٹوٹائپ میں شامل نہیں۔')}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'وزٹ چارج سے')} <b className="num">{afn(w.price)}</b></span></li>
+                <li><span className="no"><Icon name="info" /></span><span>{t('Identity (Tazkira) not verified — out of scope for this prototype.', 'شناخت کی تصدیق نہیں — اس پروٹوٹائپ میں شامل نہیں۔')}</span></li>
               </ul>
             </section>
 
@@ -94,7 +94,7 @@ export default function Profile({ own, onNavigate }) {
                   <button className="btn btn-lg btn-block is-disabled" disabled>{t('Not working today', 'آج چھٹی')}</button>
                 )}
                 <div className="row between">
-                  <span className="price"><small>{t('Visit from', 'وزٹ سے')}</small><b className="num">{rs(w.price)}</b></span>
+                  <span className="price"><small>{t('Visit from', 'وزٹ سے')}</small><b className="num">{afn(w.price)}</b></span>
                   <span className="muted small">{t('Parts extra', 'پرزے علیحدہ')}</span>
                 </div>
               </div>

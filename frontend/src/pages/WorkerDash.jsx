@@ -1,13 +1,13 @@
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { CUSTOMER, catBy, stIdx } from '../lib/data';
 
 export default function WorkerDash({ onNavigate }) {
   const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak } = useApp();
 
-  const me = W('imran');  // seeded worker — used only for stats/reviews demo data
+  const me = W('ahmad');  // seeded worker — used only for stats/reviews demo data
   const active = job && stIdx(job.status) >= stIdx('confirmed') && stIdx(job.status) < stIdx('closed');
   const incoming = job && ['requested', 'negotiating'].includes(job.status);
   const waitConfirm = job && job.status === 'agreed';
@@ -34,7 +34,7 @@ export default function WorkerDash({ onNavigate }) {
               : t('You are hidden from new requests.', 'آپ نئی درخواستوں سے چھپے ہیں۔')}
           </p>
         </div>
-        <SpeakBtn id="avail" en={active ? 'You are on a job' : on ? 'You are available' : 'You are busy'} ur={active ? 'آپ کام پر ہیں' : on ? 'آپ دستیاب ہیں' : 'آپ مصروف ہیں'} />
+        <SpeakBtn id="avail" en={active ? 'You are on a job' : on ? 'You are available' : 'You are busy'} fa={active ? 'آپ کام پر ہیں' : on ? 'آپ دستیاب ہیں' : 'آپ مصروف ہیں'} />
       </div>
       <div className="bigtoggle" role="group" aria-label="Availability">
         <button aria-pressed={on && !active} onClick={() => setAvail('available')} disabled={active}>
@@ -58,9 +58,9 @@ export default function WorkerDash({ onNavigate }) {
           <span className="small muted"><Icon name="clock" /> {t('2 min ago', '2 منٹ پہلے')}</span>
         </div>
         <div className="row">
-          <Avatar id="ayesha" size={52} radius={16} />
+          <Avatar id="mariam" size={52} radius={16} />
           <div className="grow">
-            <b style={{ fontSize: 18 }}>{t(CUSTOMER.name, CUSTOMER.nameUr)}</b>
+            <b style={{ fontSize: 18 }}>{t(CUSTOMER.name, CUSTOMER.nameFa)}</b>
             <div className="small muted">{CUSTOMER.area} · <span className="num">1.2 km</span></div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function WorkerDash({ onNavigate }) {
   } else if (waitConfirm) {
     jobCard = (
       <section className="card stack" style={{ gap: 12, border: '2px solid var(--emerald)' }}>
-        <div className="row"><Icon name="hand" /><b>{t('Price agreed', 'قیمت طے')}: <span className="num">{rs(job.price)}</span></b></div>
+        <div className="row"><Icon name="hand" /><b>{t('Price agreed', 'قیمت طے')}: <span className="num">{afn(job.price)}</span></b></div>
         <p className="muted small">{t(`Waiting for ${CUSTOMER.name.split(' ')[0]} to confirm the booking.`, 'گاہک کی تصدیق کا انتظار۔')}</p>
         <button className="btn btn-outline btn-block" onClick={simCustomerConfirm}><Icon name="refresh" />{t('Demo: simulate customer confirming', 'ڈیمو: گاہک کی تصدیق')}</button>
       </section>
@@ -114,12 +114,12 @@ export default function WorkerDash({ onNavigate }) {
           <span className="small muted num">#{job.id}</span>
         </div>
         <div className="row">
-          <Avatar id="ayesha" size={52} radius={16} />
+          <Avatar id="mariam" size={52} radius={16} />
           <div className="grow">
             <b style={{ fontSize: 18 }}>{job.title}</b>
             <div className="small muted">{CUSTOMER.name} · {job.time}</div>
           </div>
-          <b className="num" style={{ fontSize: 20, color: 'var(--forest)' }}>{rs(job.price)}</b>
+          <b className="num" style={{ fontSize: 20, color: 'var(--forest)' }}>{afn(job.price)}</b>
         </div>
         <div className="locbar"><Icon name="pin" /><span className="small grow">{CUSTOMER.address}</span></div>
         {next ? (
@@ -160,7 +160,7 @@ export default function WorkerDash({ onNavigate }) {
             {ob.photo ? (
               <span className="ava" style={{ width: 56, height: 56 }}><img src={ob.photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></span>
             ) : (
-              <Avatar id="imran" size={56} radius={18} />
+              <Avatar id="ahmad" size={56} radius={18} />
             )}
             <div>
               <p className="muted">{t('Assalam-o-Alaikum', 'السلام علیکم')}</p>
@@ -169,7 +169,7 @@ export default function WorkerDash({ onNavigate }) {
           </div>
           <span className="pill pill-info">
             <Icon name={tradeObj.icon} />
-            {t(tradeObj.en, tradeObj.ur)}{displayArea ? ` · ${displayArea}` : ''}
+            {t(tradeObj.en, tradeObj.fa)}{displayArea ? ` · ${displayArea}` : ''}
           </span>
         </div>
 
@@ -186,9 +186,9 @@ export default function WorkerDash({ onNavigate }) {
             <div className="statrow">
               <div className="stat"><Icon name="star" /><b className="num">{me.rating.toFixed(1)}</b><span>{t('rating', 'ریٹنگ')} · {me.count}</span></div>
               <div className="stat"><Icon name="checkCircle" /><b className="num">{me.jobs}</b><span>{t('jobs done', 'مکمل کام')}</span></div>
-              <div className="stat"><Icon name="wallet" /><b className="num" style={{ fontSize: 20 }}>{rs(earned)}</b><span>{t('this week', 'اس ہفتے')}</span></div>
+              <div className="stat"><Icon name="wallet" /><b className="num" style={{ fontSize: 20 }}>{afn(earned)}</b><span>{t('this week', 'اس ہفتے')}</span></div>
             </div>
-            <p className="xs muted" style={{ marginTop: -8 }}><Icon name="info" /> {t('Earnings are a record of agreed prices. Roshan Rozgar does not handle payments.', 'کمائی صرف طے شدہ قیمتوں کا ریکارڈ ہے۔')}</p>
+            <p className="xs muted" style={{ marginTop: -8 }}><Icon name="info" /> {t('Earnings are a record of agreed prices. Karigar does not handle payments.', 'کمائی صرف طے شدہ قیمتوں کا ریکارڈ ہے۔')}</p>
 
             {/* Upcoming bookings */}
             <section className="card">
@@ -196,11 +196,11 @@ export default function WorkerDash({ onNavigate }) {
               {active || waitConfirm ? (
                 <div className="listrow">
                   <span className="datebox" style={{ background: 'var(--emerald)', color: '#fff' }}><b className="num">10</b><span>Nov</span></span>
-                  <div className="grow"><b>{job.title}</b><div className="small muted">{job.time} · G-11/2</div></div>
+                  <div className="grow"><b>{job.title}</b><div className="small muted">{job.time} · Shahr-e-Naw</div></div>
                   <span className={`pill ${active ? 'pill-info' : 'pill-busy'}`}>{active ? t('Today', 'آج') : t('Pending', 'زیرِ غور')}</span>
                 </div>
               ) : null}
-              {[['12', 'Nov', '10:00 AM', 'Geyser fitting', 'Sana R. · F-11/1'], ['14', 'Nov', '3:00 PM', 'Bathroom mixer', 'Faisal M. · G-10/2']].map(([d, m, ti, title, who], i) => (
+              {[['12', 'Nov', '10:00 AM', 'Geyser fitting', 'Khalid F. · Macroyan'], ['14', 'Nov', '3:00 PM', 'Bathroom mixer', 'Omar Z. · Wazir Akbar Khan']].map(([d, m, ti, title, who], i) => (
                 <div key={i} className="listrow">
                   <span className="datebox"><b className="num">{d}</b><span>{m}</span></span>
                   <div className="grow"><b>{title}</b><div className="small muted">{ti} · {who}</div></div>

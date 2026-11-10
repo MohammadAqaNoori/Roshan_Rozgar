@@ -6,7 +6,7 @@ import { CATS } from '../lib/data';
 
 export default function Discover({ onNavigate }) {
   const { t, workers, f, setFilter, selectWorker } = useApp();
-  const [locationLabel, setLocationLabel] = useState(t('G-11/2, Islamabad', 'جی الیون، اسلام آباد'));
+  const [locationLabel, setLocationLabel] = useState(t('Shahr-e-Naw, Kabul', 'شهر نو، کابل'));
   const [locating, setLocating] = useState(false);
 
   const nearby = workers.filter((w) => w.status === 'available').sort((a, b) => a.km - b.km).slice(0, 4);
@@ -68,7 +68,7 @@ export default function Discover({ onNavigate }) {
               onClick={() => setFilter({ cat: c.id })}
             >
               <span className="tile"><Icon name={c.icon} /></span>
-              {t(c.en, c.ur)}
+              {t(c.en, c.fa)}
             </button>
           ))}
         </div>

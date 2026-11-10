@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { Brand, LangToggle } from '../components/Shared';
 
 export default function Role({ onNavigate }) {
-  const { t, ur, setRole, startCustomerSignup, startWorkerSignup } = useApp();
+  const { t, fa, setRole, startCustomerSignup, startWorkerSignup } = useApp();
 
   const goCustomer = () => {
     startCustomerSignup();
@@ -32,10 +32,10 @@ export default function Role({ onNavigate }) {
           <div className="row between wrapit" style={{ gap: 16 }}>
             <div>
               <h1 style={{ fontSize: 'clamp(28px,4vw,40px)' }}>
-                {t('Create your account', 'اکاؤنٹ بنائیں')}
+                {t('Create your account', 'اکاؤنت خود را بسازید')}
               </h1>
               <p className="muted">
-                {t('Choose how you want to use Roshan Rozgar.', 'بتائیں آپ روشن روزگار کیسے استعمال کرنا چاہتے ہیں۔')}
+                {t('Choose how you want to use Karigar.', 'انتخاب کنید چگونه کاریگر را استفاده می‌خواهید.')}
               </p>
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Role({ onNavigate }) {
             <button className="role cust" onClick={goCustomer}>
               <span className="art">
                 <span className="row" style={{ gap: -10 }}>
-                  <Avatar id="ayesha" size={96} radius={30} />
+                  <Avatar id="mariam" size={96} radius={30} />
                   <span style={{
                     width: 64, height: 64, borderRadius: 20,
                     background: '#fff', display: 'grid', placeItems: 'center',
@@ -57,19 +57,19 @@ export default function Role({ onNavigate }) {
                 </span>
               </span>
               <span>
-                <h2>{t('I need a service', 'مجھے کاریگر چاہیے')}</h2>
+                <h2>{t('I need a service', 'به کاریگر نیاز دارم')}</h2>
                 <span className="ur-sub">
-                  {ur() ? 'I need a service' : 'مجھے کاریگر چاہیے'}
+                  {fa() ? 'I need a service' : 'به کاریگر نیاز دارم'}
                 </span>
               </span>
               <span className="muted">
                 {t(
                   'Find a plumber, electrician or AC technician nearby who is free now.',
-                  'قریب کا فارغ پلمبر، الیکٹریشن یا اے سی مکینک ڈھونڈیں۔'
+                  'یک لوله‌کش، برق‌کار یا تکنسین کولر نزدیک پیدا کنید که اکنون آزاد است.'
                 )}
               </span>
               <span className="go">
-                {t('Continue as customer', 'بطور گاہک آگے')}
+                {t('Continue as customer', 'به عنوان مشتری ادامه دهید')}
                 <Icon name="arrowR" className="flip" />
               </span>
             </button>
@@ -78,7 +78,7 @@ export default function Role({ onNavigate }) {
             <button className="role work" onClick={goWorker}>
               <span className="art">
                 <span className="row">
-                  <Avatar id="imran" size={96} radius={30} />
+                  <Avatar id="ahmad" size={96} radius={30} />
                   <span style={{ display: 'flex', flexDirection: 'column', gap: 8, marginInlineStart: 12 }}>
                     {['droplet', 'zap', 'hammer'].map((i) => (
                       <span key={i} style={{
@@ -93,31 +93,30 @@ export default function Role({ onNavigate }) {
                 </span>
               </span>
               <span>
-                <h2>{t('I want to find work', 'مجھے کام چاہیے')}</h2>
+                <h2>{t('I want to find work', 'کار می‌خواهم')}</h2>
                 <span className="ur-sub">
-                  {ur() ? 'I want to find work' : 'مجھے کام چاہیے'}
+                  {fa() ? 'I want to find work' : 'کار می‌خواهم'}
                 </span>
               </span>
               <span className="muted">
                 {t(
                   'Make your profile by speaking. Get job requests from homes near you.',
-                  'بول کر پروفائل بنائیں۔ قریبی گھروں سے کام پائیں۔'
+                  'با صحبت پروفایل بسازید. درخواست کار از خانه‌های نزدیک دریافت کنید.'
                 )}
               </span>
               <span className="go">
                 <Icon name="mic" />
-                {t('Start with voice', 'آواز سے شروع کریں')}
+                {t('Start with voice', 'با صدا شروع کنید')}
                 <Icon name="arrowR" className="flip" />
               </span>
             </button>
           </div>
 
-          {/* Already have an account — link to login */}
           <div style={{ marginTop: 24, textAlign: 'center' }}>
             <p className="muted small">
-              {t('Already have an account?', 'پہلے سے رجسٹرڈ ہیں؟')}{' '}
+              {t('Already have an account?', 'از قبل اکاؤنت دارید؟')}{' '}
               <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('login')}>
-                {t('Log in', 'لاگ ان')}
+                {t('Log in', 'ورود')}
               </button>
             </p>
           </div>

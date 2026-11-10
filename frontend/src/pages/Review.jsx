@@ -1,6 +1,6 @@
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
-import { useApp, rs } from '../context/AppContext';
+import { useApp, afn } from '../context/AppContext';
 import { stIdx, CUSTOMER } from '../lib/data';
 
 export default function Review({ onNavigate }) {
@@ -32,7 +32,7 @@ export default function Review({ onNavigate }) {
             <div className="burst" style={{ background: 'var(--amber)', color: 'var(--forest-900)', boxShadow: '0 0 0 12px var(--amber-50)' }}>
               <Icon name="star" />
             </div>
-            <h1 style={{ fontSize: 28 }}>{t(`Thank you, ${CUSTOMER.name.split(' ')[0]}`, `شکریہ، ${CUSTOMER.nameUr}`)}</h1>
+            <h1 style={{ fontSize: 28 }}>{t(`Thank you, ${CUSTOMER.name.split(' ')[0]}`, `شکریہ، ${CUSTOMER.nameFa}`)}</h1>
             <p className="muted">{t('Your review is now on', 'آپ کا ریویو اب')} {wname(w)}{t('\u2019s profile. It will help the next family decide.', 'کی پروفائل پر ہے۔')}</p>
             <div className="row wrapit" style={{ justifyContent: 'center' }}>
               <button className="btn btn-primary" onClick={() => onNavigate('profile')}><Icon name="eye" />{t('See it on his profile', 'پروفائل پر دیکھیں')}</button>
@@ -60,7 +60,7 @@ export default function Review({ onNavigate }) {
           <Avatar id={w.id} size={80} radius={24} />
           <div>
             <h1 style={{ fontSize: 26 }}>{t('How was', 'کیسا رہا')} {wname(w).split(' ')[0]}{t('\u2019s work?', 'کا کام؟')}</h1>
-            <p className="muted small">{job.title} · <span className="num">{rs(job.price || 0)}</span></p>
+            <p className="muted small">{job.title} · <span className="num">{afn(job.price || 0)}</span></p>
           </div>
           {/* Overall stars */}
           <div className="bigstars" role="radiogroup" aria-label="Overall rating">

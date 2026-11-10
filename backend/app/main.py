@@ -18,10 +18,10 @@ from app.core.config import settings
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
-    title="Roshan Rozgar API",
+    title="Karigar API",
     description=(
-        "Hyper-local marketplace connecting households with skilled trade workers in Pakistan. "
-        "Built for CUI Tech Fest | AI Web Forge hackathon."
+        "Hyper-local marketplace connecting households with skilled trade workers in Afghanistan. "
+        "Built for the Afghan community."
     ),
     version="1.0.0",
     docs_url="/docs",
