@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Icon } from '../lib/icons';
 import { useApp } from '../context/AppContext';
 import { WorkerCard, Disclaimer } from '../components/Shared';
@@ -5,8 +6,28 @@ import { CATS } from '../lib/data';
 
 export default function Discover({ onNavigate }) {
   const { t, workers, f, setFilter, selectWorker } = useApp();
+  const [locationLabel, setLocationLabel] = useState(t('G-11/2, Islamabad', 'جی الیون، اسلام آباد'));
+  const [locating, setLocating] = useState(false);
 
   const nearby = workers.filter((w) => w.status === 'available').sort((a, b) => a.km - b.km).slice(0, 4);
+
+  const handleLocate = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        const { latitude, longitude } = pos.coords;
+        // Reverse-geocode label (simplified for prototype)
+        setLocationLabel(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+      },
+      () => {
+        setLocating(false);
+        // Keep default label on failure
+      },
+      { timeout: 8000 }
+    );
+  };
 
   return (
     <main className="appmain">
@@ -27,8 +48,15 @@ export default function Discover({ onNavigate }) {
         {/* Location bar */}
         <div className="locbar">
           <Icon name="pin" />
-          <span className="grow">{t('G-11/2, Islamabad', 'جی الیون، اسلام آباد')}</span>
-          <button className="btn btn-ghost btn-sm"><Icon name="nav" /></button>
+          <span className="grow">{locationLabel}</span>
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={handleLocate}
+            disabled={locating}
+            aria-label="Use my location"
+          >
+            {locating ? <Icon name="refresh" /> : <Icon name="nav" />}
+          </button>
         </div>
 
         {/* Category scroller */}

@@ -354,9 +354,13 @@ export function AppProvider({ children }) {
       showToast('Review added to profile', true);
     },
 
-    // Worker availability
+    // Worker availability — uses the first worker matching ob.name or falls back to 'imran'
     setAvail: (status) => update((s) => {
-      const workers = s.workers.map((w) => w.id === 'imran' ? { ...w, status } : w);
+      // Find the worker whose user matches the logged-in worker by ob.name or use imran as demo fallback
+      const targetId = s.ob?.name
+        ? s.workers.find((w) => w.name === s.ob.name || w.nameUr === s.ob.name)?.id ?? 'imran'
+        : 'imran';
+      const workers = s.workers.map((w) => w.id === targetId ? { ...w, status, is_available: status === 'available' } : w);
       return { ...s, workers };
     }),
 

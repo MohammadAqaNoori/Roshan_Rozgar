@@ -96,7 +96,7 @@ export default function WorkerDash({ onNavigate }) {
     jobCard = (
       <section className="card stack" style={{ gap: 12, border: '2px solid var(--emerald)' }}>
         <div className="row"><Icon name="hand" /><b>{t('Price agreed', 'قیمت طے')}: <span className="num">{rs(job.price)}</span></b></div>
-        <p className="muted small">{t('Waiting for Ayesha to confirm the booking.', 'عائشہ کی تصدیق کا انتظار۔')}</p>
+        <p className="muted small">{t(`Waiting for ${CUSTOMER.name.split(' ')[0]} to confirm the booking.`, 'گاہک کی تصدیق کا انتظار۔')}</p>
         <button className="btn btn-outline btn-block" onClick={simCustomerConfirm}><Icon name="refresh" />{t('Demo: simulate customer confirming', 'ڈیمو: گاہک کی تصدیق')}</button>
       </section>
     );
@@ -128,7 +128,7 @@ export default function WorkerDash({ onNavigate }) {
           </button>
         ) : (
           <>
-            <div className="disclaimer"><Icon name="clock" /><span>{t('Waiting for Ayesha to confirm the work is done.', 'عائشہ کی تصدیق کا انتظار۔')}</span></div>
+            <div className="disclaimer"><Icon name="clock" /><span>{t(`Waiting for ${CUSTOMER.name.split(' ')[0]} to confirm the work is done.`, 'گاہک کی تصدیق کا انتظار۔')}</span></div>
             <button className="btn btn-outline btn-block" onClick={() => { customerConfirmDone(); }}><Icon name="refresh" />{t('Demo: simulate customer confirming & rating', 'ڈیمو: گاہک کی تصدیق اور ریٹنگ')}</button>
           </>
         )}

@@ -1,7 +1,7 @@
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, rs } from '../context/AppContext';
-import { stIdx } from '../lib/data';
+import { stIdx, CUSTOMER } from '../lib/data';
 
 export default function Review({ onNavigate }) {
   const { t, job, W, wname, rv, rvStar, rvSub, rvTag, rvText, rvVoice, rvPhoto, rvSubmit } = useApp();
@@ -32,7 +32,7 @@ export default function Review({ onNavigate }) {
             <div className="burst" style={{ background: 'var(--amber)', color: 'var(--forest-900)', boxShadow: '0 0 0 12px var(--amber-50)' }}>
               <Icon name="star" />
             </div>
-            <h1 style={{ fontSize: 28 }}>{t('Thank you, Ayesha', 'شکریہ، عائشہ')}</h1>
+            <h1 style={{ fontSize: 28 }}>{t(`Thank you, ${CUSTOMER.name.split(' ')[0]}`, `شکریہ، ${CUSTOMER.nameUr}`)}</h1>
             <p className="muted">{t('Your review is now on', 'آپ کا ریویو اب')} {wname(w)}{t('\u2019s profile. It will help the next family decide.', 'کی پروفائل پر ہے۔')}</p>
             <div className="row wrapit" style={{ justifyContent: 'center' }}>
               <button className="btn btn-primary" onClick={() => onNavigate('profile')}><Icon name="eye" />{t('See it on his profile', 'پروفائل پر دیکھیں')}</button>

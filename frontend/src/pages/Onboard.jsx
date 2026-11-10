@@ -8,6 +8,58 @@ import { OB_STEPS, CATS, SKILLS, AREAS } from '../lib/data';
 export default function Onboard({ onNavigate }) {
   const { t, ur, ob, obNext, obBack, obJump, obLang, obSet, obNameListen, obNameYes, obNameNo, obNameRedo, obTyped, obProf, obSkill, obArea, obExp, obDay, obHours, obFinish, speak } = useApp();
   const [typedName, setTypedName] = useState('');
+  const [locating, setLocating] = useState(false);
+  const [locError, setLocError] = useState('');
+
+  // Find nearest AREA to GPS coordinates using simple distance
+  const findNearestArea = (lat, lng) => {
+    // Area approximate coordinates (Islamabad/Rawalpindi grid)
+    const AREA_COORDS = {
+      'G-11': { lat: 33.6844, lng: 73.0479 },
+      'G-10': { lat: 33.6750, lng: 73.0530 },
+      'G-9':  { lat: 33.6700, lng: 73.0600 },
+      'F-11': { lat: 33.6940, lng: 73.0380 },
+      'F-10': { lat: 33.6880, lng: 73.0450 },
+      'I-8':  { lat: 33.6557, lng: 73.0256 },
+      'G-13': { lat: 33.6500, lng: 73.0200 },
+      'Saddar':         { lat: 33.5900, lng: 73.0450 },
+      'Satellite Town': { lat: 33.5973, lng: 73.0479 },
+    };
+    let nearest = 'G-11';
+    let minDist = Infinity;
+    for (const [id, coords] of Object.entries(AREA_COORDS)) {
+      const d = Math.sqrt((lat - coords.lat) ** 2 + (lng - coords.lng) ** 2);
+      if (d < minDist) { minDist = d; nearest = id; }
+    }
+    return nearest;
+  };
+
+  const handleLocate = () => {
+    setLocError('');
+    if (!navigator.geolocation) {
+      setLocError(t('Geolocation not supported by your browser.', 'آپ کا براؤزر جگہ کی سہولت نہیں دیتا۔'));
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        const area = findNearestArea(pos.coords.latitude, pos.coords.longitude);
+        obArea(area);
+      },
+      (err) => {
+        setLocating(false);
+        // If permission denied or unavailable, fall back to G-11 for the demo
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocError(t('Location permission denied. Please pick an area below.', 'جگہ کی اجازت نہیں ملی۔ نیچے سے علاقہ چنیں۔'));
+        } else {
+          // Fallback: simulate G-11 for demo
+          obArea('G-11');
+        }
+      },
+      { timeout: 8000, maximumAge: 60000 }
+    );
+  };
   const n = OB_STEPS.length;
   const pct = Math.round((ob.step + (ob.step === n - 1 ? 1 : 0)) / n * 100);
   const st = OB_STEPS[ob.step];
@@ -166,8 +218,33 @@ export default function Onboard({ onNavigate }) {
       case 4:
         return (
           <Question sub="Choose the area where you take jobs.">
-            <button className="btn btn-outline btn-block" style={{ marginTop: 20, minHeight: 60 }}><Icon name="nav" />{t('Use my current location', 'میری موجودہ جگہ')}</button>
-            <p className="xs muted" style={{ textAlign: 'center', marginTop: 6 }}>{t('Prototype: location is simulated as G-11, Islamabad', 'نقلی جگہ: جی الیون')}</p>
+            <button
+              className="btn btn-outline btn-block"
+              style={{ marginTop: 20, minHeight: 60 }}
+              onClick={handleLocate}
+              disabled={locating}
+            >
+              {locating
+                ? <><Icon name="refresh" />{t('Getting your location…', 'جگہ تلاش ہو رہی ہے…')}</>
+                : <><Icon name="nav" />{t('Use my current location', 'میری موجودہ جگہ')}</>
+              }
+            </button>
+            {locError && (
+              <div className="fallback" style={{ marginTop: 8, padding: '10px 14px' }}>
+                <Icon name="alert" /> {locError}
+              </div>
+            )}
+            {ob.area && (
+              <div className="heard" style={{ marginTop: 10, background: 'var(--success-50)' }}>
+                <div className="row" style={{ gap: 8, color: '#17714A' }}>
+                  <Icon name="checkCircle" />
+                  <b>{t('Area selected', 'علاقہ چنا گیا')}: {ob.area}</b>
+                </div>
+              </div>
+            )}
+            <p className="xs muted" style={{ textAlign: 'center', marginTop: 6 }}>
+              {t('Or pick manually below', 'یا نیچے سے چنیں')}
+            </p>
             <div className="choice-grid three" style={{ marginTop: 14 }}>
               {AREAS.map((a) => (
                 <button key={a.id} className="choice" style={{ minHeight: 92 }} aria-pressed={ob.area === a.id} onClick={() => obArea(a.id)}>

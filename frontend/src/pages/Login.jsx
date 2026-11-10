@@ -120,7 +120,7 @@ export default function Login({ onNavigate }) {
                       style={{ paddingInlineStart: 56 }}
                       placeholder="300 1234567"
                       value={phone}
-                      onChange={(e) => { setPhone(e.target.value); setPhoneError(''); }}
+                      onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '')); setPhoneError(''); }}
                       onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
                       autoFocus
                       inputMode="tel"
