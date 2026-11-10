@@ -9,8 +9,13 @@ import { CATS, catBy, classify } from '../lib/data';
 export default function Request({ onNavigate }) {
   const { t, req, reqListen, reqSet, reqAnalyse, reqAnswer, sel, W, wname, catName, reqSend } = useApp();
   const w = W(sel);
-  const hasInput = req.transcript || req.aiCat;
-  const aiCat = req.aiCat;
+
+  // hasInput: any description given (typed text, voice transcript, or prior AI suggestion)
+  const hasInput = !!(req.transcript || (req.text && req.text.trim()) || req.aiCat);
+
+  // Auto-classify on-the-fly from typed text so user doesn't have to click "Suggest the trade"
+  const autocat = (req.text && req.text.trim()) ? classify(req.text.trim()) : null;
+  const aiCat = req.aiCat || autocat || null;
   const cat = req.cat || aiCat;
 
   return (
@@ -202,12 +207,12 @@ export default function Request({ onNavigate }) {
                 )}
                 <button
                   className="btn btn-primary btn-lg btn-block"
-                  disabled={!(hasInput && cat && w.status === 'available')}
+                  disabled={!hasInput || w.status !== 'available'}
                   onClick={() => { reqSend(); onNavigate('chat'); }}
                 >
                   <Icon name="send" className="flip" />{t('Send request to', 'درخواست بھیجیں')} {wname(w).split(' ').slice(-1)[0]}
                 </button>
-                {!(hasInput && cat) && <p className="xs muted" style={{ textAlign: 'center' }}>{t('Describe the problem and pick a service to continue.', 'آگے بڑھنے کے لیے مسئلہ بتائیں اور سروس چنیں۔')}</p>}
+                {!hasInput && <p className="xs muted" style={{ textAlign: 'center' }}>{t('Describe the problem to continue.', 'آگے بڑھنے کے لیے مسئلہ بتائیں۔')}</p>}
                 {cat && w.cat !== cat && (
                   <div className="disclaimer" style={{ background: 'var(--amber-50)' }}>
                     <Icon name="info" /><span>{wname(w)} {t('is a', 'ایک')} {catName(w.cat)}. <button className="btn btn-ghost btn-sm">{t('See', 'دیکھیں')} {catName(cat)}</button></span>

@@ -191,8 +191,20 @@ export function AppProvider({ children }) {
         ...s,
         job,
         msgs: [
-          { id: 'm1', from: 'customer', type: 'text', text: s.req.transcript || s.req.text, time: nowTime() },
-          { id: 'sys1', from: 'sys', type: 'text', html: 'Job request sent to Muhammad Imran. He will reply soon.', time: nowTime() },
+          {
+            id: 'm1',
+            from: 'customer',
+            type: 'text',
+            text: s.req.transcript || s.req.text || 'Job request',
+            time: nowTime(),
+          },
+          {
+            id: 'sys1',
+            from: 'sys',
+            type: 'text',
+            html: 'Job request sent. The worker will reply soon.',
+            time: nowTime(),
+          },
         ],
       }));
     },
