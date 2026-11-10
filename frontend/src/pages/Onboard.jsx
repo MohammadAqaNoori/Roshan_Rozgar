@@ -27,15 +27,18 @@ export default function Onboard({ onNavigate }) {
   };
 
   const Question = ({ sub, children }) => (
-    <div className="ob-q">
-      <span className="big-ico"><Icon name={st.icon} /></span>
-      <div className="grow">
-        <p className="ur-line">{st.ur}</p>
-        <h2>{st.en}</h2>
-        {sub && <p className="en-line" style={{ marginTop: 4 }}>{sub}</p>}
+    <>
+      <div className="ob-q">
+        <span className="big-ico"><Icon name={st.icon} /></span>
+        <div className="grow">
+          <p className="ur-line">{st.ur}</p>
+          <h2>{st.en}</h2>
+          {sub && <p className="en-line" style={{ marginTop: 4 }}>{sub}</p>}
+        </div>
+        <SpeakBtn id={`ob${ob.step}`} en={`${st.en}. ${sub || ''}`} ur={`${st.ur}. ${sub || ''}`} />
       </div>
-      <SpeakBtn id={`ob${ob.step}`} en={`${st.en}. ${sub || ''}`} ur={`${st.ur}. ${sub || ''}`} />
-    </div>
+      {children}
+    </>
   );
 
   const renderStep = () => {
