@@ -383,6 +383,14 @@ export function AppProvider({ children }) {
       setState(freshState());
       showToast('Demo reset to the start', true);
     },
+
+    // Logout — clears stored session and navigates to home/login
+    logout: (onNavigate) => {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      setState(freshState());
+      showToast('Signed out successfully', true);
+      if (onNavigate) onNavigate('home');
+    },
   };
 
   const value = {

@@ -502,3 +502,63 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:v
 .jstep:hover{border-color:var(--emerald)}
 .jstep .n{width:30px;height:30px;border-radius:99px;background:var(--mint);color:var(--forest);font-weight:800;display:grid;place-items:center;font-size:13px;flex:none}
 .jstep .oc{margin-inline-start:auto}
+
+/* ── Account Menu ─────────────────────────────────────────────────────────── */
+.acct-wrap{position:relative;flex:none}
+
+/* Trigger button */
+.acct-trigger{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:99px;padding:4px 10px 4px 4px;background:var(--surface);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.acct-trigger:hover{border-color:var(--emerald);box-shadow:0 0 0 3px var(--mint)}
+.acct-trigger:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+
+/* Initials bubble */
+.acct-avatar{width:34px;height:34px;border-radius:99px;background:var(--emerald);color:#fff;font-weight:800;font-size:13px;display:inline-grid;place-items:center;flex:none;letter-spacing:.01em}
+.acct-avatar-lg{width:44px;height:44px;font-size:16px}
+
+/* Chevron rotates when open */
+.acct-chev{color:var(--muted);width:16px;height:16px;transition:transform .2s}
+.acct-chev.open{transform:rotate(180deg)}
+
+/* Dropdown panel */
+.acct-dropdown{
+  position:absolute;
+  inset-inline-end:0;
+  top:calc(100% + 8px);
+  width:224px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  box-shadow:var(--sh-3);
+  z-index:60;
+  overflow:hidden;
+  animation:up .18s ease;
+}
+/* RTL — open from inline-start instead */
+[dir="rtl"] .acct-dropdown{inset-inline-end:auto;inset-inline-start:0}
+
+/* User info header inside dropdown */
+.acct-header{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.acct-name{font-weight:700;font-size:15px;color:var(--forest);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-phone{font-size:13px;color:var(--muted);margin-top:1px}
+
+/* Thin divider */
+.acct-divider{height:1px;background:var(--line);margin:0}
+
+/* Menu items */
+.acct-item{
+  display:flex;align-items:center;gap:12px;
+  width:100%;border:0;background:transparent;
+  padding:11px 16px;font-size:15px;font-weight:600;
+  color:var(--ink);text-align:start;cursor:pointer;
+  transition:background .12s;
+}
+.acct-item:hover{background:var(--soft)}
+.acct-item .ico{width:18px;height:18px;color:var(--muted);flex:none}
+
+/* Danger / logout item */
+.acct-item-danger{color:var(--error)}
+.acct-item-danger .ico{color:var(--error)}
+.acct-item-danger:hover{background:var(--error-50)}
+
+/* Profile page — Account card log-out button sizing fix */
+.btn-danger{display:inline-flex}

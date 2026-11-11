@@ -2,10 +2,10 @@ import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, afn } from '../context/AppContext';
 import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
-import { catBy } from '../lib/data';
+import { catBy, CUSTOMER } from '../lib/data';
 
 export default function Profile({ own, onNavigate }) {
-  const { t, fa, W, wname, catName, sel, selectWorker } = useApp();
+  const { t, fa, W, wname, catName, sel, selectWorker, role, ob, logout } = useApp();
   const w = W(own ? 'ahmad' : sel) || W('ahmad');
   const c = catBy(w.cat);
 
@@ -69,6 +69,25 @@ export default function Profile({ own, onNavigate }) {
                 <span>{w.hours}</span>
               </div>
             </section>
+
+            {/* Account card — only on own profile */}
+            {own && (
+              <section className="card">
+                <h3>{t('Account', 'حساب')}</h3>
+                <p className="small muted" style={{ marginTop: 6 }}>
+                  {t('Signed in as', 'وارد شده به عنوان')}{' '}
+                  <strong>{role === 'worker' ? (ob?.name || t('Worker', 'کاریگر')) : CUSTOMER.name}</strong>
+                </p>
+                <button
+                  className="btn btn-danger btn-sm"
+                  style={{ marginTop: 14, alignSelf: 'flex-start' }}
+                  onClick={() => logout(onNavigate)}
+                >
+                  <Icon name="logout" />
+                  {t('Log out', 'خروج')}
+                </button>
+              </section>
+            )}
           </div>
 
           {/* Sidebar */}

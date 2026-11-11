@@ -2,10 +2,11 @@
  * Shared UI components — Karigar v2.0 (Afghanistan)
  * Language: English + Dari (fa)
  */
+import { useRef, useState, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, afn } from '../context/AppContext';
-import { catBy } from '../lib/data';
+import { catBy, CUSTOMER } from '../lib/data';
 
 // Status pill for worker availability
 export function StatusPill({ w }) {
@@ -161,6 +162,7 @@ export function ToastContainer() {
 // App shell header
 export function AppHeader({ activeView, onNavigate }) {
   const { t, role } = useApp();
+  // AccountMenu is defined below — hoisting is fine in JS modules
   const navItems = role === 'worker'
     ? [['wdash', 'home', t('Home', 'خانه')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['chat', 'msg', t('Chat', 'چت')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
     : [['discover', 'search', t('Find', 'جستجو')], ['track', 'calendar', t('Bookings', 'رزروها')], ['chat', 'msg', t('Chat', 'چت')], ['profile', 'user', t('Profile', 'پروفایل')]];
@@ -186,7 +188,7 @@ export function AppHeader({ activeView, onNavigate }) {
           ))}
         </nav>
         <div className="row" style={{ marginInlineStart: 'auto', gap: 8 }}>
-          <button className="icon-btn" onClick={() => onNavigate(role === 'worker' ? 'wdash' : 'discover')} aria-label="Home"><Icon name="home" /></button>
+          <AccountMenu onNavigate={onNavigate} />
         </div>
       </div>
     </header>
@@ -241,6 +243,133 @@ export function Disclaimer({ children }) {
     <div className="disclaimer">
       <Icon name="info" />
       <span>{children}</span>
+    </div>
+  );
+}
+
+// ── Account Menu ────────────────────────────────────────────────────────────
+// Circular avatar button in the header that opens a dropdown with
+// user info, nav shortcuts, language toggle, and logout.
+export function AccountMenu({ onNavigate }) {
+  const { t, role, ob, logout, lang, setLang } = useApp();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  // Derive display name + phone for the signed-in user
+  const isWorker = role === 'worker';
+  const displayName = isWorker
+    ? (ob?.name || t('Worker', 'کاریگر'))
+    : CUSTOMER.name;
+  const displayPhone = isWorker
+    ? (ob?.phone || '—')
+    : CUSTOMER.phone;
+
+  // Initials for the avatar bubble (up to 2 chars)
+  const initials = displayName
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
+  // Close on outside click or Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    const onOutside = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onOutside);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onOutside);
+    };
+  }, [open]);
+
+  const handleLogout = () => {
+    setOpen(false);
+    logout(onNavigate);
+  };
+
+  const go = (view) => {
+    setOpen(false);
+    onNavigate(view);
+  };
+
+  // Nav items differ by role
+  const navItems = isWorker
+    ? [
+        { icon: 'user',      label: t('My profile', 'پروفایل من'),   view: 'wprofile' },
+        { icon: 'briefcase', label: t('My jobs',    'کارهای من'),     view: 'wjob'     },
+      ]
+    : [
+        { icon: 'user',      label: t('My profile',  'پروفایل من'),   view: 'profile' },
+        { icon: 'calendar',  label: t('My bookings', 'رزروهای من'),   view: 'track'   },
+      ];
+
+  return (
+    <div className="acct-wrap" ref={ref}>
+      {/* Trigger button */}
+      <button
+        className="acct-trigger"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={t('Account menu', 'منوی حساب')}
+        aria-expanded={open}
+        aria-haspopup="true"
+      >
+        <span className="acct-avatar" aria-hidden="true">{initials}</span>
+        <Icon name="chevD" className={`acct-chev${open ? ' open' : ''}`} />
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="acct-dropdown" role="menu" aria-label={t('Account options', 'گزینه‌های حساب')}>
+          {/* User info header */}
+          <div className="acct-header">
+            <span className="acct-avatar acct-avatar-lg" aria-hidden="true">{initials}</span>
+            <div className="grow" style={{ minWidth: 0 }}>
+              <div className="acct-name">{displayName}</div>
+              <div className="acct-phone num">{displayPhone}</div>
+            </div>
+          </div>
+
+          <div className="acct-divider" />
+
+          {/* Nav items */}
+          {navItems.map(({ icon, label, view }) => (
+            <button
+              key={view}
+              className="acct-item"
+              role="menuitem"
+              onClick={() => go(view)}
+            >
+              <Icon name={icon} />
+              {label}
+            </button>
+          ))}
+
+          {/* Language */}
+          <button
+            className="acct-item"
+            role="menuitem"
+            onClick={() => { setLang(lang === 'en' ? 'fa' : 'en'); setOpen(false); }}
+          >
+            <Icon name="globe" />
+            {lang === 'en' ? 'دری' : 'English'}
+          </button>
+
+          <div className="acct-divider" />
+
+          {/* Log out */}
+          <button
+            className="acct-item acct-item-danger"
+            role="menuitem"
+            onClick={handleLogout}
+          >
+            <Icon name="logout" />
+            {t('Log out', 'خروج')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
