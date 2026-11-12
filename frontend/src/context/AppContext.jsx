@@ -85,6 +85,16 @@ export function AppProvider({ children }) {
     document.documentElement.dir = state.lang === 'fa' ? 'rtl' : 'ltr';
   }, [state.lang]);
 
+  // While in worker onboarding, ob.lang is the user's chosen language.
+  // Sync it to <html> immediately so the onboarding screen reflects the
+  // picked language even before the global state.lang is updated.
+  useEffect(() => {
+    if (!state.ob || state.ob.done) return;
+    const L = state.ob.lang || 'en';
+    document.documentElement.lang = L;
+    document.documentElement.dir = L === 'fa' ? 'rtl' : 'ltr';
+  }, [state.ob?.lang, state.ob?.done]);
+
   // Helper to update state
   const update = useCallback((updater) => {
     setState((prev) => (typeof updater === 'function' ? updater(prev) : { ...prev, ...updater }));
@@ -147,7 +157,7 @@ export function AppProvider({ children }) {
     obNext: () => update((s) => ({ ...s, ob: { ...s.ob, step: Math.min(s.ob.step + 1, 9) } })),
     obBack: () => update((s) => ({ ...s, ob: { ...s.ob, step: Math.max(s.ob.step - 1, 0) } })),
     obJump: (step) => update((s) => ({ ...s, ob: { ...s.ob, step } })),
-    obLang: (lang) => update((s) => ({ ...s, ob: { ...s.ob, lang } })),
+    obLang: (lang) => update((s) => ({ ...s, ob: { ...s.ob, lang }, lang })),
     obSet: (data) => update((s) => ({ ...s, ob: { ...s.ob, ...data } })),
     obNameListen: () => {
       update((s) => ({ ...s, ob: { ...s.ob, nameState: 'listening' } }));
