@@ -261,9 +261,16 @@ export default function Onboard({ onNavigate }) {
         return (
           <Question sub="Tap one.">
             <div className="yrs">
-              {[['1-2', '1–2', 1, '۱ سے ۲ سال'], ['3-5', '3–5', 2, '۳ سے ۵ سال'], ['6-10', '6–10', 3, '۶ سے ۱۰ سال'], ['10+', '10+', 4, '۱۰ سال سے زیادہ']].map(([v, l, b, u]) => (
+              {[
+                ['1-2',  '1–2',  '۱ سے ۲ سال',      'seeding'],
+                ['3-5',  '3–5',  '۳ سے ۵ سال',      'plant'],
+                ['6-10', '6–10', '۶ سے ۱۰ سال',     'plant2'],
+                ['10+',  '10+',  '۱۰ سال سے زیادہ', 'trees'],
+              ].map(([v, l, u, icon]) => (
                 <button key={v} className="yr" aria-pressed={ob.exp === v} onClick={() => obExp(v)}>
-                  <span className="bars">{[10, 16, 21, 26].map((h, i) => <i key={i} className={i < b ? 'on' : ''} style={{ height: `${h}px` }} />)}</span>
+                  <span className="yr-icon" style={{ color: 'var(--forest)' }}>
+                    <Icon name={icon} size={34} aria-hidden="true" />
+                  </span>
                   <b className="num">{l}</b>
                   <span className="ur small">{u}</span>
                   <span className="xs muted">{t('years', 'سال')}</span>

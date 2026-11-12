@@ -64,6 +64,11 @@ const ICON_PATHS = {
   eye: <><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></>,
   flag: <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/>,
   logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>,
+  // Experience level icons (Onboard step 5)
+  seeding:      <><path d="M12 22V12"/><path d="M5 12a7 7 0 0 1 7-7 7 7 0 0 1 7 7"/><path d="M5 12H2"/><path d="M22 12h-3"/></>,
+  plant:        <><path d="M7 20h10"/><path d="M10 20c0-5.33 2.67-9 2-14"/><path d="M12 6C9 6 6.5 8 6 11c2 0 4-1 6-5z"/><path d="M12 6c3 0 5.5 2 6 5-2 0-4-1-6-5z"/></>,
+  plant2:       <><path d="M2 22V12a10 10 0 0 1 10-10 10 10 0 0 1 10 10v10"/><path d="M12 2v20"/></>,
+  trees:        <><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/><path d="M7 16v6"/><path d="M13 19v3"/><path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"/></>,
 };
 
 export function Icon({ name, className = '', size, style }) {
