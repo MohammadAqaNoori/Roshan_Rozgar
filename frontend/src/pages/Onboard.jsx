@@ -4,6 +4,7 @@ import { Avatar } from '../lib/avatar';
 import { useApp } from '../context/AppContext';
 import { Brand, SpeakBtn } from '../components/Shared';
 import { OB_STEPS, CATS, SKILLS, AREAS } from '../lib/data';
+import { ExperienceGauge } from '../lib/ExperienceGauge';
 
 export default function Onboard({ onNavigate }) {
   const { t, fa, ob, obNext, obBack, obJump, obLang, obSet, obNameListen, obNameYes, obNameNo, obNameRedo, obTyped, obProf, obSkill, obArea, obExp, obDay, obHours, obFinish, speak } = useApp();
@@ -262,14 +263,14 @@ export default function Onboard({ onNavigate }) {
           <Question sub="Tap one.">
             <div className="yrs">
               {[
-                ['1-2',  '1–2',  '۱ سے ۲ سال',      'seeding'],
-                ['3-5',  '3–5',  '۳ سے ۵ سال',      'plant'],
-                ['6-10', '6–10', '۶ سے ۱۰ سال',     'plant2'],
-                ['10+',  '10+',  '۱۰ سال سے زیادہ', 'trees'],
-              ].map(([v, l, u, icon]) => (
+                ['1-2',  '1–2',  '۱ سے ۲ سال',      1],
+                ['3-5',  '3–5',  '۳ سے ۵ سال',      2],
+                ['6-10', '6–10', '۶ سے ۱۰ سال',     3],
+                ['10+',  '10+',  '۱۰ سال سے زیادہ', 4],
+              ].map(([v, l, u, level]) => (
                 <button key={v} className="yr" aria-pressed={ob.exp === v} onClick={() => obExp(v)}>
                   <span className="yr-icon" style={{ color: 'var(--forest)' }}>
-                    <Icon name={icon} size={34} aria-hidden="true" />
+                    <ExperienceGauge level={level} />
                   </span>
                   <b className="num">{l}</b>
                   <span className="ur small">{u}</span>
