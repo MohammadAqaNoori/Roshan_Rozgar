@@ -524,6 +524,8 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:v
   inset-inline-end:0;
   top:calc(100% + 8px);
   width:224px;
+  min-width:220px;
+  max-width:calc(100vw - 16px);
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:var(--r-lg);
@@ -531,9 +533,11 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:v
   z-index:60;
   overflow:hidden;
   animation:up .18s ease;
+  /* text and icons follow reading direction */
+  text-align:start;
+  direction:inherit;
 }
-/* RTL — open from inline-start instead */
-[dir="rtl"] .acct-dropdown{inset-inline-end:auto;inset-inline-start:0}
+/* NO [dir="rtl"] override — inset-inline-end is already logical and correct in both directions */
 
 /* User info header inside dropdown */
 .acct-header{display:flex;align-items:center;gap:12px;padding:14px 16px}

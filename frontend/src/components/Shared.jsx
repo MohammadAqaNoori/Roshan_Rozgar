@@ -254,6 +254,7 @@ export function AccountMenu({ onNavigate }) {
   const { t, role, ob, logout, lang, setLang } = useApp();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
   // Derive display name + phone for the signed-in user
   const isWorker = role === 'worker';
@@ -283,6 +284,24 @@ export function AccountMenu({ onNavigate }) {
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('mousedown', onOutside);
     };
+  }, [open]);
+
+  // Viewport collision guard — shift dropdown so it never overflows by more than 8px
+  useEffect(() => {
+    if (!open || !dropdownRef.current) return;
+    const el = dropdownRef.current;
+    const rect = el.getBoundingClientRect();
+    const pad = 8;
+    // Overflow on the left (can happen in RTL when dropdown aligns to inline-end)
+    if (rect.left < pad) {
+      el.style.insetInlineEnd = 'auto';
+      el.style.insetInlineStart = `${pad}px`;
+    }
+    // Overflow on the right (can happen in LTR on narrow screens)
+    if (rect.right > window.innerWidth - pad) {
+      el.style.insetInlineEnd = `${pad}px`;
+      el.style.insetInlineStart = 'auto';
+    }
   }, [open]);
 
   const handleLogout = () => {
