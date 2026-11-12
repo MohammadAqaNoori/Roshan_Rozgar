@@ -3,9 +3,11 @@ import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp } from '../context/AppContext';
 import { Brand, SpeakBtn } from '../components/Shared';
-import { OB_STEPS, CATS, SKILLS, AREAS } from '../lib/data';
+import { AreaPicker } from '../components/AreaPicker';
+import { OB_STEPS, CATS, SKILLS } from '../lib/data';
 import { ExperienceGauge } from '../lib/ExperienceGauge';
 import { tr, toPersiDigits } from '../lib/i18n';
+import { formatAreaLabel, migrateOldArea } from '../lib/kabulDistricts';
 
 export default function Onboard({ onNavigate }) {
   const {
@@ -26,25 +28,36 @@ export default function Onboard({ onNavigate }) {
   // num(n) — Persian digits in Dari, plain digits in English
   const num = (n) => isFa ? toPersiDigits(n) : String(n);
 
+  // ── Area helpers ─────────────────────────────────────────────────────────────
+  // Migrate legacy string areas saved before this feature
+  const areaObj = typeof ob.area === 'string'
+    ? (migrateOldArea(ob.area) ?? { city: null, districtId: null, neighborhoodId: null })
+    : (ob.area || null);
+
+  // Human-readable label for the selected area
+  const areaLabel = areaObj ? formatAreaLabel(areaObj, L) : '';
+
   // ── GPS area finder ─────────────────────────────────────────────────────────
+  // Returns new area object shape { city, districtId, neighborhoodId }
   const findNearestArea = (lat, lng) => {
-    const AREA_COORDS = {
-      'Shahr-e-Naw':      { lat: 34.5260, lng: 69.1781 },
-      'Karte Seh':        { lat: 34.5100, lng: 69.1700 },
-      'Macroyan':         { lat: 34.5200, lng: 69.2050 },
-      'Wazir Akbar Khan': { lat: 34.5280, lng: 69.1950 },
-      'Khair Khana':      { lat: 34.5450, lng: 69.1650 },
-      'Pul-e-Charkhi':    { lat: 34.5500, lng: 69.2300 },
-      'Herat City':       { lat: 34.3482, lng: 62.2041 },
-      'Mazar City':       { lat: 36.7069, lng: 67.1100 },
-      'Kandahar City':    { lat: 31.6289, lng: 65.7372 },
-    };
-    let nearest = 'Shahr-e-Naw', minDist = Infinity;
-    for (const [id, c] of Object.entries(AREA_COORDS)) {
-      const d = Math.sqrt((lat - c.lat) ** 2 + (lng - c.lng) ** 2);
-      if (d < minDist) { minDist = d; nearest = id; }
+    // Coordinates mapped to new neighborhood slugs
+    const AREA_COORDS = [
+      { slug: 'shahr-e-naw',     city: 'kabul', districtId: 4,  lat: 34.5260, lng: 69.1781 },
+      { slug: 'karte-seh',       city: 'kabul', districtId: 6,  lat: 34.5100, lng: 69.1700 },
+      { slug: 'macroyan',        city: 'kabul', districtId: 9,  lat: 34.5200, lng: 69.2050 },
+      { slug: 'wazir-akbar-khan',city: 'kabul', districtId: 10, lat: 34.5280, lng: 69.1950 },
+      { slug: 'khair-khana',     city: 'kabul', districtId: 11, lat: 34.5450, lng: 69.1650 },
+      { slug: 'pul-e-charkhi',   city: 'kabul', districtId: 19, lat: 34.5500, lng: 69.2300 },
+      { slug: 'herat-city',      city: 'herat',    districtId: null, lat: 34.3482, lng: 62.2041 },
+      { slug: 'mazar-city',      city: 'mazar',    districtId: null, lat: 36.7069, lng: 67.1100 },
+      { slug: 'kandahar-city',   city: 'kandahar', districtId: null, lat: 31.6289, lng: 65.7372 },
+    ];
+    let best = AREA_COORDS[0], minDist = Infinity;
+    for (const a of AREA_COORDS) {
+      const d = Math.sqrt((lat - a.lat) ** 2 + (lng - a.lng) ** 2);
+      if (d < minDist) { minDist = d; best = a; }
     }
-    return nearest;
+    return { city: best.city, districtId: best.districtId, neighborhoodId: best.slug };
   };
 
   const handleLocate = () => {
@@ -85,7 +98,7 @@ export default function Onboard({ onNavigate }) {
       case 1: return ob.nameState === 'confirmed' && ob.name.trim().length > 1;
       case 2: return !!ob.profession;
       case 3: return ob.skills.length > 0;
-      case 4: return !!ob.area;
+      case 4: return !!(areaObj && (areaObj.neighborhoodId || areaObj.otherArea));
       case 5: return !!ob.exp;
       case 6: return true;
       case 7: return ob.days.length > 0;
@@ -264,6 +277,7 @@ export default function Onboard({ onNavigate }) {
       case 4:
         return (
           <Question hintKey="choose-area-hint">
+            {/* GPS button */}
             <button
               className="btn btn-outline btn-block"
               style={{ marginTop: 20, minHeight: 60 }}
@@ -282,33 +296,22 @@ export default function Onboard({ onNavigate }) {
               </div>
             )}
 
-            {ob.area && (
+            {/* Selected confirmation badge */}
+            {areaLabel && (
               <div className="heard" style={{ marginTop: 10, background: 'var(--success-50)' }}>
                 <div className="row" style={{ gap: 8, color: '#17714A' }}>
                   <Icon name="checkCircle" aria-hidden="true" />
-                  <b>{s('area-selected')}: {ob.area}</b>
+                  <b>{s('area-selected')}: {areaLabel}</b>
                 </div>
               </div>
             )}
 
-            <p className="xs muted" style={{ textAlign: 'center', marginTop: 6 }}>
-              {s('or-pick-below')}
-            </p>
-
-            <div className="choice-grid three" style={{ marginTop: 14 }}>
-              {AREAS.map((a) => (
-                <button
-                  key={a.id}
-                  className="choice"
-                  style={{ minHeight: 92 }}
-                  aria-pressed={ob.area === a.id}
-                  onClick={() => obArea(a.id)}
-                >
-                  <span style={{ fontWeight: 800, fontSize: 20, color: 'var(--forest)' }}>{a.id}</span>
-                  <span className="xs muted">{a.city}</span>
-                </button>
-              ))}
-            </div>
+            {/* Two-step district → neighborhood picker */}
+            <AreaPicker
+              lang={L}
+              value={areaObj}
+              onChange={(newArea) => obArea(newArea)}
+            />
           </Question>
         );
 
@@ -450,7 +453,7 @@ export default function Onboard({ onNavigate }) {
           { step: 1, labelKey: 'edit-name',   val: ob.name },
           { step: 2, labelKey: 'edit-work',   val: isFa ? c.fa : c.en },
           { step: 3, labelKey: 'edit-skills', val: `${num(ob.skills.length)} ${s('selected')}` },
-          { step: 4, labelKey: 'edit-area',   val: ob.area },
+          { step: 4, labelKey: 'edit-area',   val: areaLabel || '—' },
           { step: 5, labelKey: 'edit-exp',    val: `${ob.exp} ${s('yrs')}` },
           { step: 7, labelKey: 'edit-days',   val: `${num(ob.days.length)} ${s('days')}` },
         ];
@@ -474,7 +477,7 @@ export default function Onboard({ onNavigate }) {
                   </div>
                   <div className="meta">
                     <span><Icon name="star" aria-hidden="true" />{ob.exp} {s('years')}</span>
-                    <span><Icon name="pin"  aria-hidden="true" />{ob.area}</span>
+                    <span><Icon name="pin"  aria-hidden="true" />{areaLabel}</span>
                   </div>
                 </div>
                 <span className="pill pill-av">

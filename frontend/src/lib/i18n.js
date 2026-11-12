@@ -229,3 +229,37 @@ export function tr(lang, key, vars = {}) {
 export function toPersiDigits(str) {
   return String(str).replace(/[0-9]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
 }
+
+// ── Area picker strings (added for Kabul districts feature) ──────────────────
+// Append to both en and fa inside TR — done here by augmenting the object.
+Object.assign(TR.en, {
+  'city-kabul':           'Kabul',
+  'city-herat':           'Herat',
+  'city-mazar':           'Mazar-i-Sharif',
+  'city-kandahar':        'Kandahar',
+  'select-district':      'Select a district',
+  'select-neighborhood':  'Select a neighborhood',
+  'areas':                'areas',
+  'back-to-districts':    'Back to districts',
+  'other-area':           'Other area in {district}',
+  'search-placeholder':   'Search district or area…',
+  'kabul-districts-hint': 'Choose a district, then your neighborhood.',
+  'other-cities-hint':    'Or choose another city below.',
+  'neighborhood-count':   '{n} areas',
+});
+
+Object.assign(TR.fa, {
+  'city-kabul':           'کابل',
+  'city-herat':           'هرات',
+  'city-mazar':           'مزار شریف',
+  'city-kandahar':        'کندهار',
+  'select-district':      'ناحیه را انتخاب کنید',
+  'select-neighborhood':  'منطقه را انتخاب کنید',
+  'areas':                'منطقه',
+  'back-to-districts':    'بازگشت به ناحیه‌ها',
+  'other-area':           'منطقه دیگر در {district}',
+  'search-placeholder':   'جستجوی ناحیه یا منطقه…',
+  'kabul-districts-hint': 'ناحیه را انتخاب کنید، سپس منطقه خود را.',
+  'other-cities-hint':    'یا شهر دیگری را از زیر انتخاب کنید.',
+  'neighborhood-count':   '{n} منطقه',
+});

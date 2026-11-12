@@ -561,3 +561,41 @@ label.lbl{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:v
 
 /* Profile page — Account card log-out button sizing fix */
 .btn-danger{display:inline-flex}
+
+/* ── Area Picker ──────────────────────────────────────────────────────────── */
+.area-picker{display:flex;flex-direction:column;gap:0}
+
+/* Grid: 2 cols on phone, 3 on wider */
+.area-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:560px){.area-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* District grid uses same 2→3 col layout */
+.area-grid-districts{}
+
+/* Individual card */
+.area-card{
+  background:var(--surface);
+  border:2px solid var(--line);
+  border-radius:var(--r);
+  padding:14px 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .12s,background .12s,box-shadow .12s;
+  min-height:72px;
+  justify-content:center;
+}
+.area-card:hover{border-color:var(--emerald);box-shadow:var(--sh-1)}
+.area-card-sel{border-color:var(--emerald)!important;border-width:3px!important;background:var(--mint)!important}
+
+/* Card text */
+.area-card-name{font-size:14px;font-weight:700;color:var(--forest);line-height:1.3;word-break:break-word}
+.area-card-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* "Other area" card — dashed border, slightly muted */
+.area-card-other{border-style:dashed;min-height:60px}
+.area-card-other .area-card-name{color:var(--muted);font-weight:600;font-size:13px}
+.area-card-other.area-card-sel .area-card-name{color:var(--forest)}
