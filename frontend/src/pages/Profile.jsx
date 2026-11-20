@@ -24,34 +24,34 @@ export default function Profile({ own, onNavigate }) {
               <Avatar id={w.id} size={96} radius={28} />
               <div className="grow">
                 <h1>{wname(w)}</h1>
-                <p><Icon name={c.icon} /> {catName(w.cat)} · {w.exp} {t('years experience', 'سال تجربہ')}</p>
-                <p className="small"><Icon name="pin" /> {w.area}, {w.city} · <span className="num">{w.km} km</span> {t('from you', 'دور')}</p>
+                <p><Icon name={c.icon} /> {catName(w.cat)} · {w.exp} {t('years experience', 'سال تجربه')}</p>
+                <p className="small"><Icon name="pin" /> {w.area}, {w.city} · <span className="num">{w.km} km</span> {t('from you', 'از شما')}</p>
                 <div style={{ marginTop: 10 }}><StatusPill w={w} /></div>
               </div>
             </section>
 
             {/* Facts */}
             <div className="facts">
-              <div className="fact"><b className="num">{w.rating.toFixed(1)}</b><span><Icon name="star" /> {w.count} {t('reviews', 'ریویو')}</span></div>
-              <div className="fact"><b className="num">{w.jobs}</b><span>{t('jobs done here', 'یہاں مکمل کام')}</span></div>
-              <div className="fact"><b className="num">{w.exp}</b><span>{t('years in trade', 'سال تجربہ')}</span></div>
+              <div className="fact"><b className="num">{w.rating.toFixed(1)}</b><span><Icon name="star" /> {w.count} {t('reviews', 'نظرها')}</span></div>
+              <div className="fact"><b className="num">{w.jobs}</b><span>{t('jobs done here', 'کار انجام شده')}</span></div>
+              <div className="fact"><b className="num">{w.exp}</b><span>{t('years in trade', 'سال تجربه')}</span></div>
             </div>
 
             {/* What we know */}
             <section className="card">
-              <h3>{t('What we know about', 'ہم کیا جانتے ہیں')} {wname(w).split(' ')[0]}</h3>
+              <h3>{t('What we know about', 'آنچه درباره')} {wname(w).split(' ')[0]} {t('', 'می‌دانیم')}</h3>
               <ul className="know" style={{ marginTop: 8 }}>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Phone number confirmed by OTP', 'فون نمبر OTP سے تصدیق شدہ')} <span className="pill pill-sample">{t('simulated', 'نقلی')}</span></span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'روشن روزگار پر فعال')} {w.since}</span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبانیں:')} {w.langs}</span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'وزٹ چارج سے')} <b className="num">{afn(w.price)}</b></span></li>
-                <li><span className="no"><Icon name="info" /></span><span>{t('Identity (Tazkira) not verified — out of scope for this prototype.', 'شناخت کی تصدیق نہیں — اس پروٹوٹائپ میں شامل نہیں۔')}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Phone number confirmed by OTP', 'شماره تلفن با OTP تأیید شده')} <span className="pill pill-sample">{t('simulated', 'نمونه')}</span></span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'فعال در روشن روزگار از')} {w.since}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبان‌ها:')} {w.langs}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'هزینه ویزیت از')} <b className="num">{afn(w.price)}</b></span></li>
+                <li><span className="no"><Icon name="info" /></span><span>{t('Identity (Tazkira) not verified — out of scope for this prototype.', 'هویت (تذکره) تأیید نشده — در این نمونه اولیه گنجانده نشده.')}</span></li>
               </ul>
             </section>
 
             {/* Skills */}
             <section className="card">
-              <h3>{t('Skills', 'ہنر')}</h3>
+              <h3>{t('Skills', 'مهارت‌ها')}</h3>
               <div className="skills" style={{ marginTop: 10 }}>
                 {w.skills.map((s) => <span key={s} className="skill">{s}</span>)}
               </div>
@@ -59,7 +59,7 @@ export default function Profile({ own, onNavigate }) {
 
             {/* Schedule */}
             <section className="card">
-              <h3>{t('Working hours', 'اوقات')}</h3>
+              <h3>{t('Working hours', 'ساعات کاری')}</h3>
               <div className="row" style={{ marginTop: 10 }}>
                 <Icon name="calendar" />
                 <span>{w.days.join(', ')}</span>
@@ -73,7 +73,7 @@ export default function Profile({ own, onNavigate }) {
             {/* Account card — only on own profile */}
             {own && (
               <section className="card">
-                <h3>{t('Account', 'حساب')}</h3>
+                <h3>{t('Account', 'حساب کاربری')}</h3>
                 <p className="small muted" style={{ marginTop: 6 }}>
                   {t('Signed in as', 'وارد شده به عنوان')}{' '}
                   <strong>{role === 'worker' ? (ob?.name || t('Worker', 'کاریگر')) : CUSTOMER.name}</strong>
@@ -84,7 +84,7 @@ export default function Profile({ own, onNavigate }) {
                   onClick={() => logout(onNavigate)}
                 >
                   <Icon name="logout" />
-                  {t('Log out', 'خروج')}
+                  {t('Log out', 'خروج از حساب')}
                 </button>
               </section>
             )}
@@ -97,34 +97,34 @@ export default function Profile({ own, onNavigate }) {
               <div className="card stack" style={{ gap: 12 }}>
                 {w.status === 'available' ? (
                   <button className="btn btn-primary btn-lg btn-block" onClick={() => onNavigate('request')}>
-                    <Icon name="msg" />{t('Request service', 'سروس کی درخواست')}
+                    <Icon name="msg" />{t('Request service', 'درخواست خدمت')}
                   </button>
                 ) : w.status === 'busy' ? (
                   <div>
-                    <button className="btn btn-lg btn-block is-disabled" disabled>{t('On a job', 'مصروف')}</button>
+                    <button className="btn btn-lg btn-block is-disabled" disabled>{t('On a job', 'مشغول کار')}</button>
                     <p className="small muted" style={{ textAlign: 'center', marginTop: 8 }}>
-                      {t('Free ~', 'فارغ ~')}{w.freeAt}
+                      {t('Free ~', 'آزاد ~')}{w.freeAt}
                     </p>
                     <button className="btn btn-outline btn-block btn-sm" style={{ marginTop: 6 }}>
-                      <Icon name="bell" />{t('Notify when free', 'دستیاب ہونے پر اطلاع')}
+                      <Icon name="bell" />{t('Notify when free', 'وقتی آزاد شد خبر بده')}
                     </button>
                   </div>
                 ) : (
-                  <button className="btn btn-lg btn-block is-disabled" disabled>{t('Not working today', 'آج چھٹی')}</button>
+                  <button className="btn btn-lg btn-block is-disabled" disabled>{t('Not working today', 'امروز کار نمی‌کند')}</button>
                 )}
                 <div className="row between">
-                  <span className="price"><small>{t('Visit from', 'وزٹ سے')}</small><b className="num">{afn(w.price)}</b></span>
-                  <span className="muted small">{t('Parts extra', 'پرزے علیحدہ')}</span>
+                  <span className="price"><small>{t('Visit from', 'ویزیت از')}</small><b className="num">{afn(w.price)}</b></span>
+                  <span className="muted small">{t('Parts extra', 'قطعات جداگانه')}</span>
                 </div>
               </div>
 
               {/* Reviews */}
               <section className="card">
                 <div className="sect-title">
-                  <h2 style={{ fontSize: 18 }}>{t('Reviews', 'ریویو')} <span className="muted small">({w.count})</span></h2>
+                  <h2 style={{ fontSize: 18 }}>{t('Reviews', 'نظرها')} <span className="muted small">({w.count})</span></h2>
                 </div>
                 {w.reviews.length === 0 ? (
-                  <p className="muted small">{t('No reviews yet.', 'ابھی کوئی ریویو نہیں۔')}</p>
+                  <p className="muted small">{t('No reviews yet.', 'هنوز نظری ثبت نشده.')}</p>
                 ) : (
                   w.reviews.map((r, i) => (
                     <div key={i} className="review">
