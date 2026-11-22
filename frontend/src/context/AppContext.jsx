@@ -4,12 +4,22 @@
  */
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { seedWorkers, CUSTOMER, DEFAULT_JOB, classify, catBy, stIdx } from '../lib/data';
+import { checkBackend, getToken, setToken, clearToken } from '../api/client';
+import { register as apiRegister, login as apiLogin, getMe as apiGetMe } from '../api/auth';
+import { findNearby, getWorker as apiGetWorker, getWorkerReviews, createProfile, updateStatus as apiUpdateStatus } from '../api/workers';
+import { createJob as apiCreateJob, getJob as apiGetJob, updateJob as apiUpdateJob, listJobs as apiListJobs } from '../api/jobs';
+import { getMessages as apiGetMessages, sendText as apiSendText, sendVoice as apiSendVoice, sendOffer as apiSendOffer, acceptOffer as apiAcceptOffer } from '../api/messages';
+import { createReview as apiCreateReview, getWorkerReviews as apiGetReviews } from '../api/reviews';
+import { mapWorker, mapJob, mapMessage, mapReview } from '../api/mappers';
 
 const KEY = 'karigar-v1';
 
 const freshState = () => ({
   lang: 'en',
   role: 'customer',
+  liveMode: false,      // true when backend is connected
+  backendReady: false,  // backend health check result
+  user: null,           // authenticated user from API { id, phone, name, role }
   workers: seedWorkers(),
   ob: {
     step: 0,
@@ -94,6 +104,24 @@ export function AppProvider({ children }) {
     document.documentElement.lang = L;
     document.documentElement.dir = L === 'fa' ? 'rtl' : 'ltr';
   }, [state.ob?.lang, state.ob?.done]);
+
+  // Check backend availability on mount
+  useEffect(() => {
+    checkBackend().then((ready) => {
+      update({ backendReady: ready, liveMode: ready });
+      if (ready) {
+        // If we have a token, try to restore the session
+        const token = getToken();
+        if (token) {
+          apiGetMe().then((user) => {
+            if (user) {
+              update({ user, role: user.role });
+            }
+          });
+        }
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Helper to update state
   const update = useCallback((updater) => {
@@ -389,6 +417,7 @@ export function AppProvider({ children }) {
     togglePlay: (id) => update((s) => ({ ...s, _playing: s._playing === id ? null : id })),
     toggleRec: () => update((s) => ({ ...s, _rec: !s._rec })),
     reset: () => {
+      clearToken();
       try { localStorage.removeItem(KEY); } catch (e) {}
       setState(freshState());
       showToast('Demo reset to the start', true);
@@ -396,10 +425,220 @@ export function AppProvider({ children }) {
 
     // Logout — clears stored session and navigates to home/login
     logout: (onNavigate) => {
+      clearToken();
       try { localStorage.removeItem(KEY); } catch (e) {}
       setState(freshState());
       showToast('Signed out successfully', true);
       if (onNavigate) onNavigate('home');
+    },
+
+    // ── LIVE MODE: Real API actions ──────────────────────────────────────
+    // These are used when state.liveMode is true (backend connected).
+    // They coexist with the demo actions above — pages can call either.
+
+    // Auth: register via API
+    apiSignup: async (phone, name, role) => {
+      const data = await apiRegister(phone, name, role);
+      update({ user: data.user, role: data.user.role });
+      return data;
+    },
+
+    // Auth: login via API
+    apiLoginUser: async (phone) => {
+      const data = await apiLogin(phone);
+      update({ user: data.user, role: data.user.role });
+      return data;
+    },
+
+    // Load workers from backend (replaces seedWorkers in live mode)
+    loadWorkers: async (lat, lng, opts = {}) => {
+      try {
+        const raw = await findNearby(lat, lng, opts);
+        const workers = raw.map(mapWorker);
+        update({ workers });
+        return workers;
+      } catch (e) {
+        console.error('loadWorkers failed:', e);
+        return null;
+      }
+    },
+
+    // Load a single worker's profile + reviews from backend
+    loadWorkerProfile: async (workerId) => {
+      try {
+        const [raw, reviews] = await Promise.all([
+          apiGetWorker(workerId),
+          apiGetReviews(workerId),
+        ]);
+        const w = mapWorker(raw);
+        if (w && reviews) {
+          w.reviews = reviews.map(r => mapReview(r, w.name));
+        }
+        return w;
+      } catch (e) {
+        console.error('loadWorkerProfile failed:', e);
+        return null;
+      }
+    },
+
+    // Create a job via API
+    apiCreateJob: async (jobData) => {
+      try {
+        const raw = await apiCreateJob(jobData);
+        const job = mapJob(raw);
+        update({ job });
+        return job;
+      } catch (e) {
+        console.error('apiCreateJob failed:', e);
+        return null;
+      }
+    },
+
+    // Load messages for a job from API
+    loadMessages: async (jobId) => {
+      try {
+        // Use the numeric API ID if available, otherwise the stored ID
+        const apiId = state.job?._apiId || jobId;
+        const raw = await apiGetMessages(apiId);
+        const userId = state.user?.id || 0;
+        const msgs = raw.map(m => mapMessage(m, userId));
+        update({ msgs });
+        return msgs;
+      } catch (e) {
+        console.error('loadMessages failed:', e);
+        return null;
+      }
+    },
+
+    // Send a text message via API
+    apiSendMessage: async (text) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        const raw = await apiSendText(apiId, text);
+        const userId = state.user?.id || 0;
+        const msg = mapMessage(raw, userId);
+        update((s) => ({ ...s, msgs: [...s.msgs, msg] }));
+        return msg;
+      } catch (e) {
+        console.error('apiSendMessage failed:', e);
+        return null;
+      }
+    },
+
+    // Send a voice message via API (audio blob → Gemini transcription)
+    apiSendVoiceMsg: async (audioBlob) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        const raw = await apiSendVoice(apiId, audioBlob);
+        const userId = state.user?.id || 0;
+        const msg = mapMessage(raw, userId);
+        update((s) => ({ ...s, msgs: [...s.msgs, msg] }));
+        return msg;
+      } catch (e) {
+        console.error('apiSendVoiceMsg failed:', e);
+        return null;
+      }
+    },
+
+    // Send a price offer via API
+    apiSendPriceOffer: async (amount, note) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        const raw = await apiSendOffer(apiId, amount, note);
+        const userId = state.user?.id || 0;
+        const msg = mapMessage(raw, userId);
+        update((s) => ({ ...s, _modal: null, msgs: [...s.msgs, msg] }));
+        return msg;
+      } catch (e) {
+        console.error('apiSendPriceOffer failed:', e);
+        return null;
+      }
+    },
+
+    // Accept a price offer via API
+    apiAcceptOffer: async (msgId) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        await apiAcceptOffer(apiId, msgId);
+        update((s) => ({
+          ...s,
+          msgs: s.msgs.map((m) =>
+            m.id === msgId
+              ? { ...m, state: 'accepted' }
+              : m.type === 'offer' && m.state === 'open'
+              ? { ...m, state: 'superseded' }
+              : m
+          ),
+          job: s.job ? { ...s.job, status: 'agreed' } : null,
+        }));
+      } catch (e) {
+        console.error('apiAcceptOffer failed:', e);
+      }
+    },
+
+    // Update job status via API (confirm, on-way, working, complete, cancel)
+    apiUpdateJobStatus: async (newStatus, extra = {}) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        const raw = await apiUpdateJob(apiId, { status: newStatus, ...extra });
+        const job = mapJob(raw);
+        update({ job });
+        return job;
+      } catch (e) {
+        console.error('apiUpdateJobStatus failed:', e);
+        return null;
+      }
+    },
+
+    // Submit a review via API
+    apiSubmitReview: async (rating, text, subRatings = {}, tags = []) => {
+      const apiId = state.job?._apiId;
+      if (!apiId) return;
+      try {
+        await apiCreateReview(apiId, {
+          rating,
+          text_review: text || null,
+          quality_rating: subRatings.q || null,
+          professionalism_rating: subRatings.p || null,
+          timeliness_rating: subRatings.t || null,
+          tags: tags.length ? tags.join(',') : null,
+        });
+        update((s) => ({ ...s, job: s.job ? { ...s.job, status: 'reviewed' } : null }));
+        showToast('Review added to profile', true);
+      } catch (e) {
+        console.error('apiSubmitReview failed:', e);
+      }
+    },
+
+    // Update worker availability via API
+    apiSetAvail: async (status) => {
+      try {
+        await apiUpdateStatus(status);
+        update((s) => ({
+          ...s,
+          workers: s.workers.map((w) =>
+            w.id === s.sel ? { ...w, status, is_available: status === 'available' } : w
+          ),
+        }));
+      } catch (e) {
+        console.error('apiSetAvail failed:', e);
+      }
+    },
+
+    // Save worker profile via API (after onboarding)
+    apiSaveProfile: async (profileData) => {
+      try {
+        await createProfile(profileData);
+        return true;
+      } catch (e) {
+        console.error('apiSaveProfile failed:', e);
+        return false;
+      }
     },
   };
 

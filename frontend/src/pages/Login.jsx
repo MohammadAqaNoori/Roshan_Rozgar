@@ -26,13 +26,13 @@ function normalise(raw) {
 }
 
 export default function Login({ onNavigate }) {
-  const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast } = useApp();
+  const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser, apiSignup } = useApp();
 
   const [phone, setPhone] = useState('');
   const [step, setStep] = useState('phone');
   const [phoneError, setPhoneError] = useState('');
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const digits = phone.replace(/\D/g, '');
     if (!digits || digits.length < 9) {
       setPhoneError(t('Please enter a valid phone number.', 'لطفاً شماره تلفن معتبر وارد کنید.'));
@@ -40,9 +40,22 @@ export default function Login({ onNavigate }) {
     }
     setPhoneError('');
 
+    if (liveMode) {
+      // Live mode: try real API login
+      const normalised = normalise(phone);
+      try {
+        await apiLoginUser(normalised);
+        showToast(t('Welcome back!', 'خوش آمدید!'), true);
+        onNavigate('discover');
+      } catch (err) {
+        setStep('not-found');
+      }
+      return;
+    }
+
+    // Demo mode: check known phones
     const normalised = normalise(phone);
     const exists = KNOWN_PHONES.some(p => p === normalised);
-
     if (exists) {
       setStep('role');
     } else {

@@ -9,7 +9,7 @@ import { useApp } from '../context/AppContext';
 import { Brand, LangToggle, SpeakBtn } from '../components/Shared';
 
 export default function CustomerReg({ onNavigate }) {
-  const { t, fa, setRole, showToast } = useApp();
+  const { t, fa, setRole, showToast, liveMode, apiSignup } = useApp();
 
   const [step, setStep] = useState(0);
   const [phone, setPhone] = useState('');
@@ -41,8 +41,21 @@ export default function CustomerReg({ onNavigate }) {
     setStep(1);
   };
 
-  const handleNameNext = () => {
+  const handleNameNext = async () => {
     if (!name.trim()) return;
+    if (liveMode) {
+      // Live mode: register via API
+      try {
+        const normalised = '+93' + phone.replace(/\D/g, '').replace(/^0+/, '');
+        await apiSignup(normalised, name.trim(), 'customer');
+        showToast(t('Welcome to Karigar!', 'به کاریگر خوش آمدید!'), true);
+        onNavigate('discover');
+      } catch (err) {
+        showToast(t('Registration failed. Try again.', 'ثبت‌نام ناموفق بود. دوباره تلاش کنید.'));
+      }
+      return;
+    }
+    // Demo mode
     setRole('customer');
     showToast(t('Welcome to Karigar!', 'به کاریگر خوش آمدید!'), true);
     onNavigate('discover');

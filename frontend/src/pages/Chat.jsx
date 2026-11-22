@@ -15,10 +15,18 @@ export default function Chat({ onNavigate }) {
     sendMsg, sendVoice, sendOffer, acceptOffer,
     openModal, _playing, _rec, _typing,
     togglePlay, toggleRec, simCustomerConfirm,
+    liveMode, loadMessages, apiSendMessage, apiSendVoiceMsg, apiSendPriceOffer, apiAcceptOffer,
   } = useApp();
 
   const [draft, setDraft] = useState('');
   const msgsRef = useRef(null);
+
+  // Load messages from backend when in live mode and job exists
+  useEffect(() => {
+    if (liveMode && job?._apiId && loadMessages) {
+      loadMessages(job._apiId);
+    }
+  }, [liveMode, job?._apiId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-scroll to bottom whenever messages or typing indicator changes
   useEffect(() => {
@@ -104,11 +112,15 @@ export default function Chat({ onNavigate }) {
     sendMsg(label);
   };
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     const text = draft.trim();
     if (!text) return;
-    sendMsg(text);
+    if (liveMode && apiSendMessage) {
+      await apiSendMessage(text);
+    } else {
+      sendMsg(text);
+    }
     setDraft('');
   };
 

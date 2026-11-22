@@ -7,7 +7,7 @@ import { Avatar } from '../lib/avatar';
 import { CATS, catBy, classify } from '../lib/data';
 
 export default function Request({ onNavigate }) {
-  const { t, req, reqListen, reqSet, reqAnalyse, reqAnswer, sel, W, wname, catName, reqSend } = useApp();
+  const { t, req, reqListen, reqSet, reqAnalyse, reqAnswer, sel, W, wname, catName, reqSend, liveMode, apiCreateJob } = useApp();
   const w = W(sel);
 
   // hasInput: any description given (typed text, voice transcript, or prior AI suggestion)
@@ -208,7 +208,23 @@ export default function Request({ onNavigate }) {
                 <button
                   className="btn btn-primary btn-lg btn-block"
                   disabled={!hasInput || w.status !== 'available'}
-                  onClick={() => { reqSend(); onNavigate('chat'); }}
+                  onClick={async () => {
+                    if (liveMode && apiCreateJob) {
+                      const jobData = {
+                        title: req.transcript || req.text || 'Job request',
+                        description: req.transcript || req.text || '',
+                        trade_required: cat || w?.cat || 'plumber',
+                        area_name: req.address || 'Kabul',
+                        lat: 34.5260,
+                        lng: 69.1781,
+                        worker_id: w ? parseInt(w.id) : undefined,
+                      };
+                      await apiCreateJob(jobData);
+                    } else {
+                      reqSend();
+                    }
+                    onNavigate('chat');
+                  }}
                 >
                   <Icon name="send" className="flip" />{t('Send request to', 'درخواست بھیجیں')} {wname(w).split(' ').slice(-1)[0]}
                 </button>

@@ -1,17 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { useApp } from '../context/AppContext';
 import { WorkerCard, Disclaimer } from '../components/Shared';
 import { CATS } from '../lib/data';
 
+// Default Kabul coordinates for when geolocation is unavailable
+const KABUL_LAT = 34.5260;
+const KABUL_LNG = 69.1781;
+
 export default function Discover({ onNavigate }) {
-  const { t, workers, f, setFilter, selectWorker } = useApp();
+  const { t, workers, f, setFilter, selectWorker, liveMode, loadWorkers } = useApp();
   const [locationLabel, setLocationLabel] = useState(t('Shahr-e-Naw, Kabul', 'شهر نو، کابل'));
   const [locating, setLocating] = useState(false);
+
+  // Load workers from backend when in live mode
+  useEffect(() => {
+    if (liveMode && loadWorkers) {
+      loadWorkers(KABUL_LAT, KABUL_LNG, {
+        trade: f.cat || undefined,
+        radius_km: f.dist || 50,
+        available_only: f.availOnly || false,
+      });
+    }
+  }, [liveMode, f.cat, f.dist, f.availOnly]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reload when filter category changes in live mode
+  useEffect(() => {
+    if (liveMode && loadWorkers) {
+      loadWorkers(KABUL_LAT, KABUL_LNG, {
+        trade: f.cat || undefined,
+        radius_km: f.dist || 50,
+        available_only: f.availOnly || false,
+      });
+    }
+  }, [f.cat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nearby = workers.filter((w) => w.status === 'available').sort((a, b) => a.km - b.km).slice(0, 4);
 
   const handleLocate = () => {
+    if (liveMode && loadWorkers) {
+      // Live mode: get GPS and load real workers
+      if (!navigator.geolocation) {
+        loadWorkers(KABUL_LAT, KABUL_LNG, { trade: f.cat || undefined, radius_km: f.dist || 50 });
+        return;
+      }
+      setLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setLocating(false);
+          const { latitude, longitude } = pos.coords;
+          setLocationLabel(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+          loadWorkers(latitude, longitude, { trade: f.cat || undefined, radius_km: f.dist || 50 });
+        },
+        () => {
+          setLocating(false);
+          loadWorkers(KABUL_LAT, KABUL_LNG, { trade: f.cat || undefined, radius_km: f.dist || 50 });
+        },
+        { timeout: 8000 }
+      );
+      return;
+    }
+    // Demo mode: just show coordinates
     if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
