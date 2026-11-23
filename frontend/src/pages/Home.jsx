@@ -49,7 +49,7 @@ export default function Home({ onNavigate }) {
 
       {/* ─────────────── 2. HERO ─────────────── */}
       <section className="hero" style={{ padding: 0 }}>
-        <div style={{ position: 'relative', width: '100%', minHeight: 520, overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%', minHeight: 620, overflow: 'hidden' }}>
           {/* Full-width background image */}
           <img
             src="/hero.jpg"
@@ -63,6 +63,8 @@ export default function Home({ onNavigate }) {
               display: 'block',
               position: 'absolute',
               top: 0, left: 0,
+              filter: 'blur(3px) brightness(0.85)',
+              transform: 'scale(1.05)',
             }}
           />
           {/* Dark gradient overlay so text is readable */}
