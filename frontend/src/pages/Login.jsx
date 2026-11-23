@@ -29,7 +29,7 @@ export default function Login({ onNavigate }) {
   const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser, apiSignup } = useApp();
 
   const [phone, setPhone] = useState('');
-  const [step, setStep] = useState('phone');
+  const [step, setStep] = useState('not-found');
   const [phoneError, setPhoneError] = useState('');
 
   const handleContinue = async () => {
@@ -97,7 +97,7 @@ export default function Login({ onNavigate }) {
                 <div className="ob-q">
                   <span className="big-ico"><Icon name="phone" /></span>
                   <div className="grow">
-                    <p className="ur-line">{t('وارد کاریگر شوید', 'وارد کاریگر شوید')}</p>
+                    {fa() && <p className="ur-line">{t('وارد کاریگر شوید', 'وارد کاریگر شوید')}</p>}
                     <h2>{t('Log in to your account', 'وارد اکاؤنت خود شوید')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
                       {t('Enter your phone number to continue.', 'برای ادامه شماره تلفن خود را وارد کنید.')}
@@ -204,18 +204,6 @@ export default function Login({ onNavigate }) {
           {step === 'not-found' && (
             <div className="ob">
               <div className="ob-card">
-                <div className="ob-q">
-                  <span className="big-ico" style={{ background: 'var(--amber-50)', color: 'var(--amber-ink)' }}>
-                    <Icon name="user" />
-                  </span>
-                  <div className="grow">
-                    <h2>{t('No account found', 'اکاؤنتی پیدا نشد')}</h2>
-                    <p className="en-line" style={{ marginTop: 4 }}>
-                      {t('Create a free account to get started.', 'برای شروع یک اکاؤنت رایگان بسازید.')}
-                    </p>
-                  </div>
-                </div>
-
                 <div className="stack" style={{ gap: 12, marginTop: 20 }}>
                   <button className="role cust" style={{ padding: 20 }} onClick={signupCustomer}>
                     <span className="art" style={{ height: 100 }}>

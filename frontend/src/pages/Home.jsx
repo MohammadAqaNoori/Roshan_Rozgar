@@ -48,120 +48,60 @@ export default function Home({ onNavigate }) {
       </header>
 
       {/* ─────────────── 2. HERO ─────────────── */}
-      <section className="hero">
-        <div className="wrap hero-grid">
-          {/* Left column */}
-          <div>
-            <span className="eyebrow">{t('Kabul · Herat', 'کابل · هرات')}</span>
-            <h1 style={{ marginTop: 14 }}>
+      <section className="hero" style={{ padding: 0 }}>
+        <div style={{ position: 'relative', width: '100%', minHeight: 620, overflow: 'hidden' }}>
+          {/* Full-width background image */}
+          <img
+            src="/hero.jpg"
+            alt="Karigar — customer booking a worker on mobile"
+            style={{
+              width: '100%',
+              height: '100%',
+              minHeight: 520,
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              display: 'block',
+              position: 'absolute',
+              top: 0, left: 0,
+              filter: 'blur(3px) brightness(0.85)',
+              transform: 'scale(1.05)',
+            }}
+          />
+          {/* Dark gradient overlay so text is readable */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.0) 100%)',
+          }} />
+          {/* Text content on top */}
+          <div className="wrap" style={{ position: 'relative', zIndex: 1, paddingBlock: '72px 80px', color: '#fff' }}>
+            <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>{t('Kabul · Herat', 'کابل · هرات')}</span>
+            <h1 style={{ marginTop: 14, color: '#fff', fontSize: 'clamp(32px,5vw,56px)', maxWidth: 640 }}>
               {fa() ? (
-                <>هر کار، یک <em>کاریگر ماهر</em>، نزدیک شما.</>
+                <>هر کار، یک <em style={{ color: '#F4B942', fontStyle: 'normal', textDecoration: 'none' }}>کاریگر ماهر</em>، نزدیک شما.</>
               ) : (
-                <>Every job, a skilled <em>Karigar</em>, near you.</>
+                <>Every job, a skilled <em style={{ color: '#F4B942', fontStyle: 'normal', textDecoration: 'none' }}>Karigar</em>, near you.</>
               )}
             </h1>
-            <p className="lede">
+            <p className="lede" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: 560, marginTop: 16 }}>
               {t(
                 'Find a nearby electrician, plumber or AC technician who is free right now. See reviews from real bookings, agree the price by chat or voice note, then book.',
                 'یک برق‌کار، لوله‌کش یا تکنسین کولر نزدیک خود پیدا کنید که اکنون آزاد است. نظرات واقعی رزرو را ببینید، قیمت را با چت یا پیام صوتی توافق کنید، سپس رزرو کنید.'
               )}
             </p>
-            <div className="ctas">
+            <div className="ctas" style={{ marginTop: 28 }}>
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="search" />
                 {t('Find a Worker', 'کاریگر پیدا کنید')}
               </button>
-              <button className="btn btn-outline btn-lg" onClick={() => onNavigate('role')}>
+              <button className="btn btn-lg" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', backdropFilter: 'blur(8px)' }} onClick={() => onNavigate('role')}>
                 <Icon name="briefcase" />
                 {t('Join as a Worker', 'کاریگر شوید')}
               </button>
             </div>
-            <div className="trustline">
+            <div className="trustline" style={{ marginTop: 28, color: 'rgba(255,255,255,0.8)' }}>
               <span><Icon name="checkCircle" />{t('Reviews only from completed bookings', 'نظرات فقط از رزروهای تکمیل شده')}</span>
               <span><Icon name="tag" />{t('Price agreed before work starts', 'قیمت قبل از شروع کار توافق می‌شود')}</span>
               <span><Icon name="mic" />{t('Works in Dari & by voice', 'به دری و با صدا کار می‌کند')}</span>
-            </div>
-          </div>
-
-          {/* Right column — hero art */}
-          <div className="hero-art" aria-label="Product preview">
-            {/* Voice note card */}
-            <div className="float hero-voice">
-              <div className="row" style={{ gap: 10 }}>
-                <span className="mic-sm" style={{ width: 36, height: 36 }}>
-                  <Icon name="mic" />
-                </span>
-                <div className="wave live">
-                  {waveBars.map((h, i) => (
-                    <i key={i} style={{ height: `${h}px`, animationDelay: `${i * 0.08}s` }} />
-                  ))}
-                </div>
-              </div>
-              <p style={{ marginTop: 8, color: 'var(--ink)' }}>
-                "آب آشپزخانه چکه می‌کند، امروز تا غروب کسی بیاید"
-              </p>
-              <div className="row" style={{ gap: 6, marginTop: 8 }}>
-                <span className="pill pill-ai">
-                  <Icon name="sparkles" />
-                  {t('Suggested: Plumber', 'پیشنهاد: لوله‌کش')}
-                </span>
-              </div>
-            </div>
-
-            {/* Worker card preview */}
-            <div className="hero-card">
-              <div className="row" style={{ gap: 12, alignItems: 'flex-start' }}>
-                <Avatar id="karim" size={64} />
-                <div className="grow">
-                  <b style={{ fontSize: 17, color: 'var(--ink)' }}>
-                    {fa() ? karim.nameFa : karim.name}
-                  </b>
-                  <div className="muted small">
-                    {t('Electrician', 'برق‌کار')} · {karim.exp} {t('yrs', 'سال')}
-                  </div>
-                  <div className="row" style={{ gap: 8, marginTop: 4 }}>
-                    <Stars n={karim.rating} count={karim.count} />
-                    <span className="muted small">
-                      <Icon name="pin" /> <span className="num">{karim.km}</span> km
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="row between" style={{ marginTop: 14 }}>
-                <StatusPill w={karim} />
-                <span className="price">
-                  <small>{t('Visit from', 'ویزیت از')}</small>
-                  <b className="num">{afn(karim.price)}</b>
-                </span>
-              </div>
-              <div className="skills" style={{ marginTop: 12 }}>
-                {karim.skills.map((s) => (
-                  <span key={s} className="skill">{s}</span>
-                ))}
-              </div>
-              <div className="row" style={{ gap: 8, marginTop: 14 }}>
-                <span className="btn btn-outline btn-sm grow">{t('Profile', 'پروفایل')}</span>
-                <span className="btn btn-primary btn-sm grow">{t('Request', 'درخواست')}</span>
-              </div>
-            </div>
-
-            {/* Booking confirmation badge */}
-            <div className="float hero-book">
-              <span style={{
-                width: 38, height: 38, borderRadius: '99px',
-                background: 'var(--success-50)', color: 'var(--success)',
-                display: 'grid', placeItems: 'center'
-              }}>
-                <Icon name="check" />
-              </span>
-              <div>
-                <b style={{ display: 'block', color: 'var(--ink)' }}>
-                  {t('Booking confirmed', 'رزرو تأیید شد')}
-                </b>
-                <span className="muted xs num">
-                  ؋ 1,300 · {t('Today 5–7 PM', 'امروز ۵ تا ۷ عصر')}
-                </span>
-              </div>
             </div>
           </div>
         </div>

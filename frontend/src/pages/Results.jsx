@@ -26,12 +26,12 @@ export default function Results({ onNavigate }) {
     <main className="appmain">
       <div className="wrap">
         <div className="row between wrapit" style={{ marginBottom: 16 }}>
-          <h1 style={{ fontSize: 'clamp(22px,3vw,30px)' }}>{t('Workers near you', 'قریب کے کاریگر')}</h1>
+          <h1 style={{ fontSize: 'clamp(22px,3vw,30px)' }}>{t('Workers near you', 'کاریگران نزدیک شما')}</h1>
         </div>
 
         <button className="btn btn-outline btn-block only-sm" onClick={toggleFilters} aria-expanded={!!_fopen}>
           <Icon name="sliders" />
-          {_fopen ? t('Hide filters', 'فلٹر چھپائیں') : t('Filters', 'فلٹر')}
+          {_fopen ? t('Hide filters', 'پنهان کردن فیلترها') : t('Filters', 'فیلترها')}
           {(f.availOnly ? 1 : 0) + (f.minRating ? 1 : 0) + (f.dist < 10 ? 1 : 0) > 0 && (
             <span className="pill pill-info">{(f.availOnly ? 1 : 0) + (f.minRating ? 1 : 0) + (f.dist < 10 ? 1 : 0)}</span>
           )}
@@ -42,7 +42,7 @@ export default function Results({ onNavigate }) {
           <aside className={`filters-panel${_fopen ? '' : ' closed'}`}>
             <div className="card">
               <div>
-                <h4>{t('Distance', 'فاصلہ')}</h4>
+                <h4>{t('Distance', 'فاصله')}</h4>
                 <input
                   type="range"
                   className="range"
@@ -52,12 +52,12 @@ export default function Results({ onNavigate }) {
                   onChange={(e) => setFilter({ dist: Number(e.target.value) })}
                 />
                 <div className="row between">
-                  <span className="xs muted">{t('0 km', '۰ کلومیٹر')}</span>
+                  <span className="xs muted">{t('0 km', '۰ کیلومتر')}</span>
                   <span className="xs muted num">{f.dist} km</span>
                 </div>
               </div>
               <div>
-                <h4>{t('Service', 'سروس')}</h4>
+                <h4>{t('Service', 'خدمت')}</h4>
                 <div className="row wrapit" style={{ gap: 6 }}>
                   {CATS.map((c) => (
                     <button
@@ -72,7 +72,7 @@ export default function Results({ onNavigate }) {
                 </div>
               </div>
               <div>
-                <h4>{t('Minimum rating', 'کم از کم ریٹنگ')}</h4>
+                <h4>{t('Minimum rating', 'حداقل امتیاز')}</h4>
                 <div className="row wrapit" style={{ gap: 6 }}>
                   {[0, 4, 4.5].map((r) => (
                     <button
@@ -81,13 +81,13 @@ export default function Results({ onNavigate }) {
                       aria-pressed={f.minRating === r}
                       onClick={() => setFilter({ minRating: r })}
                     >
-                      {r === 0 ? t('Any', 'کوئی بھی') : `★ ${r}+`}
+                      {r === 0 ? t('Any', 'هر امتیازی') : `★ ${r}+`}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="toggle-row">
-                <h4>{t('Available only', 'صرف دستیاب')}</h4>
+                <h4>{t('Available only', 'فقط در دسترس')}</h4>
                 <button
                   className="switch"
                   aria-checked={f.availOnly}
@@ -95,7 +95,7 @@ export default function Results({ onNavigate }) {
                 />
               </div>
               <button className="btn btn-outline btn-block btn-sm" onClick={() => setFilter({ q: '', cat: '', dist: 10, availOnly: false, minRating: 0 })}>
-                {t('Clear filters', 'فلٹر صاف کریں')}
+                {t('Clear filters', 'پاک کردن فیلترها')}
               </button>
             </div>
           </aside>
@@ -104,8 +104,8 @@ export default function Results({ onNavigate }) {
           <section>
             {/* View toggle */}
             <div className="seg" style={{ background: 'var(--soft)', marginBottom: 14 }}>
-              <button aria-pressed={f.view === 'list'} onClick={() => setFilter({ view: 'list' })}><Icon name="list" />{t('List', 'فہرست')}</button>
-              <button aria-pressed={f.view === 'map'} onClick={() => setFilter({ view: 'map' })}><Icon name="map" />{t('Map', 'نقشہ')}</button>
+              <button aria-pressed={f.view === 'list'} onClick={() => setFilter({ view: 'list' })}><Icon name="list" />{t('List', 'فهرست')}</button>
+              <button aria-pressed={f.view === 'map'} onClick={() => setFilter({ view: 'map' })}><Icon name="map" />{t('Map', 'نقشه')}</button>
             </div>
 
             {loading ? (
@@ -127,11 +127,11 @@ export default function Results({ onNavigate }) {
             ) : !list.length ? (
               <div className="card empty">
                 <span className="tile"><Icon name="search" /></span>
-                <h3>{t('No workers match these filters', 'ان فلٹرز پر کوئی نہیں ملا')}</h3>
-                <p className="muted">{t('Try a wider distance or include busy workers.', 'فاصلہ بڑھائیں یا مصروف کاریگر بھی دکھائیں۔')}</p>
+                <h3>{t('No workers match these filters', 'هیچ کاریگری با این فیلترها یافت نشد')}</h3>
+                <p className="muted">{t('Try a wider distance or include busy workers.', 'فاصله را بیشتر کنید یا کاریگران مشغول را هم نشان دهید.')}</p>
                 <div className="row wrapit" style={{ justifyContent: 'center' }}>
-                  <button className="btn btn-primary" onClick={() => setFilter({ dist: 10 })}>{t('Widen to 10 km', '10 کلومیٹر تک بڑھائیں')}</button>
-                  <button className="btn btn-outline" onClick={() => setFilter({ q: '', cat: '', dist: 10, availOnly: false, minRating: 0 })}>{t('Clear filters', 'فلٹر صاف کریں')}</button>
+                  <button className="btn btn-primary" onClick={() => setFilter({ dist: 10 })}>{t('Widen to 10 km', 'گسترش به ۱۰ کیلومتر')}</button>
+                  <button className="btn btn-outline" onClick={() => setFilter({ q: '', cat: '', dist: 10, availOnly: false, minRating: 0 })}>{t('Clear filters', 'پاک کردن فیلترها')}</button>
                 </div>
               </div>
             ) : f.view === 'map' ? (
@@ -139,12 +139,10 @@ export default function Results({ onNavigate }) {
                 <div className="mapbox">
                   <svg viewBox="0 0 600 500" style={{ width: '100%', height: 'auto' }}>
                     <rect width="600" height="500" fill="#EAF1EC" />
-                    {/* Simplified streets */}
                     <g stroke="#CFE8DE" strokeWidth="3" fill="none">
                       <path d="M0 100h600M0 200h600M0 300h600M0 400h600" />
                       <path d="M100 0v500M200 0v500M300 0v500M400 0v500M500 0v500" />
                     </g>
-                    {/* Sector labels */}
                     {list.slice(0, 6).map((w, i) => (
                       <g key={w.id}>
                         <circle cx={100 + i * 80} cy={100 + (i % 3) * 100} r="14" fill="#087F5B" stroke="#fff" strokeWidth="3" />
@@ -154,7 +152,7 @@ export default function Results({ onNavigate }) {
                   </svg>
                   <div className="mapnote">
                     <Icon name="lock" />
-                    <span>{t('Approximate sector only. Exact addresses are shared after a booking is confirmed. Tap a pin to open a profile.', 'صرف اندازاً سیکٹر۔ صحیح پتا بکنگ کے بعد۔')}</span>
+                    <span>{t('Approximate sector only. Exact addresses are shared after a booking is confirmed. Tap a pin to open a profile.', 'فقط ناحیه تقریبی. آدرس دقیق پس از تأیید رزرو به اشتراک گذاشته می‌شود.')}</span>
                   </div>
                 </div>
                 <div className="results-grid" style={{ marginTop: 14 }}>

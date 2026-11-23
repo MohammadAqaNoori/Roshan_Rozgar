@@ -102,7 +102,7 @@ export default function CustomerReg({ onNavigate }) {
                 <div className="ob-q">
                   <span className="big-ico"><Icon name="phone" /></span>
                   <div className="grow">
-                    <p className="ur-line">{t('شماره تلفن خود را وارد کنید', 'شماره تلفن خود را وارد کنید')}</p>
+                    {fa() && <p className="ur-line">{t('شماره تلفن خود را وارد کنید', 'شماره تلفن خود را وارد کنید')}</p>}
                     <h2>{t('What is your phone number?', 'شماره تلفن شما چیست؟')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
                       {t("We'll send a one-time code to verify. No spam.", 'کد یکبار مصرف برای تأیید می‌فرستیم. اسپم نیست.')}
@@ -202,7 +202,7 @@ export default function CustomerReg({ onNavigate }) {
                 <div className="ob-q">
                   <span className="big-ico"><Icon name="user" /></span>
                   <div className="grow">
-                    <p className="ur-line">{t('نام شما چیست؟', 'نام شما چیست؟')}</p>
+                    {fa() && <p className="ur-line">{t('نام شما چیست؟', 'نام شما چیست؟')}</p>}
                     <h2>{t('What is your name?', 'نام شما چیست؟')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
                       {t('Only your first name and area are shown to workers.', 'فقط نام اول و منطقه شما به کاریگران نشان داده می‌شود.')}
