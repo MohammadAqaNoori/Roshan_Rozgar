@@ -18,12 +18,10 @@ export default function Discover({ onNavigate }) {
       (pos) => {
         setLocating(false);
         const { latitude, longitude } = pos.coords;
-        // Reverse-geocode label (simplified for prototype)
         setLocationLabel(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
       },
       () => {
         setLocating(false);
-        // Keep default label on failure
       },
       { timeout: 8000 }
     );
@@ -36,12 +34,12 @@ export default function Discover({ onNavigate }) {
         <div className="searchbar">
           <Icon name="search" />
           <input
-            placeholder={t('Search workers, trades…', 'کاریگر تلاش کریں…')}
+            placeholder={t('Search workers, trades…', 'جستجوی کاریگر، حرفه‌ها…')}
             value={f.q}
             onChange={(e) => setFilter({ q: e.target.value })}
           />
           <button className="btn btn-primary btn-sm" onClick={() => onNavigate('results')}>
-            {t('Search', 'تلاش')}
+            {t('Search', 'جستجو')}
           </button>
         </div>
 
@@ -76,9 +74,9 @@ export default function Discover({ onNavigate }) {
         {/* Nearby workers */}
         <section>
           <div className="sect-title">
-            <h2>{t('Available near you', 'آپ کے قریب دستیاب')}</h2>
+            <h2>{t('Available near you', 'کاریگران در دسترس نزدیک شما')}</h2>
             <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('results')}>
-              {t('See all', 'سب دیکھیں')}<Icon name="arrowR" className="flip" />
+              {t('See all', 'همه را ببینید')}<Icon name="arrowR" className="flip" />
             </button>
           </div>
           <div className="results-grid">
@@ -94,7 +92,7 @@ export default function Discover({ onNavigate }) {
         </section>
 
         <Disclaimer>
-          {t('Distance and rating help you choose, but they don\u2019t guarantee safety or quality. Check reviews and agree the price before work starts.', 'فاصلہ اور ریٹنگ مددگار ہیں مگر حفاظت یا معیار کی ضمانت نہیں۔')}
+          {t('Distance and rating help you choose, but they don\u2019t guarantee safety or quality. Check reviews and agree the price before work starts.', 'فاصله و امتیاز کمک می‌کنند انتخاب کنید، اما ضمانت ایمنی یا کیفیت نیستند. نظرات را بررسی کنید و قبل از شروع کار قیمت را توافق کنید.')}
         </Disclaimer>
       </div>
     </main>

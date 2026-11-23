@@ -20,7 +20,6 @@ export default function Chat({ onNavigate }) {
   const [draft, setDraft] = useState('');
   const msgsRef = useRef(null);
 
-  // Auto-scroll to bottom whenever messages or typing indicator changes
   useEffect(() => {
     if (msgsRef.current) {
       msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
@@ -34,12 +33,12 @@ export default function Chat({ onNavigate }) {
         <div className="wrap">
           <div className="empty" style={{ marginTop: 40 }}>
             <div className="tile"><Icon name="msg" /></div>
-            <h2>{t('No conversations yet', 'ابھی کوئی بات چیت نہیں')}</h2>
+            <h2>{t('No conversations yet', 'هنوز هیچ مکالمه‌ای نیست')}</h2>
             <p className="muted small">
-              {t('Find a worker and send a request to start chatting.', 'کاریگر ڈھونڈیں اور درخواست بھیجیں۔')}
+              {t('Find a worker and send a request to start chatting.', 'یک کاریگر پیدا کنید و درخواست بفرستید تا چت شروع شود.')}
             </p>
             <button className="btn btn-primary" onClick={() => onNavigate('discover')}>
-              <Icon name="search" />{t('Find a worker', 'کاریگر ڈھونڈیں')}
+              <Icon name="search" />{t('Find a worker', 'پیدا کردن کاریگر')}
             </button>
           </div>
         </div>
@@ -59,26 +58,26 @@ export default function Chat({ onNavigate }) {
   let agreeCls = 'none';
   let agreeContent;
   if (job.status === 'declined') {
-    agreeContent = <><Icon name="x" />{t('Request declined', 'درخواست رد')}</>;
+    agreeContent = <><Icon name="x" />{t('Request declined', 'درخواست رد شد')}</>;
   } else if (stIdx(job.status) >= stIdx('agreed')) {
     agreeCls = 'done';
     agreeContent = (
       <>
         <Icon name="hand" />
-        {t('Agreed:', 'طے:')} <b className="num">{afn(job.price)}</b> · {job.time}
+        {t('Agreed:', 'توافق شد:')} <b className="num">{afn(job.price)}</b> · {job.time}
         {job.status === 'agreed' && (
           <span> · {isCustomer
-            ? t('confirm the booking', 'بکنگ کنفرم کریں')
-            : t('waiting for customer to confirm', 'گاہک کی تصدیق کا انتظار')}
+            ? t('confirm the booking', 'رزرو را تأیید کنید')
+            : t('waiting for customer to confirm', 'منتظر تأیید مشتری')}
           </span>
         )}
       </>
     );
   } else if (msgs.some((m) => m.type === 'offer' && m.state === 'open')) {
     agreeCls = 'pending';
-    agreeContent = <><Icon name="tag" />{t('Price offer pending', 'قیمت کی پیشکش زیرِ غور')}</>;
+    agreeContent = <><Icon name="tag" />{t('Price offer pending', 'پیشنهاد قیمت در انتظار')}</>;
   } else {
-    agreeContent = <><Icon name="tag" />{t('Price not agreed yet', 'قیمت ابھی طے نہیں')}</>;
+    agreeContent = <><Icon name="tag" />{t('Price not agreed yet', 'قیمت هنوز توافق نشده')}</>;
   }
 
   const locked = job.status === 'declined';
@@ -87,16 +86,16 @@ export default function Chat({ onNavigate }) {
   // ── Quick replies ─────────────────────────────────────────────────────────
   const quickReplies = isCustomer
     ? [
-        [t('Can you come today?', 'کیا آپ آج آ سکتے ہیں؟'), 'Kya aap aaj aa saktay hain?'],
-        [t('What will it cost?', 'کتنے پیسے لگیں گے؟'), 'Kitne paise lagenge?'],
-        [t('Please bring the parts', 'پرزے ساتھ لے آئیں'), 'Parts saath le aayein'],
-        [t('I accept this offer', 'مجھے یہ قیمت منظور ہے'), 'Mujhe ye qeemat manzoor hai'],
+        [t('Can you come today?', 'آیا امروز می‌توانید بیایید؟')],
+        [t('What will it cost?', 'هزینه چقدر می‌شود؟')],
+        [t('Please bring the parts', 'لطفاً قطعات را بیاورید')],
+        [t('I accept this offer', 'این پیشنهاد را قبول دارم')],
       ]
     : [
-        [t('I can come today', 'میں آج آ سکتا ہوں'), 'Main aaj aa sakta hoon'],
-        [t('Please share your location', 'اپنی لوکیشن بھیجیں'), 'Apni location bhej dein'],
-        [t('What is the problem?', 'مسئلہ کیا ہے؟'), 'Masla kya hai?'],
-        [t('My estimated price is…', 'میرا اندازاً ریٹ…'), '__price'],
+        [t('I can come today', 'امروز می‌توانم بیایم')],
+        [t('Please share your location', 'لطفاً موقعیت خود را بفرستید')],
+        [t('What is the problem?', 'مشکل چیست؟')],
+        [t('My estimated price is…', 'قیمت تخمینی من…'), '__price'],
       ];
 
   const handleQuick = (label, value) => {
@@ -159,23 +158,23 @@ export default function Chat({ onNavigate }) {
         <div className={`offer ${cls}`}>
           <div className="row between">
             <span className="small" style={{ fontWeight: 700 }}>
-              <Icon name="tag" /> {m.from === 'worker' ? t('Price offer', 'قیمت کی پیشکش') : t('Counter-offer', 'جوابی پیشکش')}
+              <Icon name="tag" /> {m.from === 'worker' ? t('Price offer', 'پیشنهاد قیمت') : t('Counter-offer', 'پیشنهاد متقابل')}
             </span>
             {m.state === 'accepted'
-              ? <span className="pill pill-av"><Icon name="check" />{t('Accepted', 'منظور')}</span>
+              ? <span className="pill pill-av"><Icon name="check" />{t('Accepted', 'قبول شد')}</span>
               : m.state === 'superseded'
-              ? <span className="pill pill-off">{t('Replaced', 'بدل گئی')}</span>
-              : <span className="pill pill-busy">{t('Waiting', 'انتظار')}</span>}
+              ? <span className="pill pill-off">{t('Replaced', 'جایگزین شد')}</span>
+              : <span className="pill pill-busy">{t('Waiting', 'در انتظار')}</span>}
           </div>
           <div className="amt num">{afn(m.amount)}</div>
           {m.note && <p className="small">{m.note}</p>}
           {canAct && (
             <div className="row" style={{ gap: 8, marginTop: 10 }}>
               <button className="btn btn-primary btn-sm grow" onClick={() => acceptOffer(m.id)}>
-                <Icon name="check" />{t('Accept', 'منظور')}
+                <Icon name="check" />{t('Accept', 'قبول')}
               </button>
               <button className="btn btn-outline btn-sm grow" onClick={() => openModal('counter')}>
-                {t('Counter', 'جوابی قیمت')}
+                {t('Counter', 'پیشنهاد متقابل')}
               </button>
             </div>
           )}
@@ -197,7 +196,6 @@ export default function Chat({ onNavigate }) {
   const sidebar = (
     <aside>
       <div className="card stack" style={{ gap: 12 }}>
-        {/* Job title */}
         <div className="row" style={{ gap: 10 }}>
           <span style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mint)', color: 'var(--emerald)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
             <Icon name={c.icon} />
@@ -205,12 +203,10 @@ export default function Chat({ onNavigate }) {
           <b>{job.title}</b>
         </div>
 
-        {/* Details */}
         <ul style={{ margin: 0, paddingInlineStart: 18 }} className="small">
           {job.details.map((d, i) => <li key={i}>{d}</li>)}
         </ul>
 
-        {/* Photo thumbnail */}
         <div className="thumb" style={{ width: '100%', height: 140 }}>
           <svg viewBox="0 0 120 120" style={{ width: '100%', height: '100%' }}>
             <rect width="120" height="120" fill="#DCE8E2" />
@@ -222,11 +218,10 @@ export default function Chat({ onNavigate }) {
           </svg>
         </div>
 
-        {/* Key-value details */}
         <dl className="kv" style={{ margin: 0 }}>
-          <dt><Icon name="clock" />{t('Time', 'وقت')}</dt>
+          <dt><Icon name="clock" />{t('Time', 'زمان')}</dt>
           <dd>{job.time}</dd>
-          <dt><Icon name="pin" />{t('Place', 'جگہ')}</dt>
+          <dt><Icon name="pin" />{t('Place', 'مکان')}</dt>
           <dd>
             {stIdx(job.status) >= stIdx('confirmed') || isCustomer
               ? job.address
@@ -236,23 +231,22 @@ export default function Chat({ onNavigate }) {
           <dd className="num">{job.price ? afn(job.price) : '—'}</dd>
         </dl>
 
-        {/* Action buttons based on status */}
         {job.status === 'agreed' && isCustomer && (
           <button className="btn btn-primary btn-lg btn-block" onClick={() => onNavigate('confirm')}>
-            <Icon name="check" />{t('Review & confirm booking', 'بکنگ کنفرم کریں')}
+            <Icon name="check" />{t('Review & confirm booking', 'بررسی و تأیید رزرو')}
           </button>
         )}
         {job.status === 'agreed' && !isCustomer && (
           <>
-            <Disclaimer>{t('Waiting for the customer to confirm the booking.', 'گاہک کی تصدیق کا انتظار۔')}</Disclaimer>
+            <Disclaimer>{t('Waiting for the customer to confirm the booking.', 'منتظر تأیید رزرو از طرف مشتری هستیم.')}</Disclaimer>
             <button className="btn btn-outline btn-block" onClick={simCustomerConfirm}>
-              <Icon name="refresh" />{t('Demo: simulate customer confirming', 'ڈیمو: گاہک کی تصدیق')}
+              <Icon name="refresh" />{t('Demo: simulate customer confirming', 'دمو: تأیید توسط مشتری')}
             </button>
           </>
         )}
         {stIdx(job.status) >= stIdx('confirmed') && job.status !== 'reviewed' && (
           <button className="btn btn-outline btn-block" onClick={() => onNavigate(isCustomer ? 'track' : 'wdash')}>
-            <Icon name="calendar" />{t('Open booking', 'بکنگ کھولیں')}
+            <Icon name="calendar" />{t('Open booking', 'باز کردن رزرو')}
           </button>
         )}
       </div>
@@ -314,7 +308,7 @@ export default function Chat({ onNavigate }) {
                     onClick={() => openModal('counter')}
                   >
                     <Icon name="tag" />
-                    {isCustomer ? t('Offer a price', 'قیمت بتائیں') : t('Send price', 'قیمت بھیجیں')}
+                    {isCustomer ? t('Offer a price', 'پیشنهاد قیمت') : t('Send price', 'ارسال قیمت')}
                   </button>
                 )}
               </div>
@@ -338,7 +332,7 @@ export default function Chat({ onNavigate }) {
                         <i key={i} style={{ height: `${6 + ((i * 5) % 14)}px`, animationDelay: `${i * 0.05}s`, background: 'var(--error)' }} />
                       ))}
                     </div>
-                    <b className="small">{t('Recording… tap to send', 'ریکارڈنگ… بھیجنے کے لیے دبائیں')}</b>
+                    <b className="small">{t('Recording… tap to send', 'در حال ضبط… برای ارسال بزنید')}</b>
                   </div>
                 ) : (
                   <>
@@ -346,7 +340,7 @@ export default function Chat({ onNavigate }) {
                     <input
                       id="chatin"
                       className="inp"
-                      placeholder={t('Type a message, or hold the mic', 'پیغام لکھیں یا مائیک دبائیں')}
+                      placeholder={t('Type a message, or hold the mic', 'پیامی بنویسید یا میکروفون را نگه دارید')}
                       autoComplete="off"
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
