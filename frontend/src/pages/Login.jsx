@@ -84,7 +84,7 @@ export default function Login({ onNavigate }) {
                 <div className="ob-q">
                   <span className="big-ico"><Icon name="phone" /></span>
                   <div className="grow">
-                    <p className="ur-line">{t('وارد کاریگر شوید', 'وارد کاریگر شوید')}</p>
+                    {fa() && <p className="ur-line">{t('وارد کاریگر شوید', 'وارد کاریگر شوید')}</p>}
                     <h2>{t('Log in to your account', 'وارد اکاؤنت خود شوید')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
                       {t('Enter your phone number to continue.', 'برای ادامه شماره تلفن خود را وارد کنید.')}
