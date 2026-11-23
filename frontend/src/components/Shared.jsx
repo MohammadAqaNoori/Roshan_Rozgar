@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, afn } from '../context/AppContext';
-import { catBy, CUSTOMER } from '../lib/data';
+import { catBy, CUSTOMER, skillFa, DAY_FA, HOURS_FA } from '../lib/data';
 
 // Status pill for worker availability
 export function StatusPill({ w }) {
@@ -79,7 +79,7 @@ export function Brand({ onClick }) {
 
 // Worker card
 export function WorkerCard({ w, onProfile, onRequest, landing }) {
-  const { t, wname, catName } = useApp();
+  const { t, fa, wname, catName } = useApp();
   const c = catBy(w.cat);
   const cls = w.status === 'busy' ? 'is-busy' : w.status === 'off' ? 'is-off' : '';
   const cta = w.status === 'available'
@@ -102,7 +102,7 @@ export function WorkerCard({ w, onProfile, onRequest, landing }) {
       <div className="row between wrapit">
         <StatusPill w={w} />
       </div>
-      <div className="skills">{w.skills.slice(0, 3).map((s) => <span key={s} className="skill">{s}</span>)}</div>
+      <div className="skills">{w.skills.slice(0, 3).map((s) => <span key={s} className="skill">{fa() ? skillFa(s) : s}</span>)}</div>
       <div className="foot">
         <span className="price grow"><small>{t('Visit from', 'ویزیت از')}</small><b className="num">{afn(w.price)}</b></span>
         <button className="btn btn-outline btn-sm" onClick={() => onProfile?.(w.id)}>{t('Profile', 'پروفایل')}</button>

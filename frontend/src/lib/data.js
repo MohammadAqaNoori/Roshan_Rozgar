@@ -33,6 +33,29 @@ export const SKILLS = {
   general:     [['Drilling & fixing', 'حفاری و نصب', 'wrench'], ['Curtain rods', 'میله پرده', 'home'], ['Furniture assembly', 'مونتاژ مبلمان', 'hammer'], ['Small repairs', 'تعمیرات کوچک', 'wrench']],
 };
 
+// Lookup a skill's Dari translation by its English name
+export const skillFa = (enSkill) => {
+  for (const list of Object.values(SKILLS)) {
+    const found = list.find(([en]) => en === enSkill);
+    if (found) return found[1];
+  }
+  return enSkill; // fallback
+};
+
+// Day name translations
+export const DAY_FA = { Sat: 'شنبه', Sun: 'یکشنبه', Mon: 'دوشنبه', Tue: 'سه‌شنبه', Wed: 'چهارشنبه', Thu: 'پنجشنبه', Fri: 'جمعه' };
+
+// Hours translation map (common patterns)
+export const HOURS_FA = {
+  '8 AM – 7 PM':  '۸ صبح تا ۷ شب',
+  '7 AM – 9 PM':  '۷ صبح تا ۹ شب',
+  '9 AM – 7 PM':  '۹ صبح تا ۷ شب',
+  '8 AM – 6 PM':  '۸ صبح تا ۶ شب',
+  '7 AM – 6 PM':  '۷ صبح تا ۶ شب',
+  '9 AM – 8 PM':  '۹ صبح تا ۸ شب',
+  '8 AM – 5 PM':  '۸ صبح تا ۵ شب',
+};
+
 // ── Afghan cities and districts ───────────────────────────────────────────────
 export const AREAS = [
   { id: 'Shahr-e-Naw',    city: 'Kabul',           x: 250, y: 250 },

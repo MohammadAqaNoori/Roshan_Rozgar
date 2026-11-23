@@ -2,12 +2,13 @@ import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp, afn } from '../context/AppContext';
 import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
-import { catBy, CUSTOMER } from '../lib/data';
+import { catBy, CUSTOMER, skillFa, DAY_FA, HOURS_FA } from '../lib/data';
 
 export default function Profile({ own, onNavigate }) {
   const { t, fa, W, wname, catName, sel, selectWorker, role, ob, logout } = useApp();
   const w = W(own ? 'ahmad' : sel) || W('ahmad');
   const c = catBy(w.cat);
+  const isFa = fa();
 
   const avg = (k) => {
     const r = w.reviews;
@@ -43,7 +44,7 @@ export default function Profile({ own, onNavigate }) {
               <ul className="know" style={{ marginTop: 8 }}>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Phone number confirmed by OTP', 'شماره تلفن با OTP تأیید شده')} <span className="pill pill-sample">{t('simulated', 'نمونه')}</span></span></li>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'فعال در روشن روزگار از')} {w.since}</span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبان‌ها:')} {w.langs}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبان‌ها:')} {isFa ? w.langs.replace('Dari', 'دری').replace('Pashto', 'پښتو').replace('Uzbeki', 'ازبکی') : w.langs}</span></li>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'هزینه ویزیت از')} <b className="num">{afn(w.price)}</b></span></li>
                 <li><span className="no"><Icon name="info" /></span><span>{t('Identity (Tazkira) not verified — out of scope for this prototype.', 'هویت (تذکره) تأیید نشده — در این نمونه اولیه گنجانده نشده.')}</span></li>
               </ul>
@@ -53,7 +54,7 @@ export default function Profile({ own, onNavigate }) {
             <section className="card">
               <h3>{t('Skills', 'مهارت‌ها')}</h3>
               <div className="skills" style={{ marginTop: 10 }}>
-                {w.skills.map((s) => <span key={s} className="skill">{s}</span>)}
+                {w.skills.map((s) => <span key={s} className="skill">{isFa ? skillFa(s) : s}</span>)}
               </div>
             </section>
 
@@ -62,11 +63,11 @@ export default function Profile({ own, onNavigate }) {
               <h3>{t('Working hours', 'ساعات کاری')}</h3>
               <div className="row" style={{ marginTop: 10 }}>
                 <Icon name="calendar" />
-                <span>{w.days.join(', ')}</span>
+                <span>{isFa ? w.days.map((d) => DAY_FA[d] || d).join('، ') : w.days.join(', ')}</span>
               </div>
               <div className="row">
                 <Icon name="clock" />
-                <span>{w.hours}</span>
+                <span>{isFa ? (HOURS_FA[w.hours] || w.hours) : w.hours}</span>
               </div>
             </section>
 
@@ -135,7 +136,7 @@ export default function Profile({ own, onNavigate }) {
                       {r.text && <p className="small" style={{ marginTop: 4 }}>{r.text}</p>}
                       {r.tags && r.tags.length > 0 && (
                         <div className="skills" style={{ marginTop: 4 }}>
-                          {r.tags.map((tag) => <span key={tag} className="skill">{tag}</span>)}
+                          {r.tags.map((tag) => <span key={tag} className="skill">{isFa ? skillFa(tag) : tag}</span>)}
                         </div>
                       )}
                       <span className="xs muted">{r.area} · {r.date}</span>
