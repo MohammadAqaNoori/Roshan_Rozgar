@@ -29,7 +29,7 @@ export default function Login({ onNavigate }) {
   const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast } = useApp();
 
   const [phone, setPhone] = useState('');
-  const [step, setStep] = useState('phone');
+  const [step, setStep] = useState('not-found');
   const [phoneError, setPhoneError] = useState('');
 
   const handleContinue = () => {
