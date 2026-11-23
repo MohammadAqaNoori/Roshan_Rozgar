@@ -84,7 +84,7 @@ export default function Home({ onNavigate }) {
           </div>
 
           {/* Right column — hero art */}
-          <div className="hero-art" aria-label="Product preview">
+          <div className="hero-art" aria-label="Product preview" style={{ padding: 0, overflow: 'hidden', borderRadius: 24 }}>
             <img
               src="/hero.jpg"
               alt="Karigar — customer booking a worker on mobile"
@@ -92,8 +92,9 @@ export default function Home({ onNavigate }) {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
+                objectPosition: 'center top',
+                display: 'block',
                 borderRadius: 24,
-                boxShadow: 'var(--sh-3)',
               }}
             />
           </div>
