@@ -11,6 +11,7 @@ import Onboard from './pages/Onboard';
 import Discover from './pages/Discover';
 import Results from './pages/Results';
 import Profile from './pages/Profile';
+import CustomerProfile from './pages/CustomerProfile';
 import Request from './pages/Request';
 import Chat from './pages/Chat';
 import Confirm from './pages/Confirm';
@@ -56,7 +57,11 @@ function AppInner() {
       case 'onboard':    return <Onboard onNavigate={navigate} />;
       case 'discover':   return <Discover onNavigate={navigate} />;
       case 'results':    return <Results onNavigate={navigate} />;
+      // 'profile' = view a worker's profile (from search results)
+      // 'cprofile' = customer's own account page
+      // 'wprofile' = worker's own profile page
       case 'profile':    return <Profile own={false} onNavigate={navigate} />;
+      case 'cprofile':   return <CustomerProfile onNavigate={navigate} />;
       case 'wprofile':   return <Profile own={true} onNavigate={navigate} />;
       case 'request':    return <Request onNavigate={navigate} />;
       case 'chat':       return <Chat onNavigate={navigate} />;

@@ -172,10 +172,10 @@ export function AppHeader({ activeView, onNavigate }) {
 
   const topNav = role === 'worker'
     ? [['wdash', 'home', t('Dashboard', 'داشبورد')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
-    : [['discover', 'search', t('Find a worker', 'پیدا کردن کاریگر')], ['track', 'calendar', t('My bookings', 'رزروهای من')], ['profile', 'user', t('Profile', 'پروفایل')]];
+    : [['discover', 'search', t('Find a worker', 'پیدا کردن کاریگر')], ['track', 'calendar', t('My bookings', 'رزروهای من')], ['cprofile', 'user', t('Profile', 'پروفایل')]];
 
   const activeOf = (v) => {
-    const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track' };
+    const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track', profile: 'cprofile' };
     return map[v] || v;
   };
 
@@ -203,10 +203,10 @@ export function BottomNav({ activeView, onNavigate }) {
   const { t, role, notifs } = useApp();
   const items = role === 'worker'
     ? [['wdash', 'home', t('Home', 'خانه')], ['wjob', 'briefcase', t('Jobs', 'کارها')], ['chat', 'msg', t('Chat', 'چت')], ['wprofile', 'user', t('Profile', 'پروفایل')]]
-    : [['discover', 'search', t('Find', 'جستجو')], ['track', 'calendar', t('Bookings', 'رزروها')], ['chat', 'msg', t('Chat', 'چت')], ['profile', 'user', t('Profile', 'پروفایل')]];
+    : [['discover', 'search', t('Find', 'جستجو')], ['track', 'calendar', t('Bookings', 'رزروها')], ['chat', 'msg', t('Chat', 'چت')], ['cprofile', 'user', t('Profile', 'پروفایل')]];
 
   const activeOf = (v) => {
-    const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track' };
+    const map = { results: 'discover', request: 'discover', confirm: 'track', booked: 'track', review: 'track', profile: 'cprofile' };
     return map[v] || v;
   };
 
@@ -322,7 +322,7 @@ export function AccountMenu({ onNavigate }) {
         { icon: 'briefcase', label: t('My jobs',    'کارهای من'),     view: 'wjob'     },
       ]
     : [
-        { icon: 'user',      label: t('My profile',  'پروفایل من'),   view: 'profile' },
+        { icon: 'user',      label: t('My profile',  'پروفایل من'),   view: 'cprofile' },
         { icon: 'calendar',  label: t('My bookings', 'رزروهای من'),   view: 'track'   },
       ];
 
