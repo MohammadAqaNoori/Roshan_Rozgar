@@ -191,18 +191,6 @@ export default function Login({ onNavigate }) {
           {step === 'not-found' && (
             <div className="ob">
               <div className="ob-card">
-                <div className="ob-q">
-                  <span className="big-ico" style={{ background: 'var(--amber-50)', color: 'var(--amber-ink)' }}>
-                    <Icon name="user" />
-                  </span>
-                  <div className="grow">
-                    <h2>{t('No account found', 'اکاؤنتی پیدا نشد')}</h2>
-                    <p className="en-line" style={{ marginTop: 4 }}>
-                      {t('Create a free account to get started.', 'برای شروع یک اکاؤنت رایگان بسازید.')}
-                    </p>
-                  </div>
-                </div>
-
                 <div className="stack" style={{ gap: 12, marginTop: 20 }}>
                   <button className="role cust" style={{ padding: 20 }} onClick={signupCustomer}>
                     <span className="art" style={{ height: 100 }}>
