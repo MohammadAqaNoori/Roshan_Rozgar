@@ -523,7 +523,7 @@ export default function Onboard({ onNavigate }) {
             <div className="burst"><Icon name="check" aria-hidden="true" /></div>
             <h2 style={{ fontSize: 28 }}>{s('profile-is-live')}</h2>
             <p className="muted" style={{ maxWidth: '30em' }}>
-              {s('profile-live-desc', { area: ob.area || 'Shahr-e-Naw' })}
+              {s('profile-live-desc', { area: areaLabel || 'Shahr-e-Naw' })}
             </p>
             <SpeakBtn
               id="obdone"
