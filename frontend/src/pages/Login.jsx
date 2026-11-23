@@ -1,6 +1,11 @@
 /**
- * Login page — unified entry point.
- * v2.0 — Afghanistan localization (Karigar)
+ * Login page — unified entry point with real account verification.
+ * v2.1 — Karigar / Afghanistan
+ *
+ * Flow:
+ *   1. User enters phone number → we check if the account exists
+ *   2a. Account found   → pick role (Customer / Worker) → navigate
+ *   2b. Account NOT found → show "Account not found" with clear message + signup options
  */
 import { useState } from 'react';
 import { Icon } from '../lib/icons';
@@ -8,7 +13,7 @@ import { useApp } from '../context/AppContext';
 import { Brand, LangToggle } from '../components/Shared';
 import { Avatar } from '../lib/avatar';
 
-// Seeded phones that "exist" in the prototype
+// Seeded phones that "exist" in demo mode
 const KNOWN_PHONES = [
   '+93700100100',  // Mariam Noori (customer)
   '+93700111001',  // Ahmad Shah (worker)
@@ -26,11 +31,16 @@ function normalise(raw) {
 }
 
 export default function Login({ onNavigate }) {
-  const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser, apiSignup } = useApp();
+  const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser } = useApp();
 
   const [phone, setPhone] = useState('');
-  const [step, setStep] = useState('not-found');
+  // 'phone'     → initial step: enter phone
+  // 'checking'  → loading while API verifies
+  // 'found'     → account exists, pick role
+  // 'not-found' → account doesn't exist, offer signup
+  const [step, setStep] = useState('phone');
   const [phoneError, setPhoneError] = useState('');
+  const [checkedPhone, setCheckedPhone] = useState(''); // the phone that was verified
 
   const handleContinue = async () => {
     const digits = phone.replace(/\D/g, '');
@@ -39,42 +49,51 @@ export default function Login({ onNavigate }) {
       return;
     }
     setPhoneError('');
+    const normalised = normalise(phone);
+    setCheckedPhone(normalised);
 
     if (liveMode) {
-      // Live mode: try real API login
-      const normalised = normalise(phone);
+      // ── Live mode: try real API login ─────────────────────────────────────
+      setStep('checking');
       try {
         await apiLoginUser(normalised);
-        showToast(t('Welcome back!', 'خوش آمدید!'), true);
-        onNavigate('discover');
+        // 200 OK → account found, user is now logged in
+        setStep('found');
       } catch (err) {
-        setStep('not-found');
+        // 404 → account not found
+        // 403 → account deactivated
+        const status = err?.response?.status;
+        if (status === 404 || status === 403) {
+          setStep('not-found');
+        } else {
+          // Network or server error — show inline error and stay on phone step
+          setStep('phone');
+          setPhoneError(
+            t('Could not reach the server. Check your connection.', 'به سرور دسترسی نداشت. اتصال را بررسی کنید.')
+          );
+        }
       }
       return;
     }
 
-    // Demo mode: check known phones
-    const normalised = normalise(phone);
+    // ── Demo mode: check known phones ────────────────────────────────────────
     const exists = KNOWN_PHONES.some(p => p === normalised);
-    if (exists) {
-      setStep('role');
-    } else {
-      setStep('not-found');
-    }
+    setStep(exists ? 'found' : 'not-found');
   };
 
   const loginAs = (selectedRole) => {
     setRole(selectedRole);
     showToast(t('Welcome back!', 'خوش آمدید!'), true);
-    if (selectedRole === 'worker') {
-      onNavigate('wdash-returning');
-    } else {
-      onNavigate('discover');
-    }
+    onNavigate(selectedRole === 'worker' ? 'wdash-returning' : 'discover');
   };
 
   const signupCustomer = () => { startCustomerSignup(); onNavigate('customerReg'); };
   const signupWorker = () => { startWorkerSignup(); onNavigate('onboard', { fresh: true }); };
+
+  const goBack = () => {
+    setStep('phone');
+    setPhoneError('');
+  };
 
   return (
     <>
@@ -90,17 +109,17 @@ export default function Login({ onNavigate }) {
       <main className="wrap" style={{ paddingBlock: '32px 64px' }}>
         <div style={{ maxWidth: 480, margin: '0 auto' }}>
 
-          {/* Step 1: Phone number */}
+          {/* ── Step 1: Enter phone number ─────────────────────────────── */}
           {step === 'phone' && (
             <div className="ob">
               <div className="ob-card">
                 <div className="ob-q">
                   <span className="big-ico"><Icon name="phone" /></span>
                   <div className="grow">
-                    {fa() && <p className="ur-line">{t('وارد کاریگر شوید', 'وارد کاریگر شوید')}</p>}
+                    {fa() && <p className="ur-line">وارد کاریگر شوید</p>}
                     <h2>{t('Log in to your account', 'وارد اکاؤنت خود شوید')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
-                      {t('Enter your phone number to continue.', 'برای ادامه شماره تلفن خود را وارد کنید.')}
+                      {t('Enter your phone number. We\'ll check if you have an account.', 'شماره تلفن خود را وارد کنید. بررسی می‌کنیم که آیا اکاؤنت دارید.')}
                     </p>
                   </div>
                 </div>
@@ -126,36 +145,59 @@ export default function Login({ onNavigate }) {
                       autoComplete="tel"
                     />
                   </div>
+
+                  {/* Inline error */}
                   {phoneError && (
                     <div className="fallback" style={{ marginTop: 10, padding: '10px 14px' }}>
                       <Icon name="alert" /> {phoneError}
                     </div>
                   )}
-                  <p className="xs muted" style={{ marginTop: 8 }}>
-                    <Icon name="info" />{' '}
-                    {t('Demo: use 0700100100 (customer) or 0700111001 (worker)', 'نمونه: ۰۷۰۰۱۰۰۱۰۰ (مشتری) یا ۰۷۰۰۱۱۱۰۰۱ (کاریگر)')}
-                  </p>
+
+                  {/* Demo hint when backend not running */}
+                  {!liveMode && (
+                    <p className="xs muted" style={{ marginTop: 8 }}>
+                      <Icon name="info" />{' '}
+                      {t('Demo: use 0700100100 (customer) or 0700111001 (worker)', 'نمونه: ۰۷۰۰۱۰۰۱۰۰ (مشتری) یا ۰۷۰۰۱۱۱۰۰۱ (کاریگر)')}
+                    </p>
+                  )}
                 </div>
 
                 <div className="ob-foot">
-                  <button className="btn btn-primary btn-lg" disabled={!phone.trim()} onClick={handleContinue}>
+                  <button
+                    className="btn btn-primary btn-lg"
+                    disabled={!phone.trim()}
+                    onClick={handleContinue}
+                  >
                     {t('Continue', 'ادامه')}
                     <Icon name="arrowR" className="flip" />
                   </button>
                 </div>
 
                 <p className="muted small" style={{ textAlign: 'center', marginTop: 20 }}>
-                  {t("Don't have an account yet?", 'هنوز اکاؤنت ندارید؟')}{' '}
+                  {t("Don't have an account?", 'هنوز اکاؤنت ندارید؟')}{' '}
                   <button className="btn btn-ghost btn-sm" onClick={() => setStep('not-found')}>
-                    {t('Create one', 'ساختن')}
+                    {t('Sign up', 'ثبت‌نام')}
                   </button>
                 </p>
               </div>
             </div>
           )}
 
-          {/* Step 2a: Known user — pick role */}
-          {step === 'role' && (
+          {/* ── Checking (loading spinner) ─────────────────────────────── */}
+          {step === 'checking' && (
+            <div className="ob">
+              <div className="ob-card" style={{ textAlign: 'center', padding: 48 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+                  <div className="skel" style={{ width: 56, height: 56, borderRadius: '50%' }} />
+                </div>
+                <h2>{t('Checking your account…', 'در حال بررسی اکاؤنت شما…')}</h2>
+                <p className="muted small" style={{ marginTop: 8 }}>+93{phone}</p>
+              </div>
+            </div>
+          )}
+
+          {/* ── Step 2a: Account found — pick role ────────────────────── */}
+          {step === 'found' && (
             <div className="ob">
               <div className="ob-card">
                 <div className="ob-q">
@@ -165,25 +207,30 @@ export default function Login({ onNavigate }) {
                   <div className="grow">
                     <h2>{t('Account found!', 'اکاؤنت پیدا شد!')}</h2>
                     <p className="en-line" style={{ marginTop: 4 }}>
-                      {t('How do you want to log in?', 'چگونه می‌خواهید وارد شوید؟')}
+                      {t('Welcome back. How do you want to continue?', 'خوش آمدید. چگونه می‌خواهید ادامه دهید؟')}
                     </p>
+                    <p className="xs muted num" style={{ marginTop: 4 }}>{checkedPhone}</p>
                   </div>
                 </div>
 
                 <div className="stack" style={{ gap: 12, marginTop: 20 }}>
                   <button className="choice wide" style={{ minHeight: 76, padding: '16px 20px' }} onClick={() => loginAs('customer')}>
-                    <span className="tile" style={{ width: 48, height: 48 }}><Icon name="home" /></span>
+                    <span className="tile" style={{ width: 48, height: 48 }}>
+                      <Icon name="home" />
+                    </span>
                     <span>
-                      <b style={{ display: 'block', fontSize: 16 }}>{t('As a Customer', 'به عنوان مشتری')}</b>
+                      <b style={{ display: 'block', fontSize: 16 }}>{t('I need a service', 'به کاریگر نیاز دارم')}</b>
                       <span className="small muted">{t('Find workers and book services', 'کاریگر پیدا کنید و رزرو کنید')}</span>
                     </span>
                     <Icon name="arrowR" className="flip" style={{ marginInlineStart: 'auto', color: 'var(--emerald)' }} />
                   </button>
 
                   <button className="choice wide" style={{ minHeight: 76, padding: '16px 20px' }} onClick={() => loginAs('worker')}>
-                    <span className="tile" style={{ width: 48, height: 48, background: 'var(--amber-50)', color: 'var(--amber-ink)' }}><Icon name="briefcase" /></span>
+                    <span className="tile" style={{ width: 48, height: 48, background: 'var(--amber-50)', color: 'var(--amber-ink)' }}>
+                      <Icon name="briefcase" />
+                    </span>
                     <span>
-                      <b style={{ display: 'block', fontSize: 16 }}>{t('As a Worker', 'به عنوان کاریگر')}</b>
+                      <b style={{ display: 'block', fontSize: 16 }}>{t('I want to find work', 'کار می‌خواهم')}</b>
                       <span className="small muted">{t('Manage jobs and availability', 'مدیریت کارها و دسترس‌پذیری')}</span>
                     </span>
                     <Icon name="arrowR" className="flip" style={{ marginInlineStart: 'auto', color: 'var(--emerald)' }} />
@@ -191,7 +238,7 @@ export default function Login({ onNavigate }) {
                 </div>
 
                 <p className="muted small" style={{ textAlign: 'center', marginTop: 16 }}>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setStep('phone')}>
+                  <button className="btn btn-ghost btn-sm" onClick={goBack}>
                     <Icon name="arrowL" className="flip" />
                     {t('Use a different number', 'شماره دیگر')}
                   </button>
@@ -200,37 +247,65 @@ export default function Login({ onNavigate }) {
             </div>
           )}
 
-          {/* Step 2b: Not found — offer signup */}
+          {/* ── Step 2b: Account NOT found ────────────────────────────── */}
           {step === 'not-found' && (
             <div className="ob">
               <div className="ob-card">
-                <div className="stack" style={{ gap: 12, marginTop: 20 }}>
+
+                {/* Clear "not found" message */}
+                <div className="ob-q" style={{ marginBottom: 20 }}>
+                  <span className="big-ico" style={{ background: 'var(--amber-50)', color: 'var(--amber-ink)', flexShrink: 0 }}>
+                    <Icon name="user" />
+                  </span>
+                  <div className="grow">
+                    <h2>{t('No account found', 'اکاؤنتی پیدا نشد')}</h2>
+                    {checkedPhone ? (
+                      <p className="en-line" style={{ marginTop: 4 }}>
+                        {t('No account is registered with', 'هیچ اکاؤنتی با این شماره ثبت نشده:')} <b className="num">{checkedPhone}</b>
+                      </p>
+                    ) : (
+                      <p className="en-line" style={{ marginTop: 4 }}>
+                        {t('Create a free account to get started.', 'برای شروع یک اکاؤنت رایگان بسازید.')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Divider + prompt */}
+                <div className="disclaimer" style={{ marginBottom: 16 }}>
+                  <Icon name="info" />
+                  <span>{t('Choose how you\'d like to sign up:', 'روش ثبت‌نام را انتخاب کنید:')}</span>
+                </div>
+
+                <div className="stack" style={{ gap: 12 }}>
+                  {/* Customer signup */}
                   <button className="role cust" style={{ padding: 20 }} onClick={signupCustomer}>
-                    <span className="art" style={{ height: 100 }}>
+                    <span className="art" style={{ height: 90 }}>
                       <span className="row" style={{ gap: -10, justifyContent: 'center' }}>
-                        <Avatar id="mariam" size={72} radius={22} />
-                        <span style={{ width: 48, height: 48, borderRadius: 14, background: '#fff', display: 'grid', placeItems: 'center', color: 'var(--emerald)', boxShadow: 'var(--sh-2)', marginInlineStart: -10, marginTop: 28 }}>
+                        <Avatar id="mariam" size={68} radius={22} />
+                        <span style={{ width: 44, height: 44, borderRadius: 14, background: '#fff', display: 'grid', placeItems: 'center', color: 'var(--emerald)', boxShadow: 'var(--sh-2)', marginInlineStart: -10, marginTop: 24 }}>
                           <Icon name="home" />
                         </span>
                       </span>
                     </span>
                     <span>
-                      <h2 style={{ fontSize: 20 }}>{t('I need a service', 'به کاریگر نیاز دارم')}</h2>
+                      <h2 style={{ fontSize: 18 }}>{t('Sign up as Customer', 'ثبت‌نام به عنوان مشتری')}</h2>
                       <span className="muted small">{t('Find plumbers, electricians and more nearby', 'لوله‌کش، برق‌کار و بیشتر نزدیک پیدا کنید')}</span>
                     </span>
                     <span className="go">
-                      {t('Sign up as Customer', 'ثبت‌نام به عنوان مشتری')}
+                      {t('Get started', 'شروع کنید')}
                       <Icon name="arrowR" className="flip" />
                     </span>
                   </button>
 
+                  {/* Worker signup */}
                   <button className="role work" style={{ padding: 20 }} onClick={signupWorker}>
-                    <span className="art" style={{ height: 100 }}>
+                    <span className="art" style={{ height: 90 }}>
                       <span className="row" style={{ justifyContent: 'center' }}>
-                        <Avatar id="ahmad" size={72} radius={22} />
+                        <Avatar id="ahmad" size={68} radius={22} />
                         <span style={{ display: 'flex', flexDirection: 'column', gap: 6, marginInlineStart: 10 }}>
                           {['droplet', 'zap', 'hammer'].map((i) => (
-                            <span key={i} style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--amber)', display: 'grid', placeItems: 'center', color: 'var(--forest-900)' }}>
+                            <span key={i} style={{ width: 30, height: 30, borderRadius: 10, background: 'var(--amber)', display: 'grid', placeItems: 'center', color: 'var(--forest-900)' }}>
                               <Icon name={i} />
                             </span>
                           ))}
@@ -238,19 +313,25 @@ export default function Login({ onNavigate }) {
                       </span>
                     </span>
                     <span>
-                      <h2 style={{ fontSize: 20 }}>{t('I want to find work', 'کار می‌خواهم')}</h2>
+                      <h2 style={{ fontSize: 18 }}>{t('Sign up as Worker', 'ثبت‌نام به عنوان کاریگر')}</h2>
                       <span className="muted small">{t('Create a profile by speaking. Get job requests.', 'با صحبت پروفایل بسازید. درخواست کار دریافت کنید.')}</span>
                     </span>
                     <span className="go">
                       <Icon name="mic" />
-                      {t('Sign up as Worker', 'ثبت‌نام به عنوان کاریگر')}
+                      {t('Start with voice', 'با صدا شروع کنید')}
                       <Icon name="arrowR" className="flip" />
                     </span>
                   </button>
                 </div>
 
+                {/* Back link */}
                 <p className="muted small" style={{ textAlign: 'center', marginTop: 16 }}>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setStep('phone')}>
+                  {checkedPhone && (
+                    <>
+                      {t('Already have an account?', 'قبلاً اکاؤنت داشتید؟')}{' '}
+                    </>
+                  )}
+                  <button className="btn btn-ghost btn-sm" onClick={goBack}>
                     <Icon name="arrowL" className="flip" />
                     {t('Try a different number', 'شماره دیگر امتحان کنید')}
                   </button>
