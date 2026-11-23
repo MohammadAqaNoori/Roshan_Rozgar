@@ -7,6 +7,7 @@ import { Icon } from '../lib/icons';
 import { Avatar } from '../lib/avatar';
 import { useApp } from '../context/AppContext';
 import { Brand, LangToggle, SpeakBtn } from '../components/Shared';
+import { normalisePhone } from '../api/client';
 
 export default function CustomerReg({ onNavigate }) {
   const { t, fa, setRole, showToast, liveMode, apiSignup } = useApp();
@@ -46,7 +47,7 @@ export default function CustomerReg({ onNavigate }) {
     if (liveMode) {
       // Live mode: register via API
       try {
-        const normalised = '+93' + phone.replace(/\D/g, '').replace(/^0+/, '');
+        const normalised = normalisePhone(phone);
         await apiSignup(normalised, name.trim(), 'customer');
         showToast(t('Welcome to Karigar!', 'به کاریگر خوش آمدید!'), true);
         onNavigate('discover');
@@ -150,7 +151,7 @@ export default function CustomerReg({ onNavigate }) {
                         <span className="pill pill-sample">{t('Simulated — code is 1234', 'شبیه‌سازی شده — کد ۱۲۳۴ است')}</span>
                       </div>
                       <p className="small muted">
-                        {t('Enter the 4-digit code sent to', 'کد ۴ رقمی ارسال شده به')} +93{phone.replace(/\D/g, '')}
+                        {t('Enter the 4-digit code sent to', 'کد ۴ رقمی ارسال شده به')} <span className="num">{normalisePhone(phone)}</span>
                       </p>
                     </div>
                     <label className="lbl" htmlFor="otp">{t('Verification code', 'کد تأیید')}</label>

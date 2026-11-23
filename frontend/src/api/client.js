@@ -27,6 +27,23 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+/**
+ * Normalise an Afghan phone number to E.164 format (+93XXXXXXXXX).
+ * Handles: 0700123456, 700123456, +93700123456, 93700123456
+ *
+ * This is the SINGLE normalisation function used by both Login and
+ * CustomerReg so the stored number always matches the login number.
+ */
+export function normalisePhone(raw) {
+  const digits = String(raw).replace(/\D/g, '');
+  // Already has full country code e.g. 93700123456
+  if (digits.startsWith('93') && digits.length >= 11) return '+' + digits;
+  // Afghan local format with leading zero e.g. 0700123456
+  if (digits.startsWith('0')) return '+93' + digits.slice(1);
+  // Raw digits without any prefix e.g. 700123456
+  return '+93' + digits;
+}
+
 export const api = axios.create({
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },

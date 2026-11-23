@@ -12,6 +12,7 @@ import { Icon } from '../lib/icons';
 import { useApp } from '../context/AppContext';
 import { Brand, LangToggle } from '../components/Shared';
 import { Avatar } from '../lib/avatar';
+import { normalisePhone } from '../api/client';
 
 // Seeded phones that "exist" in demo mode
 const KNOWN_PHONES = [
@@ -22,13 +23,6 @@ const KNOWN_PHONES = [
   '+93700111004',  // Habibullah (worker)
   '+93700111005',  // Wahidullah (worker)
 ];
-
-function normalise(raw) {
-  const digits = raw.replace(/\D/g, '');
-  if (digits.startsWith('93')) return '+' + digits;
-  if (digits.startsWith('0')) return '+93' + digits.slice(1);
-  return '+93' + digits;
-}
 
 export default function Login({ onNavigate }) {
   const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser } = useApp();
@@ -49,7 +43,9 @@ export default function Login({ onNavigate }) {
       return;
     }
     setPhoneError('');
-    const normalised = normalise(phone);
+
+    // Single shared normalisation — same logic for both signup and login
+    const normalised = normalisePhone(phone);
     setCheckedPhone(normalised);
 
     if (liveMode) {

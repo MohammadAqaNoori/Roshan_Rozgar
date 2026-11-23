@@ -5,7 +5,7 @@
  *   import { register, login, findNearby, createJob } from '../api';
  *   import { mapWorker, mapJob, mapMessage } from '../api';
  */
-export { api, checkBackend, getToken, setToken, clearToken, isLoggedIn } from './client';
+export { api, checkBackend, getToken, setToken, clearToken, normalisePhone } from './client';
 export * as authApi from './auth';
 export * as workersApi from './workers';
 export * as jobsApi from './jobs';

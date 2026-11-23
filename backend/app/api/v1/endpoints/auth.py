@@ -1,5 +1,6 @@
 """Auth endpoints — phone-based registration and login with JWT."""
 
+import re
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -12,10 +13,27 @@ from app.schemas.user import UserCreate, UserLogin, UserOut, Token
 router = APIRouter()
 
 
+def normalise_phone(raw: str) -> str:
+    """
+    Normalise an Afghan phone number to E.164 format (+93XXXXXXXXX).
+    Handles: 0700123456, 700123456, +93700123456, 93700123456
+    This runs on both register and login so the stored number always
+    matches the login number regardless of how the user typed it.
+    """
+    digits = re.sub(r'\D', '', raw)
+    if digits.startswith('93') and len(digits) >= 11:
+        return '+' + digits
+    if digits.startswith('0'):
+        return '+93' + digits[1:]
+    return '+93' + digits
+
+
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(payload: UserCreate, db: Session = Depends(get_db)):
     """Register with phone + name + role. OTP verification is simulated."""
-    existing = db.query(User).filter(User.phone == payload.phone).first()
+    phone = normalise_phone(payload.phone)
+
+    existing = db.query(User).filter(User.phone == phone).first()
     if existing:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -23,7 +41,7 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
         )
 
     user = User(
-        phone=payload.phone,
+        phone=phone,  # always store normalised
         name=payload.name,
         role=UserRole(payload.role),
     )
@@ -38,9 +56,14 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=Token)
 def login(payload: UserLogin, db: Session = Depends(get_db)):
     """Login with phone number (OTP simulated — any phone that exists works)."""
-    user = db.query(User).filter(User.phone == payload.phone).first()
+    phone = normalise_phone(payload.phone)
+
+    user = db.query(User).filter(User.phone == phone).first()
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No account found for {phone}. Please register first.",
+        )
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account deactivated")
 
