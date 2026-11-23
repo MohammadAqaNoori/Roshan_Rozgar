@@ -48,55 +48,59 @@ export default function Home({ onNavigate }) {
       </header>
 
       {/* ─────────────── 2. HERO ─────────────── */}
-      <section className="hero">
-        <div className="wrap hero-grid">
-          {/* Left column */}
-          <div>
-            <span className="eyebrow">{t('Kabul · Herat', 'کابل · هرات')}</span>
-            <h1 style={{ marginTop: 14 }}>
+      <section className="hero" style={{ padding: 0 }}>
+        <div style={{ position: 'relative', width: '100%', minHeight: 520, overflow: 'hidden' }}>
+          {/* Full-width background image */}
+          <img
+            src="/hero.jpg"
+            alt="Karigar — customer booking a worker on mobile"
+            style={{
+              width: '100%',
+              height: '100%',
+              minHeight: 520,
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              display: 'block',
+              position: 'absolute',
+              top: 0, left: 0,
+            }}
+          />
+          {/* Dark gradient overlay so text is readable */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.0) 100%)',
+          }} />
+          {/* Text content on top */}
+          <div className="wrap" style={{ position: 'relative', zIndex: 1, paddingBlock: '72px 80px', color: '#fff' }}>
+            <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>{t('Kabul · Herat', 'کابل · هرات')}</span>
+            <h1 style={{ marginTop: 14, color: '#fff', fontSize: 'clamp(32px,5vw,56px)', maxWidth: 640 }}>
               {fa() ? (
-                <>هر کار، یک <em>کاریگر ماهر</em>، نزدیک شما.</>
+                <>هر کار، یک <em style={{ color: '#F4B942' }}>کاریگر ماهر</em>، نزدیک شما.</>
               ) : (
-                <>Every job, a skilled <em>Karigar</em>, near you.</>
+                <>Every job, a skilled <em style={{ color: '#F4B942' }}>Karigar</em>, near you.</>
               )}
             </h1>
-            <p className="lede">
+            <p className="lede" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: 560, marginTop: 16 }}>
               {t(
                 'Find a nearby electrician, plumber or AC technician who is free right now. See reviews from real bookings, agree the price by chat or voice note, then book.',
                 'یک برق‌کار، لوله‌کش یا تکنسین کولر نزدیک خود پیدا کنید که اکنون آزاد است. نظرات واقعی رزرو را ببینید، قیمت را با چت یا پیام صوتی توافق کنید، سپس رزرو کنید.'
               )}
             </p>
-            <div className="ctas">
+            <div className="ctas" style={{ marginTop: 28 }}>
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('role')}>
                 <Icon name="search" />
                 {t('Find a Worker', 'کاریگر پیدا کنید')}
               </button>
-              <button className="btn btn-outline btn-lg" onClick={() => onNavigate('role')}>
+              <button className="btn btn-lg" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', backdropFilter: 'blur(8px)' }} onClick={() => onNavigate('role')}>
                 <Icon name="briefcase" />
                 {t('Join as a Worker', 'کاریگر شوید')}
               </button>
             </div>
-            <div className="trustline">
+            <div className="trustline" style={{ marginTop: 28, color: 'rgba(255,255,255,0.8)' }}>
               <span><Icon name="checkCircle" />{t('Reviews only from completed bookings', 'نظرات فقط از رزروهای تکمیل شده')}</span>
               <span><Icon name="tag" />{t('Price agreed before work starts', 'قیمت قبل از شروع کار توافق می‌شود')}</span>
               <span><Icon name="mic" />{t('Works in Dari & by voice', 'به دری و با صدا کار می‌کند')}</span>
             </div>
-          </div>
-
-          {/* Right column — hero art */}
-          <div className="hero-art" aria-label="Product preview" style={{ padding: 0, overflow: 'hidden', borderRadius: 24 }}>
-            <img
-              src="/hero.jpg"
-              alt="Karigar — customer booking a worker on mobile"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
-                display: 'block',
-                borderRadius: 24,
-              }}
-            />
           </div>
         </div>
       </section>
