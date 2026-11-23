@@ -5,7 +5,25 @@ import { BookingTicket } from '../components/Shared';
 import { catBy, stIdx } from '../lib/data';
 
 export default function Track({ onNavigate }) {
-  const { t, job, W, wname, customerConfirmDone, simWorkerStep, openModal } = useApp();
+  const { t, job, W, wname, customerConfirmDone, simWorkerStep, openModal, liveMode, apiUpdateJobStatus } = useApp();
+
+  const handleConfirmDone = async () => {
+    if (liveMode && apiUpdateJobStatus) {
+      await apiUpdateJobStatus('completed');
+    } else {
+      customerConfirmDone();
+    }
+    onNavigate('review');
+  };
+
+  const handleSimWorker = async () => {
+    if (liveMode && apiUpdateJobStatus) {
+      const next = { confirmed: 'onway', onway: 'working', working: 'done' }[job?.status];
+      if (next) await apiUpdateJobStatus(next);
+    } else {
+      simWorkerStep();
+    }
+  };
 
   if (!job || stIdx(job.status) < stIdx('confirmed')) {
     return (
@@ -51,7 +69,7 @@ export default function Track({ onNavigate }) {
         <b style={{ fontSize: 18 }}>{wname(w)} {t('says the job is finished.', 'می‌گوید کار تمام شده.')}</b>
         <p className="small muted">{t('Check the work, then confirm. If something is wrong, tell him in chat first.', 'کار را بررسی کنید سپس تأیید کنید. اگر مشکلی هست، اول در چت بگویید.')}</p>
         <div className="row wrapit">
-          <button className="btn btn-primary btn-lg grow" onClick={() => { customerConfirmDone(); onNavigate('review'); }}>
+          <button className="btn btn-primary btn-lg grow" onClick={handleConfirmDone}>
             <Icon name="check" />{t('Yes, work is done', 'بله، کار تمام شد')}
           </button>
           <button className="btn btn-outline btn-lg" onClick={() => onNavigate('chat')}>
@@ -79,7 +97,7 @@ export default function Track({ onNavigate }) {
           <Icon name="info" />
           <span>{t('Status updates come from the worker\u2019s app. There is no live GPS tracking.', 'به‌روزرسانی‌ها از برنامه کاریگر می‌آیند. ردیابی زنده GPS وجود ندارد.')}</span>
         </div>
-        <button className="btn btn-outline btn-block" onClick={simWorkerStep}>
+        <button className="btn btn-outline btn-block" onClick={handleSimWorker}>
           <Icon name="refresh" />{t('Demo: simulate next update from worker', 'دمو: شبیه‌سازی به‌روزرسانی بعدی از کاریگر')}
         </button>
       </>

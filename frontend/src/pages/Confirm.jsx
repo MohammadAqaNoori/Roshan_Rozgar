@@ -5,7 +5,16 @@ import { Avatar } from '../lib/avatar';
 import { catBy, stIdx } from '../lib/data';
 
 export default function Confirm({ onNavigate }) {
-  const { t, job, W, wname, catName, confirmBooking, _confirming } = useApp();
+  const { t, job, W, wname, catName, confirmBooking, _confirming, liveMode, apiUpdateJobStatus } = useApp();
+
+  const handleConfirm = async () => {
+    if (liveMode && apiUpdateJobStatus) {
+      await apiUpdateJobStatus('confirmed');
+    } else {
+      confirmBooking();
+    }
+    onNavigate('confirm');
+  };
 
   if (!job || stIdx(job.status) < stIdx('agreed')) {
     return (
@@ -82,7 +91,7 @@ export default function Confirm({ onNavigate }) {
             </Disclaimer>
             <div className="row wrapit">
               <button className="btn btn-outline btn-lg" onClick={() => onNavigate('chat')}><Icon name="msg" />{t('Back to chat', 'بازگشت به چت')}</button>
-              <button className="btn btn-primary btn-lg grow" disabled={_confirming} onClick={() => { confirmBooking(); onNavigate('confirm'); }}>
+              <button className="btn btn-primary btn-lg grow" disabled={_confirming} onClick={handleConfirm}>
                 {_confirming ? t('Confirming…', 'در حال تأیید…') : <><Icon name="check" />{t('Confirm booking', 'تأیید رزرو')}</>}
               </button>
             </div>

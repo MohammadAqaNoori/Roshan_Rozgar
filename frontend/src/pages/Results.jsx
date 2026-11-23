@@ -1,10 +1,56 @@
+import { useState, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { useApp } from '../context/AppContext';
 import { WorkerCard, Disclaimer } from '../components/Shared';
 import { CATS } from '../lib/data';
 
+// Leaflet map — loaded only when map view is active
+let MapContainer, TileLayer, Marker, Popup;
+let leafletReady = false;
+
+async function loadLeaflet() {
+  if (leafletReady) return true;
+  try {
+    const [leaflet, reactLeaflet] = await Promise.all([
+      import('leaflet'),
+      import('react-leaflet'),
+    ]);
+    L = leaflet.default;
+    // Fix default marker icon path broken by bundlers
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    });
+    MapContainer  = reactLeaflet.MapContainer;
+    TileLayer     = reactLeaflet.TileLayer;
+    Marker        = reactLeaflet.Marker;
+    Popup         = reactLeaflet.Popup;
+    leafletReady  = true;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function Results({ onNavigate }) {
-  const { t, workers, f, setFilter, toggleFilters, selectWorker, _fopen } = useApp();
+  const { t, workers, f, setFilter, toggleFilters, selectWorker, _fopen, liveMode, loadWorkers } = useApp();
+  const [mapReady, setMapReady] = useState(false);
+
+  // Reload from API when in live mode and map view opened
+  useEffect(() => {
+    if (liveMode && f.view === 'map' && loadWorkers) {
+      loadWorkers(34.5260, 69.1781, {
+        trade: f.cat || undefined,
+        radius_km: f.dist || 50,
+        available_only: false,
+      });
+    }
+    if (f.view === 'map' && !mapReady) {
+      loadLeaflet().then((ok) => setMapReady(ok));
+    }
+  }, [f.view]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = () => {
     let list = [...workers];
@@ -136,25 +182,50 @@ export default function Results({ onNavigate }) {
               </div>
             ) : f.view === 'map' ? (
               <>
-                <div className="mapbox">
-                  <svg viewBox="0 0 600 500" style={{ width: '100%', height: 'auto' }}>
-                    <rect width="600" height="500" fill="#EAF1EC" />
-                    <g stroke="#CFE8DE" strokeWidth="3" fill="none">
-                      <path d="M0 100h600M0 200h600M0 300h600M0 400h600" />
-                      <path d="M100 0v500M200 0v500M300 0v500M400 0v500M500 0v500" />
-                    </g>
-                    {list.slice(0, 6).map((w, i) => (
-                      <g key={w.id}>
-                        <circle cx={100 + i * 80} cy={100 + (i % 3) * 100} r="14" fill="#087F5B" stroke="#fff" strokeWidth="3" />
-                        <text x={100 + i * 80} y={104} textAnchor="middle" fill="#fff" fontSize="10" fontWeight="700">{w.rating}</text>
-                      </g>
-                    ))}
-                  </svg>
-                  <div className="mapnote">
-                    <Icon name="lock" />
-                    <span>{t('Approximate sector only. Exact addresses are shared after a booking is confirmed. Tap a pin to open a profile.', 'فقط ناحیه تقریبی. آدرس دقیق پس از تأیید رزرو به اشتراک گذاشته می‌شود.')}</span>
+                {mapReady && MapContainer ? (
+                  <div className="mapbox" style={{ height: 420, borderRadius: 20, overflow: 'hidden', border: '1px solid var(--line)' }}>
+                    <MapContainer
+                      center={[34.5260, 69.1781]}
+                      zoom={12}
+                      style={{ width: '100%', height: '100%' }}
+                    >
+                      <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                      />
+                      {list.filter(w => w.lat && w.lng).map((w) => (
+                        <Marker key={w.id} position={[w.lat, w.lng]}>
+                          <Popup>
+                            <div style={{ minWidth: 160 }}>
+                              <b style={{ display: 'block', fontSize: 14 }}>{w.name}</b>
+                              <span style={{ fontSize: 12, color: '#5E6A66' }}>{w.cat} · ★ {w.rating}</span>
+                              <br />
+                              <span style={{ fontSize: 12 }}>{w.area}</span>
+                              <br />
+                              <button
+                                style={{ marginTop: 8, padding: '4px 10px', background: '#006400', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 12 }}
+                                onClick={() => { selectWorker(w.id); onNavigate('profile'); }}
+                              >
+                                View profile
+                              </button>
+                            </div>
+                          </Popup>
+                        </Marker>
+                      ))}
+                    </MapContainer>
+                    <div className="mapnote">
+                      <Icon name="lock" />
+                      <span>{t('Approximate location only. Exact address shared after booking confirmed.', 'فقط موقعیت تقریبی. آدرس دقیق پس از تأیید رزرو.')}</span>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="mapbox" style={{ height: 300, display: 'grid', placeItems: 'center', borderRadius: 20, border: '1px solid var(--line)', background: '#EAF1EC' }}>
+                    <div className="stack" style={{ alignItems: 'center', gap: 10 }}>
+                      <div className="skel" style={{ width: 48, height: 48, borderRadius: '50%' }} />
+                      <span className="muted small">{t('Loading map…', 'در حال بارگذاری نقشه…')}</span>
+                    </div>
+                  </div>
+                )}
                 <div className="results-grid" style={{ marginTop: 14 }}>
                   {list.slice(0, 3).map((w) => (
                     <WorkerCard key={w.id} w={w} onProfile={() => { selectWorker(w.id); onNavigate('profile'); }} onRequest={() => { selectWorker(w.id); onNavigate('request'); }} />
