@@ -85,84 +85,17 @@ export default function Home({ onNavigate }) {
 
           {/* Right column — hero art */}
           <div className="hero-art" aria-label="Product preview">
-            {/* Voice note card */}
-            <div className="float hero-voice">
-              <div className="row" style={{ gap: 10 }}>
-                <span className="mic-sm" style={{ width: 36, height: 36 }}>
-                  <Icon name="mic" />
-                </span>
-                <div className="wave live">
-                  {waveBars.map((h, i) => (
-                    <i key={i} style={{ height: `${h}px`, animationDelay: `${i * 0.08}s` }} />
-                  ))}
-                </div>
-              </div>
-              <p style={{ marginTop: 8, color: 'var(--ink)' }}>
-                "آب آشپزخانه چکه می‌کند، امروز تا غروب کسی بیاید"
-              </p>
-              <div className="row" style={{ gap: 6, marginTop: 8 }}>
-                <span className="pill pill-ai">
-                  <Icon name="sparkles" />
-                  {t('Suggested: Plumber', 'پیشنهاد: لوله‌کش')}
-                </span>
-              </div>
-            </div>
-
-            {/* Worker card preview */}
-            <div className="hero-card">
-              <div className="row" style={{ gap: 12, alignItems: 'flex-start' }}>
-                <Avatar id="karim" size={64} />
-                <div className="grow">
-                  <b style={{ fontSize: 17, color: 'var(--ink)' }}>
-                    {fa() ? karim.nameFa : karim.name}
-                  </b>
-                  <div className="muted small">
-                    {t('Electrician', 'برق‌کار')} · {karim.exp} {t('yrs', 'سال')}
-                  </div>
-                  <div className="row" style={{ gap: 8, marginTop: 4 }}>
-                    <Stars n={karim.rating} count={karim.count} />
-                    <span className="muted small">
-                      <Icon name="pin" /> <span className="num">{karim.km}</span> km
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="row between" style={{ marginTop: 14 }}>
-                <StatusPill w={karim} />
-                <span className="price">
-                  <small>{t('Visit from', 'ویزیت از')}</small>
-                  <b className="num">{afn(karim.price)}</b>
-                </span>
-              </div>
-              <div className="skills" style={{ marginTop: 12 }}>
-                {karim.skills.map((s) => (
-                  <span key={s} className="skill">{s}</span>
-                ))}
-              </div>
-              <div className="row" style={{ gap: 8, marginTop: 14 }}>
-                <span className="btn btn-outline btn-sm grow">{t('Profile', 'پروفایل')}</span>
-                <span className="btn btn-primary btn-sm grow">{t('Request', 'درخواست')}</span>
-              </div>
-            </div>
-
-            {/* Booking confirmation badge */}
-            <div className="float hero-book">
-              <span style={{
-                width: 38, height: 38, borderRadius: '99px',
-                background: 'var(--success-50)', color: 'var(--success)',
-                display: 'grid', placeItems: 'center'
-              }}>
-                <Icon name="check" />
-              </span>
-              <div>
-                <b style={{ display: 'block', color: 'var(--ink)' }}>
-                  {t('Booking confirmed', 'رزرو تأیید شد')}
-                </b>
-                <span className="muted xs num">
-                  ؋ 1,300 · {t('Today 5–7 PM', 'امروز ۵ تا ۷ عصر')}
-                </span>
-              </div>
-            </div>
+            <img
+              src="/hero.jpg"
+              alt="Karigar — customer booking a worker on mobile"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: 24,
+                boxShadow: 'var(--sh-3)',
+              }}
+            />
           </div>
         </div>
       </section>
