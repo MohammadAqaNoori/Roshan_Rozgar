@@ -77,9 +77,9 @@ export default function Home({ onNavigate }) {
             <span className="eyebrow" style={{ color: 'rgba(255,255,255,0.85)' }}>{t('Kabul · Herat', 'کابل · هرات')}</span>
             <h1 style={{ marginTop: 14, color: '#fff', fontSize: 'clamp(32px,5vw,56px)', maxWidth: 640 }}>
               {fa() ? (
-                <>هر کار، یک <em style={{ color: '#F4B942' }}>کاریگر ماهر</em>، نزدیک شما.</>
+                <>هر کار، یک <em style={{ color: '#F4B942', fontStyle: 'normal', textDecoration: 'none' }}>کاریگر ماهر</em>، نزدیک شما.</>
               ) : (
-                <>Every job, a skilled <em style={{ color: '#F4B942' }}>Karigar</em>, near you.</>
+                <>Every job, a skilled <em style={{ color: '#F4B942', fontStyle: 'normal', textDecoration: 'none' }}>Karigar</em>, near you.</>
               )}
             </h1>
             <p className="lede" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: 560, marginTop: 16 }}>

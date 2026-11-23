@@ -138,7 +138,6 @@ html[lang="fa"] .pill,html[lang="ur"] .pill{font-weight:600;padding-block:0}
 .hero h1{font-size:clamp(36px,6.4vw,64px);font-weight:800;line-height:1.02;letter-spacing:-.035em;color:var(--forest)}
 html[lang="fa"] .hero h1,html[lang="ur"] .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.8;font-weight:700}
 .hero h1 em{font-style:normal;color:var(--emerald);position:relative;white-space:nowrap}
-.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.18em;background:var(--amber);border-radius:4px;z-index:-1;opacity:.85}
 .hero .lede{font-size:18px;color:var(--muted);max-width:34em;margin-top:18px}
 .hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .hero-search{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px;display:flex;gap:8px;box-shadow:var(--sh-2);max-width:560px;flex-wrap:wrap}
