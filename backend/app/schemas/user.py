@@ -24,10 +24,10 @@ class UserCreate(BaseModel):
         # Strip all non-digit characters for length check
         digits = "".join(c for c in v if c.isdigit())
         # Afghan numbers: local (10 digits with 0) or E.164 (+93 + 9 digits = 11 digits)
-        # Accept anything that has 9–13 digits to be flexible
+        # We normalise to E.164 in auth.py before storing, so digits here = 11 (93 + 9)
         if len(digits) < 9:
-            raise ValueError("Phone number too short — must have at least 9 digits")
-        if len(digits) > 15:
+            raise ValueError("Phone number too short — Afghan numbers are 9-10 digits")
+        if len(digits) > 12:
             raise ValueError("Phone number too long")
         return v.strip()
 

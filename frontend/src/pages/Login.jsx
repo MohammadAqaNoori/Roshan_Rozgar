@@ -39,7 +39,11 @@ export default function Login({ onNavigate }) {
   const handleContinue = async () => {
     const digits = phone.replace(/\D/g, '');
     if (!digits || digits.length < 9) {
-      setPhoneError(t('Please enter a valid phone number.', 'لطفاً شماره تلفن معتبر وارد کنید.'));
+      setPhoneError(t('Please enter a valid Afghan phone number (10 digits starting with 0).', 'لطفاً شماره تلفن افغانستانی معتبر وارد کنید (۱۰ رقم با شروع ۰).'));
+      return;
+    }
+    if (digits.length > 10) {
+      setPhoneError(t('Phone number too long. Afghan numbers are 10 digits (e.g. 0700 123456).', 'شماره تلفن خیلی طولانی است. شماره‌های افغانستانی ۱۰ رقم هستند.'));
       return;
     }
     setPhoneError('');
@@ -134,13 +138,22 @@ export default function Login({ onNavigate }) {
                       style={{ paddingInlineStart: 56 }}
                       placeholder="700 123456"
                       value={phone}
-                      onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '')); setPhoneError(''); }}
+                      maxLength={10}
+                      onChange={(e) => { setPhone(e.target.value.replace(/\D/g, '').slice(0, 10)); setPhoneError(''); }}
                       onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
                       autoFocus
                       inputMode="tel"
                       autoComplete="tel"
                     />
                   </div>
+
+                  {/* Live preview of stored number */}
+                  {phone.length >= 7 && (
+                    <p className="xs muted" style={{ marginTop: 6 }}>
+                      <Icon name="checkCircle" style={{ color: 'var(--success)' }} />{' '}
+                      {t('Will be stored as:', 'ذخیره می‌شود به عنوان:')} <b className="num">{normalisePhone(phone)}</b>
+                    </p>
+                  )}
 
                   {/* Inline error */}
                   {phoneError && (
@@ -149,10 +162,16 @@ export default function Login({ onNavigate }) {
                     </div>
                   )}
 
+                  {/* Format hint */}
+                  <p className="xs muted" style={{ marginTop: 8 }}>
+                    <Icon name="info" />{' '}
+                    {t('Afghan format: 0700 123456 (10 digits starting with 0)', 'فرمت افغانستان: ۰۷۰۰ ۱۲۳۴۵۶ (۱۰ رقم با شروع ۰)')}
+                  </p>
+
                   {/* Demo hint when backend not running */}
                   {!liveMode && (
-                    <p className="xs muted" style={{ marginTop: 8 }}>
-                      <Icon name="info" />{' '}
+                    <p className="xs muted" style={{ marginTop: 4 }}>
+                      <Icon name="star" />{' '}
                       {t('Demo: use 0700100100 (customer) or 0700111001 (worker)', 'نمونه: ۰۷۰۰۱۰۰۱۰۰ (مشتری) یا ۰۷۰۰۱۱۱۰۰۱ (کاریگر)')}
                     </p>
                   )}
@@ -161,7 +180,7 @@ export default function Login({ onNavigate }) {
                 <div className="ob-foot">
                   <button
                     className="btn btn-primary btn-lg"
-                    disabled={!phone.trim()}
+                    disabled={phone.replace(/\D/g, '').length < 9}
                     onClick={handleContinue}
                   >
                     {t('Continue', 'ادامه')}
