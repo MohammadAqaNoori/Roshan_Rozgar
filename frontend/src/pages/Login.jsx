@@ -38,12 +38,14 @@ export default function Login({ onNavigate }) {
 
   const handleContinue = async () => {
     const digits = phone.replace(/\D/g, '');
-    if (!digits || digits.length < 9) {
-      setPhoneError(t('Please enter a valid Afghan phone number (10 digits starting with 0).', 'لطفاً شماره تلفن افغانستانی معتبر وارد کنید (۱۰ رقم با شروع ۰).'));
+    // Afghan numbers: 0 + 9 digits = 10 total, or 9 digits without leading 0
+    const subscriber = digits.startsWith('0') ? digits.slice(1) : digits;
+    if (!digits || subscriber.length < 9) {
+      setPhoneError(t('Phone number too short. Use format: 07XX XXX XXX (10 digits)', 'شماره کوتاه است. فرمت: ۰۷XX XXX XXX (۱۰ رقم)'));
       return;
     }
-    if (digits.length > 10) {
-      setPhoneError(t('Phone number too long. Afghan numbers are 10 digits (e.g. 0700 123456).', 'شماره تلفن خیلی طولانی است. شماره‌های افغانستانی ۱۰ رقم هستند.'));
+    if (subscriber.length > 9) {
+      setPhoneError(t('Phone number too long. Afghan numbers are 10 digits (e.g. 0700 123456)', 'شماره طولانی است. ۱۰ رقم مثل ۰۷۰۰ ۱۲۳۴۵۶'));
       return;
     }
     setPhoneError('');

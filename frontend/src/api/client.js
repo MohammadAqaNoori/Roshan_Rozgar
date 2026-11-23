@@ -31,8 +31,8 @@ export function clearToken() {
  * Normalise an Afghan phone number to E.164 format (+93XXXXXXXXX).
  * Handles: 0700123456, 700123456, +93700123456, 93700123456
  *
- * This is the SINGLE normalisation function used by both Login and
- * CustomerReg so the stored number always matches the login number.
+ * Afghan numbers are 0 + 9 digits = 10 total (local) = +93 + 9 digits (E.164)
+ * Valid: 0700123456 → +93700123456 (11 chars including +)
  */
 export function normalisePhone(raw) {
   const digits = String(raw).replace(/\D/g, '');
@@ -40,7 +40,7 @@ export function normalisePhone(raw) {
   if (digits.startsWith('93') && digits.length >= 11) return '+' + digits;
   // Afghan local format with leading zero e.g. 0700123456
   if (digits.startsWith('0')) return '+93' + digits.slice(1);
-  // Raw digits without any prefix e.g. 700123456
+  // Raw 9 subscriber digits without any prefix e.g. 700123456
   return '+93' + digits;
 }
 

@@ -23,8 +23,10 @@ export default function CustomerReg({ onNavigate }) {
   const validatePhone = () => {
     const digits = phone.replace(/\D/g, '');
     if (!digits) return t('Please enter your phone number.', 'لطفاً شماره تلفن خود را وارد کنید.');
-    if (digits.length < 9) return t('Phone number too short. Use format: 0700 123456', 'شماره تلفن کوتاه است. فرمت: ۰۷۰۰ ۱۲۳۴۵۶');
-    if (digits.length > 10) return t('Phone number too long. Afghan numbers are 10 digits.', 'شماره تلفن طولانی است. شماره‌های افغانستانی ۱۰ رقم هستند.');
+    // Strip leading 0 to get the subscriber number
+    const subscriber = digits.startsWith('0') ? digits.slice(1) : digits;
+    if (subscriber.length < 9) return t('Phone number too short. Format: 07XX XXX XXX (10 digits)', 'شماره کوتاه است. فرمت: ۰۷XX XXX XXX (۱۰ رقم)');
+    if (subscriber.length > 9) return t('Phone number too long. Afghan numbers are 10 digits (e.g. 0700 123456)', 'شماره طولانی است. ۱۰ رقم مثل ۰۷۰۰ ۱۲۳۴۵۶');
     return '';
   };
 
@@ -53,7 +55,15 @@ export default function CustomerReg({ onNavigate }) {
         showToast(t('Welcome to Karigar!', 'به کاریگر خوش آمدید!'), true);
         onNavigate('discover');
       } catch (err) {
-        showToast(t('Registration failed. Try again.', 'ثبت‌نام ناموفق بود. دوباره تلاش کنید.'));
+        const status = err?.response?.status;
+        const detail = err?.response?.data?.detail;
+        if (status === 400 && detail?.includes('already registered')) {
+          // Phone already exists — go to login instead
+          showToast(t('This number already has an account. Please log in.', 'این شماره قبلاً ثبت شده. لطفاً وارد شوید.'));
+          onNavigate('login');
+        } else {
+          showToast(detail || t('Registration failed. Try again.', 'ثبت‌نام ناموفق بود. دوباره تلاش کنید.'));
+        }
       }
       return;
     }
