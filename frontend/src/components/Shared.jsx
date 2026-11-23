@@ -114,8 +114,11 @@ export function WorkerCard({ w, onProfile, onRequest, landing }) {
 
 // Booking ticket component
 export function BookingTicket({ j, w, statusLabel }) {
-  const { t, wname, catName } = useApp();
+  const { t, wname, catName, user, role, ob } = useApp();
   const c = catBy(j.cat);
+  // Use real logged-in user name, fall back to ob name or generic label
+  const customerName = user?.name || (role === 'customer' ? t('You', 'شما') : CUSTOMER.name);
+  const customerPhone = user?.phone || CUSTOMER.phone;
   return (
     <div className="ticket">
       <div className="band">
@@ -130,7 +133,7 @@ export function BookingTicket({ j, w, statusLabel }) {
       </div>
       <div className="body">
         <div className="parties">
-          <div className="party"><Avatar id="mariam" size={48} /><div className="grow"><span className="xs muted">{t('Customer', 'مشتری')}</span><b style={{ display: 'block' }}>Mariam Noori</b><span className="small muted num">0700-100100</span></div></div>
+          <div className="party"><Avatar id="mariam" size={48} /><div className="grow"><span className="xs muted">{t('Customer', 'مشتری')}</span><b style={{ display: 'block' }}>{customerName}</b><span className="small muted num">{customerPhone}</span></div></div>
           <div className="party"><Avatar id={w.id} size={48} /><div className="grow"><span className="xs muted">{t('Worker', 'کاریگر')}</span><b style={{ display: 'block' }}>{w.name}</b><span className="small muted">{catName(w.cat)} · <Stars n={w.rating} /></span></div></div>
         </div>
         <dl className="kv" style={{ margin: 0 }}>
@@ -251,19 +254,17 @@ export function Disclaimer({ children }) {
 // Circular avatar button in the header that opens a dropdown with
 // user info, nav shortcuts, language toggle, and logout.
 export function AccountMenu({ onNavigate }) {
-  const { t, role, ob, logout, lang, setLang } = useApp();
+  const { t, role, ob, user, logout, lang, setLang } = useApp();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Derive display name + phone for the signed-in user
+  // Derive display name + phone from the real authenticated user first,
+  // then fall back to onboarding state (demo mode)
   const isWorker = role === 'worker';
-  const displayName = isWorker
-    ? (ob?.name || t('Worker', 'کاریگر'))
-    : CUSTOMER.name;
-  const displayPhone = isWorker
-    ? (ob?.phone || '—')
-    : CUSTOMER.phone;
+  const displayName = user?.name
+    || (isWorker ? (ob?.name || t('Worker', 'کاریگر')) : t('Customer', 'مشتری'));
+  const displayPhone = user?.phone || '—';
 
   // Initials for the avatar bubble (up to 2 chars)
   const initials = displayName

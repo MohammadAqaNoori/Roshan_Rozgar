@@ -5,16 +5,16 @@ import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { CUSTOMER, catBy, stIdx } from '../lib/data';
 
 export default function WorkerDash({ onNavigate }) {
-  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak } = useApp();
+  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak, user } = useApp();
 
-  const me = W('ahmad');  // seeded worker — used only for stats/reviews demo data
+  const me = W('ahmad');  // seeded worker — used for stats/reviews demo data
   const active = job && stIdx(job.status) >= stIdx('confirmed') && stIdx(job.status) < stIdx('closed');
   const incoming = job && ['requested', 'negotiating'].includes(job.status);
   const waitConfirm = job && job.status === 'agreed';
   const on = me.status === 'available';
 
-  // Actual logged-in worker's name and trade from onboarding state
-  const displayName = ob.name && ob.name.trim() ? ob.name.trim() : me.name;
+  // Show real logged-in user name first (live mode), then onboarding name, then seed fallback
+  const displayName = user?.name || (ob.name && ob.name.trim() ? ob.name.trim() : me.name);
   const displayTrade = ob.profession ? ob.profession : me.cat;
   const displayArea = ob.area ? ob.area : me.area;
   const tradeObj = catBy(displayTrade);
@@ -228,7 +228,7 @@ export default function WorkerDash({ onNavigate }) {
               <div className="stat"><Icon name="wallet" /><b className="num" style={{ fontSize: 20 }}>{afn(earned)}</b><span>{t('this week', 'این هفته')}</span></div>
             </div>
             <p className="xs muted" style={{ marginTop: -8 }}>
-              <Icon name="info" /> {t('Earnings are a record of agreed prices. Karigar does not handle payments.', 'درآمد فقط قیمت‌های توافق‌شده را ثبت می‌کند. روشن روزگار پرداخت را مدیریت نمی‌کند.')}
+              <Icon name="info" /> {t('Earnings are a record of agreed prices. Karigar does not handle payments.', 'درآمد فقط قیمت‌های توافق‌شده را ثبت می‌کند. کاریگر پرداخت را مدیریت نمی‌کند.')}
             </p>
 
             {/* Upcoming bookings */}

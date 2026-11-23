@@ -5,8 +5,28 @@ import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { catBy, CUSTOMER, skillFa, DAY_FA, HOURS_FA } from '../lib/data';
 
 export default function Profile({ own, onNavigate }) {
-  const { t, fa, W, wname, catName, sel, selectWorker, role, ob, logout } = useApp();
-  const w = W(own ? 'ahmad' : sel) || W('ahmad');
+  const { t, fa, W, wname, catName, sel, selectWorker, role, ob, user, workers, logout, liveMode, loadWorkerProfile } = useApp();
+  
+  // For own profile:
+  //   - worker: show their own worker profile (matched by user.id or ob.name)
+  //   - customer: show logged-in customer info
+  // For other profiles: show the selected worker (sel)
+  const getWorkerForOwnProfile = () => {
+    if (role === 'worker') {
+      // Try to find by user id first (live mode), then by name (demo)
+      if (user?.id) {
+        const byUserId = workers.find((w) => w.user_id === user.id || w._userId === user.id);
+        if (byUserId) return byUserId;
+      }
+      if (ob?.name) {
+        const byName = workers.find((w) => w.name === ob.name || w.nameFa === ob.name);
+        if (byName) return byName;
+      }
+    }
+    return null;
+  };
+
+  const w = own ? (getWorkerForOwnProfile() || W('ahmad')) : (W(sel) || W('ahmad'));
   const c = catBy(w.cat);
   const isFa = fa();
 
@@ -43,7 +63,7 @@ export default function Profile({ own, onNavigate }) {
               <h3>{t('What we know about', 'آنچه درباره')} {wname(w).split(' ')[0]} {t('', 'می‌دانیم')}</h3>
               <ul className="know" style={{ marginTop: 8 }}>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Phone number confirmed by OTP', 'شماره تلفن با OTP تأیید شده')} <span className="pill pill-sample">{t('simulated', 'نمونه')}</span></span></li>
-                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'فعال در روشن روزگار از')} {w.since}</span></li>
+                <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Active on Karigar since', 'فعال در کاریگر از')} {w.since}</span></li>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Languages:', 'زبان‌ها:')} {isFa ? w.langs.replace('Dari', 'دری').replace('Pashto', 'پښتو').replace('Uzbeki', 'ازبکی') : w.langs}</span></li>
                 <li><span className="ok"><Icon name="checkCircle" /></span><span>{t('Visit charge from', 'هزینه ویزیت از')} <b className="num">{afn(w.price)}</b></span></li>
                 <li><span className="no"><Icon name="info" /></span><span>{t('Identity (Tazkira) not verified — out of scope for this prototype.', 'هویت (تذکره) تأیید نشده — در این نمونه اولیه گنجانده نشده.')}</span></li>
@@ -77,8 +97,13 @@ export default function Profile({ own, onNavigate }) {
                 <h3>{t('Account', 'حساب کاربری')}</h3>
                 <p className="small muted" style={{ marginTop: 6 }}>
                   {t('Signed in as', 'وارد شده به عنوان')}{' '}
-                  <strong>{role === 'worker' ? (ob?.name || t('Worker', 'کاریگر')) : CUSTOMER.name}</strong>
+                  <strong>
+                    {user?.name || (role === 'worker' ? (ob?.name || t('Worker', 'کاریگر')) : t('Customer', 'مشتری'))}
+                  </strong>
                 </p>
+                {user?.phone && (
+                  <p className="small muted num" style={{ marginTop: 2 }}>{user.phone}</p>
+                )}
                 <button
                   className="btn btn-danger btn-sm"
                   style={{ marginTop: 14, alignSelf: 'flex-start' }}
