@@ -131,9 +131,10 @@ html[lang="fa"] .pill,html[lang="ur"] .pill{font-weight:600;padding-block:0}
 .lnav .links{display:none;gap:4px;margin-inline-start:auto}
 .lnav .links a{color:rgba(255,255,255,.9);text-decoration:none;font-weight:600;padding:8px 12px;border-radius:10px;font-size:15px;cursor:pointer}
 .lnav .links a:hover{background:rgba(255,255,255,.12)}
-.lnav .btn-outline{border-color:rgba(255,255,255,.5)!important;color:#fff!important}
-.lnav .btn-ghost{color:rgba(255,255,255,.85)!important}
+.lnav .btn-outline{border-color:rgba(255,255,255,.5)!important;color:#fff!important;background:rgba(255,255,255,.1)!important}
+.lnav .btn-ghost{color:rgba(255,255,255,.85)!important;background:transparent!important}
 .lnav .brand b,.lnav .brand span{color:#fff!important}
+.lnav .brand{background:none!important;border:none!important}
 @media (min-width:1000px){.lnav .links{display:flex}}
 .hero{padding-block:40px 56px}
 .hero-grid{display:grid;gap:40px;align-items:center}
