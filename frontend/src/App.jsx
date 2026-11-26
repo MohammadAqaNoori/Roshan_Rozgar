@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { ToastContainer, AppHeader, BottomNav } from './components/Shared';
+import AdminDash   from './admin/AdminDash';
+import AdminLogin  from './admin/AdminLogin';
+import { ADMIN_PHONE } from './admin/AdminContext';
 
 // Pages
 import Home from './pages/Home';
@@ -28,6 +31,24 @@ function AppInner() {
   const [view, setView] = useState('home');
   const { role, ob } = useApp();
 
+  // Admin portal state — separate from main app
+  const [adminStep, setAdminStep] = useState(null); // null | 'pin' | 'portal'
+
+  // Called from Login when admin phone is detected
+  const handleAdminPhoneDetected = () => setAdminStep('pin');
+  const handleAdminPinSuccess    = () => setAdminStep('portal');
+  const handleAdminLogout        = () => { setAdminStep(null); setView('home'); };
+
+  // Admin login screen (PIN)
+  if (adminStep === 'pin') {
+    return <AdminLogin onSuccess={handleAdminPinSuccess} onBack={() => setAdminStep(null)} />;
+  }
+
+  // Admin portal (full dashboard)
+  if (adminStep === 'portal') {
+    return <AdminDash onLogout={handleAdminLogout} />;
+  }
+
   const navigate = (v, opts = {}) => {
     // 'wdash-returning' means a worker who already finished onboarding — skip it
     if (v === 'wdash-returning') {
@@ -52,7 +73,7 @@ function AppInner() {
     switch (view) {
       case 'home':       return <Home onNavigate={navigate} />;
       case 'role':       return <Role onNavigate={navigate} />;
-      case 'login':      return <Login onNavigate={navigate} />;
+      case 'login':      return <Login onNavigate={navigate} onAdminDetected={handleAdminPhoneDetected} />;
       case 'customerReg': return <CustomerReg onNavigate={navigate} />;
       case 'onboard':    return <Onboard onNavigate={navigate} />;
       case 'discover':   return <Discover onNavigate={navigate} />;

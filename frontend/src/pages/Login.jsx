@@ -13,6 +13,7 @@ import { useApp } from '../context/AppContext';
 import { Brand, LangToggle } from '../components/Shared';
 import { Avatar } from '../lib/avatar';
 import { normalisePhone } from '../api/client';
+import { ADMIN_PHONE } from '../admin/AdminContext';
 
 // Seeded phones that "exist" in demo mode
 const KNOWN_PHONES = [
@@ -24,7 +25,7 @@ const KNOWN_PHONES = [
   '+93700111005',  // Wahidullah (worker)
 ];
 
-export default function Login({ onNavigate }) {
+export default function Login({ onNavigate, onAdminDetected }) {
   const { t, fa, setRole, startCustomerSignup, startWorkerSignup, showToast, liveMode, apiLoginUser } = useApp();
 
   const [phone, setPhone] = useState('');
@@ -38,6 +39,14 @@ export default function Login({ onNavigate }) {
 
   const handleContinue = async () => {
     const digits = phone.replace(/\D/g, '');
+
+    // ── Admin phone bypass ────────────────────────────────────────────────
+    const normalised = normalisePhone(phone);
+    if (normalised === ADMIN_PHONE) {
+      if (onAdminDetected) onAdminDetected();
+      return;
+    }
+
     // Afghan numbers: 0 + 9 digits = 10 total, or 9 digits without leading 0
     const subscriber = digits.startsWith('0') ? digits.slice(1) : digits;
     if (!digits || subscriber.length < 9) {
@@ -50,8 +59,7 @@ export default function Login({ onNavigate }) {
     }
     setPhoneError('');
 
-    // Single shared normalisation — same logic for both signup and login
-    const normalised = normalisePhone(phone);
+    // normalised is already declared above for admin check — reuse it
     setCheckedPhone(normalised);
 
     if (liveMode) {
