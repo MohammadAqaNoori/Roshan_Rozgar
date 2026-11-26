@@ -150,15 +150,45 @@ export function BookingTicket({ j, w, statusLabel }) {
 
 // Toast container
 export function ToastContainer() {
-  const { toastMsg } = useApp();
-  if (!toastMsg) return null;
+  const { toastMsg, liveMode, backendReady } = useApp();
   return (
-    <div className="toasts">
-      <div className={`toast${toastMsg.ok ? ' ok' : ''}`} role="status">
-        <Icon name={toastMsg.ok ? 'checkCircle' : 'bell'} />
-        <div>{toastMsg.msg}</div>
+    <>
+      {/* Live mode indicator — small dot in bottom-left */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
+          insetInlineStart: 12,
+          zIndex: 999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 5,
+          background: 'rgba(0,0,0,.55)',
+          color: '#fff',
+          borderRadius: 99,
+          padding: '3px 9px',
+          fontSize: 11,
+          fontWeight: 700,
+          pointerEvents: 'none',
+          opacity: 0.75,
+        }}
+      >
+        <span style={{
+          width: 7, height: 7, borderRadius: '50%',
+          background: liveMode ? '#4ade80' : '#f59e0b',
+          flexShrink: 0,
+        }} />
+        {liveMode ? 'LIVE' : 'DEMO'}
       </div>
-    </div>
+      {toastMsg && (
+        <div className="toasts">
+          <div className={`toast${toastMsg.ok ? ' ok' : ''}`} role="status">
+            <Icon name={toastMsg.ok ? 'checkCircle' : 'bell'} />
+            <div>{toastMsg.msg}</div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -74,10 +74,14 @@ api.interceptors.response.use(
  * Returns true/false. Used to decide demo mode vs live mode.
  */
 export async function checkBackend() {
+  const healthUrl = `${BASE_URL.replace('/api/v1', '')}/health`;
   try {
-    const res = await axios.get(`${BASE_URL.replace('/api/v1', '')}/health`, { timeout: 3000 });
-    return res.data && res.data.status === 'healthy';
-  } catch {
+    const res = await axios.get(healthUrl, { timeout: 5000 });
+    const ok = res.data && res.data.status === 'healthy';
+    console.log(`[Karigar] Backend check: ${ok ? '✅ live' : '⚠️ unhealthy'} (${healthUrl})`);
+    return ok;
+  } catch (err) {
+    console.warn(`[Karigar] Backend unreachable at ${healthUrl} — running in demo mode. Error:`, err.message);
     return false;
   }
 }
