@@ -5,7 +5,7 @@ import { Stars, StatusPill, SpeakBtn } from '../components/Shared';
 import { CUSTOMER, catBy, stIdx } from '../lib/data';
 
 export default function WorkerDash({ onNavigate }) {
-  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak, user } = useApp();
+  const { t, ob, workers, job, W, wname, catName, setAvail, simIncoming, simCustomerConfirm, workerStep, customerConfirmDone, openModal, speak, user, liveMode, apiSetAvail } = useApp();
 
   const me = W('ahmad');  // seeded worker — used for stats/reviews demo data
   const active = job && stIdx(job.status) >= stIdx('confirmed') && stIdx(job.status) < stIdx('closed');
@@ -53,10 +53,10 @@ export default function WorkerDash({ onNavigate }) {
         />
       </div>
       <div className="bigtoggle" role="group" aria-label="Availability">
-        <button aria-pressed={on && !active} onClick={() => setAvail('available')} disabled={active}>
+        <button aria-pressed={on && !active} onClick={() => { setAvail('available'); if (liveMode && apiSetAvail) apiSetAvail('available'); }} disabled={active}>
           <Icon name="checkCircle" /><span>{t('Available', 'در دسترس')}</span>
         </button>
-        <button aria-pressed={!on || active} onClick={() => setAvail('busy')} disabled={active}>
+        <button aria-pressed={!on || active} onClick={() => { setAvail('busy'); if (liveMode && apiSetAvail) apiSetAvail('busy'); }} disabled={active}>
           <Icon name="clock" /><span>{t('Busy', 'مشغول')}</span>
         </button>
       </div>

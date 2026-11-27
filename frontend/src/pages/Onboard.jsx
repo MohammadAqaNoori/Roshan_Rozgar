@@ -14,6 +14,7 @@ export default function Onboard({ onNavigate }) {
     ob, obNext, obBack, obJump, obLang, obSet,
     obNameRedo, obTyped, obProf, obSkill, obArea,
     obExp, obDay, obHours, obFinish, speak,
+    liveMode, apiSaveProfile, apiSignup, showToast,
   } = useApp();
 
   const [typedName, setTypedName] = useState('');
@@ -533,7 +534,29 @@ export default function Onboard({ onNavigate }) {
             <div className="stack" style={{ width: '100%', maxWidth: 380, marginTop: 8 }}>
               <button
                 className="btn btn-primary btn-lg btn-block"
-                onClick={() => { obFinish(); onNavigate('wdash'); }}
+                onClick={async () => {
+                  obFinish();
+                  // In live mode, save the worker profile to the database
+                  if (liveMode && apiSaveProfile) {
+                    try {
+                      const areaLabel = typeof ob.area === 'string'
+                        ? ob.area
+                        : formatAreaLabel(ob.area, ob.lang || 'en');
+                      await apiSaveProfile({
+                        name: ob.name,
+                        trade: ob.profession || 'general',
+                        experience_years: ob.exp ? parseInt(String(ob.exp).replace('+', '')) : 1,
+                        area_name: areaLabel || 'Kabul',
+                        skills: ob.skills.join(','),
+                        days: ob.days.join(','),
+                        hours: ob.hours,
+                      });
+                    } catch (e) {
+                      // Profile may already exist — not fatal
+                    }
+                  }
+                  onNavigate('wdash');
+                }}
               >
                 <Icon name="home" aria-hidden="true" />
                 {s('go-home')}

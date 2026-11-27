@@ -8,6 +8,7 @@ import { Avatar } from '../lib/avatar';
 import { useApp, afn } from '../context/AppContext';
 import { StatusPill, Disclaimer } from '../components/Shared';
 import { catBy, CUSTOMER, stIdx } from '../lib/data';
+import { useVoiceRecorder } from '../lib/useVoiceRecorder';
 
 export default function Chat({ onNavigate }) {
   const {
@@ -16,10 +17,12 @@ export default function Chat({ onNavigate }) {
     openModal, _playing, _rec, _typing,
     togglePlay, toggleRec, simCustomerConfirm,
     liveMode, loadMessages, apiSendMessage, apiSendVoiceMsg, apiSendPriceOffer, apiAcceptOffer,
+    user,
   } = useApp();
 
   const [draft, setDraft] = useState('');
   const msgsRef = useRef(null);
+  const { recording, start: startRec, stop: stopRec, audioBlob, mimeType, duration, error: recError, reset: resetRec } = useVoiceRecorder();
 
   // Load messages from backend when in live mode and job exists
   useEffect(() => {
@@ -124,9 +127,24 @@ export default function Chat({ onNavigate }) {
     setDraft('');
   };
 
+  // When recording stops and we have a real audio blob → send it
+  useEffect(() => {
+    if (!audioBlob || recording) return;
+    if (liveMode && apiSendVoiceMsg) {
+      apiSendVoiceMsg(audioBlob).then(() => resetRec());
+    } else {
+      sendVoice('Voice note (transcription pending…)');
+      resetRec();
+    }
+  }, [audioBlob, recording]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleMic = () => {
-    if (!_rec) { toggleRec(); }
-    else { toggleRec(); sendVoice(); }
+    if (recording) {
+      stopRec(); // triggers the effect above
+    } else {
+      resetRec();
+      startRec();
+    }
   };
 
   // ── Render a single message ───────────────────────────────────────────────
@@ -330,22 +348,27 @@ export default function Chat({ onNavigate }) {
             {/* Composer */}
             {!locked && (
               <form className="composer" onSubmit={handleSend}>
+                {recError && (
+                  <div style={{ gridColumn: '1/-1', padding: '6px 12px', background: 'var(--error-50)', color: 'var(--error)', borderRadius: 10, fontSize: 13 }}>
+                    {recError}
+                  </div>
+                )}
                 <button
                   type="button"
-                  className={`mic-sm${_rec ? ' listening' : ''}`}
+                  className={`mic-sm${recording ? ' listening' : ''}`}
                   onClick={handleMic}
-                  aria-label={_rec ? 'Stop and send voice note' : 'Record voice note'}
+                  aria-label={recording ? 'Stop and send voice note' : 'Record voice note'}
                 >
-                  <Icon name={_rec ? 'send' : 'mic'} />
+                  <Icon name={recording ? 'send' : 'mic'} />
                 </button>
-                {_rec ? (
+                {recording ? (
                   <div className="grow row" style={{ gap: 10, color: 'var(--error)' }}>
                     <div className="wave live">
                       {Array.from({ length: 16 }, (_, i) => (
                         <i key={i} style={{ height: `${6 + ((i * 5) % 14)}px`, animationDelay: `${i * 0.05}s`, background: 'var(--error)' }} />
                       ))}
                     </div>
-                    <b className="small">{t('Recording… tap to send', 'در حال ضبط… برای ارسال بزنید')}</b>
+                    <b className="small">{duration} · {t('Tap to send', 'برای ارسال بزنید')}</b>
                   </div>
                 ) : (
                   <>
@@ -353,7 +376,7 @@ export default function Chat({ onNavigate }) {
                     <input
                       id="chatin"
                       className="inp"
-                      placeholder={t('Type a message, or hold the mic', 'پیامی بنویسید یا میکروفون را نگه دارید')}
+                      placeholder={t('Type a message, or tap the mic', 'پیامی بنویسید یا میکروفون را بزنید')}
                       autoComplete="off"
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}

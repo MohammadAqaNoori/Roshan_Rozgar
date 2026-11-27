@@ -1,17 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '../lib/icons';
 import { useApp } from '../context/AppContext';
 import { StatusPill } from '../components/Shared';
 import { Stars } from '../components/Shared';
 import { Avatar } from '../lib/avatar';
 import { CATS, catBy, classify } from '../lib/data';
+import { useVoiceRecorder } from '../lib/useVoiceRecorder';
+import { createJobFromVoice } from '../api/jobs';
 
 export default function Request({ onNavigate }) {
   const { t, req, reqListen, reqSet, reqAnalyse, reqAnswer, sel, W, wname, catName, reqSend, liveMode, apiCreateJob } = useApp();
   const w = W(sel);
+  const { recording, start: startRec, stop: stopRec, audioBlob, mimeType, duration, error: recError, reset: resetRec } = useVoiceRecorder();
+  const [aiLoading, setAiLoading] = useState(false);
+
+  // When recording stops → send to Gemini for extraction (live mode) or fall back to demo
+  useEffect(() => {
+    if (!audioBlob || recording) return;
+    if (liveMode) {
+      setAiLoading(true);
+      createJobFromVoice(audioBlob, mimeType)
+        .then(result => {
+          if (result?.extracted) {
+            const { title, description, trade_required } = result.extracted;
+            reqSet({
+              transcript: description || title || '',
+              aiCat: trade_required || null,
+              cat: trade_required || req.cat,
+            });
+          }
+        })
+        .catch(() => {})
+        .finally(() => { setAiLoading(false); resetRec(); });
+    } else {
+      // Demo fallback — classify locally
+      reqSet({ voiceState: 'idle' });
+      resetRec();
+    }
+  }, [audioBlob, recording]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleVoice = () => {
+    if (recording) {
+      stopRec();
+      reqSet({ voiceState: 'processing' });
+    } else {
+      resetRec();
+      reqSet({ voiceState: 'listening' });
+      startRec();
+    }
+  };
 
   const hasInput = !!(req.transcript || (req.text && req.text.trim()) || req.aiCat);
-
   const autocat = (req.text && req.text.trim()) ? classify(req.text.trim()) : null;
   const aiCat = req.aiCat || autocat || null;
   const cat = req.cat || aiCat;
@@ -34,22 +73,31 @@ export default function Request({ onNavigate }) {
             <section className="card stack" style={{ gap: 14 }}>
               <h3>1 · {t('What\u2019s the problem?', 'مشکل چیست؟')}</h3>
 
-              {req.voiceState === 'listening' ? (
+              {recording || req.voiceState === 'listening' ? (
                 <div className="voice-big" style={{ background: 'var(--error-50)' }}>
-                  <button className="mic-sm listening"><Icon name="mic" /></button>
+                  <button className="mic-sm listening" onClick={handleVoice}><Icon name="send" /></button>
                   <div className="grow">
-                    <b>{t('Listening… speak naturally', 'گوش می‌دهیم… طبیعی صحبت کنید')}</b>
+                    <b>{t('Listening… tap to stop', 'گوش می‌دهیم… برای توقف بزنید')} {duration && `· ${duration}`}</b>
                     <div className="wave live" style={{ marginTop: 6 }}>
                       {Array.from({ length: 24 }, (_, i) => <i key={i} style={{ height: `${6 + ((i * 5) % 16)}px`, animationDelay: `${i * 0.05}s`, background: 'var(--error)' }} />)}
                     </div>
                   </div>
                 </div>
+              ) : req.voiceState === 'processing' || aiLoading ? (
+                <div className="voice-big" style={{ background: 'var(--ai-50)' }}>
+                  <div className="mic-sm" style={{ background: 'var(--ai)' }}><Icon name="sparkles" /></div>
+                  <div className="grow">
+                    <b style={{ color: 'var(--ai)' }}>{t('AI is reading your voice…', 'هوش مصنوعی صدای شما را می‌خواند…')}</b>
+                    <div className="small muted">{t('Gemini processing in Dari/English', 'Gemini به دری/انگلیسی پردازش می‌کند')}</div>
+                  </div>
+                </div>
               ) : (
                 <div className="voice-big">
-                  <button className="mic-sm" style={{ width: 64, height: 64 }} onClick={reqListen} aria-label="Describe by voice"><Icon name="mic" /></button>
+                  <button className="mic-sm" style={{ width: 64, height: 64 }} onClick={handleVoice} aria-label="Describe by voice"><Icon name="mic" /></button>
                   <div className="grow">
                     <b>{t('Tap and describe the problem', 'بزنید و مشکل را توضیح دهید')}</b>
                     <div className="small muted">{t('Dari or English. e.g. "AC sard nemi konad"', 'به دری یا انگلیسی. مثلاً: "کولر سرد نمی‌کند"')}</div>
+                    {recError && <div style={{ color: 'var(--error)', fontSize: 12, marginTop: 4 }}>{recError}</div>}
                   </div>
                 </div>
               )}
@@ -58,10 +106,10 @@ export default function Request({ onNavigate }) {
                 <div className="transcript">
                   <div className="row between wrapit" style={{ gap: 6, marginBottom: 6 }}>
                     <span className="pill pill-ai"><Icon name="sparkles" />{t('Speech-to-text', 'صدا به متن')}</span>
-                    <span className="pill pill-sample">{t('Simulated voice', 'صدای نمونه')}</span>
+                    {!liveMode && <span className="pill pill-sample">{t('Demo voice', 'صدای نمونه')}</span>}
                   </div>
                   &ldquo;{req.transcript}&rdquo;
-                  <div className="xs muted" style={{ marginTop: 6 }}>{t('Kept as a voice note for the worker to listen to.', 'به عنوان پیام صوتی برای کاریگر نگه داشته می‌شود.')}</div>
+                  <div className="xs muted" style={{ marginTop: 6 }}>{t('AI-transcribed in Dari/English via Gemini', 'تبدیل صدا توسط Gemini به دری/انگلیسی')}</div>
                 </div>
               )}
 
